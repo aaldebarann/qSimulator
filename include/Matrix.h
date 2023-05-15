@@ -5,7 +5,6 @@
 #ifndef QSIMULATOR_MATRIX_H
 #define QSIMULATOR_MATRIX_H
 
-#include <complex>
 #include "Vector.h"
 using std::complex;
 
@@ -21,7 +20,10 @@ public:
     complex<float>& operator()(size_t row, size_t column);
 
     Vector operator*(Vector& v);
+
+    Matrix kron(Matrix& x); // computes the Kronecker product
 };
+
 
 
 #endif //QSIMULATOR_MATRIX_H

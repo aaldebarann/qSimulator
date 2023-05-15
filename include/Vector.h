@@ -6,6 +6,7 @@
 #define QSIMULATOR_VECTOR_H
 
 #include <complex>
+#include <vector>
 using std::complex;
 
 
@@ -15,10 +16,11 @@ public:
     const size_t size;
     Vector(size_t size);
     Vector(size_t size, std::complex<float> value);
+    Vector(Vector& v);
     ~Vector();
 
     complex<float>& operator[](size_t i);
-
+    Vector& operator=(Vector v);
 };
 
 

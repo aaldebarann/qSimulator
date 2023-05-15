@@ -19,3 +19,15 @@ Vector::Vector(size_t size, std::complex<float> value): Vector(size) {
     for(int i = 0; i < size; i++)
         pMem[i] = value;
 }
+
+Vector::Vector(Vector &v): Vector(v.size) {
+    for(int i = 0; i < size; i++)
+        (*this)[i] = v[i];
+}
+
+Vector &Vector::operator=(Vector v) {
+    Vector tmp(v);
+
+    return *this;
+}
+

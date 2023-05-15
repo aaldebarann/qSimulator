@@ -22,3 +22,15 @@ Vector Matrix::operator* (Vector &v) {
     }
     return result;
 }
+
+Matrix Matrix::kron(Matrix &x) {
+    Matrix result(this->size * x.size);
+    for(int i = 0; i < result.size; i++) {
+        for(int j = 0; j < result.size; j++) {
+            result(i, j) = (*this)(i / x.size, j / x.size) * x(i % x.size, j % x.size);
+        }
+    }
+    return result;
+}
+
+
