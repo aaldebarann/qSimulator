@@ -5,21 +5,33 @@
 #ifndef QSIMULATOR_MATRIX_H
 #define QSIMULATOR_MATRIX_H
 
-#include "Vector.h"
-using std::complex;
+#include <complex>
+#include <vector>
+using std::vector;
+
+typedef std::complex<float> Complex;
 
 // квадратная матрица
 class Matrix {
-    complex<float>* pMem;
+    Complex* pMem;
+    size_t sz; // size
 public:
-    const size_t size;
+    size_t size() const {return sz;}
 
     Matrix(size_t size);
     ~Matrix();
+    Matrix& operator=(const Matrix& m) {
+        sz = m.size();
+        delete[] pMem;
+        pMem = new Complex[size()*size()];
+        copy(m.pMem, m.pMem + size()*size(), pMem);
+        return *this;
+    }
 
-    complex<float>& operator()(size_t row, size_t column);
-
-    Vector operator*(Vector& v);
+    Complex& operator()(size_t row, size_t column);
+    bool operator==(const Matrix&) const;
+    Matrix& operator+=(Matrix& m);
+    vector<Complex> operator*(const vector<Complex>& v);
 
     Matrix kron(Matrix& x); // computes the Kronecker product
 };

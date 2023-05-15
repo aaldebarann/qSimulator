@@ -10,12 +10,11 @@
 
 class System {
 
-    Vector* state;
+    vector<Complex> state;
 public:
     const size_t size; // qubit number
 
     explicit System(size_t size);
-    ~System();
 
     static Matrix I() {
         Matrix matrix(2);
@@ -58,10 +57,45 @@ public:
         matrix(0, 1) = matrix(1, 0) = 0;
         matrix(1, 1) = std::exp(phi * i);
         return matrix;
+    } // phase shift
+    static Matrix CNOT(size_t i, size_t j, size_t qubit_number) {
+        Matrix m1{2}, m2{2};
+        m1(0, 0) = m2(1, 1) = 1;
+        m1(0, 1) = m1(1, 0) = m1(1, 1) = 0;
+        m2(0, 0) = m2(0, 1) = m2(1, 0) = 0;
+        Matrix id = I();
+        Matrix x = X();
+
+        Matrix res1{1};
+        res1(0, 0) = 1;
+        for(int k = 0; k < qubit_number; k++) {
+            if(k == i)
+                res1 = res1.kron(m1);
+            else
+                res1 = res1.kron(id);
+        }
+        Matrix res2{1};
+        res2(0, 0) = 1;
+        for(int k = 0; k < qubit_number; k++) {
+            if(k == i)
+                res2 = res2.kron(m2);
+            else if(k == j)
+                res2 = res2.kron(x);
+            else
+                res2 = res2.kron(id);
+        }
+        return res1 += res2;
     }
 
-    Vector getState() {
-        return *state;
+    vector<Complex> getState() {
+        return state;
+    } // returns current state
+    void apply(vector<Matrix>& v) {
+        // составляем итоговую матрицу преобразования
+        Matrix m = v[0];
+        for(int i = 1; i < v.size(); i++)
+            m = m.kron(v[i]);
+        state = m*state;
     }
 };
 

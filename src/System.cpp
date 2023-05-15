@@ -5,8 +5,7 @@
 #include "System.h"
 
 System::System(size_t sz): size(sz) {
-    state = new Vector((size_t)pow(2, size), 0);
-}
-System::~System() {
-    delete state;
+    state.resize((size_t)pow(2, size));
+    for(Complex z: state)
+        z = 0;
 }
