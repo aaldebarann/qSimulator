@@ -20,13 +20,7 @@ public:
 
     Matrix(size_t size);
     ~Matrix();
-    Matrix& operator=(const Matrix& m) {
-        sz = m.size();
-        delete[] pMem;
-        pMem = new Complex[size()*size()];
-        copy(m.pMem, m.pMem + size()*size(), pMem);
-        return *this;
-    }
+    Matrix& operator=(const Matrix& m);
 
     Complex& operator()(size_t row, size_t column);
     bool operator==(const Matrix&) const;

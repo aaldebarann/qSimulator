@@ -55,5 +55,13 @@ bool Matrix::operator==(const Matrix &m) const {
     return true;
 }
 
+Matrix &Matrix::operator=(const Matrix &m)  {
+    sz = m.size();
+    delete[] pMem;
+    pMem = new Complex[size()*size()];
+    copy(m.pMem, m.pMem + size()*size(), pMem);
+    return *this;
+}
+
 
 

@@ -27,7 +27,7 @@ TEST(Matrix, can_assign) {
     m(1, 0) = 3;
     m(1, 1) = 4;
 
-    Matrix m1(4);
+    Matrix m1(1);
     m1 = m;
 
     EXPECT_EQ((Complex)1, m1(0, 0));

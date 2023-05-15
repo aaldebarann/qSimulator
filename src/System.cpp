@@ -8,4 +8,5 @@ System::System(size_t sz): size(sz) {
     state.resize((size_t)pow(2, size));
     for(Complex z: state)
         z = 0;
+    state[0] = 1;
 }

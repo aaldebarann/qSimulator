@@ -61,7 +61,7 @@ Matrix CNOT(size_t i, size_t j, size_t qubit_number) {
 
     Matrix res1{1};
     res1(0, 0) = 1;
-    for(int k = 0; k < qubit_number; k++) {
+    for(int k = (int)qubit_number - 1; k >= 0; k--) {
         if(k == i)
             res1 = res1.kron(m1);
         else
@@ -69,7 +69,7 @@ Matrix CNOT(size_t i, size_t j, size_t qubit_number) {
     }
     Matrix res2{1};
     res2(0, 0) = 1;
-    for(int k = 0; k < qubit_number; k++) {
+    for(int k = (int)qubit_number - 1; k >= 0; k--) {
         if(k == i)
             res2 = res2.kron(m2);
         else if(k == j)
