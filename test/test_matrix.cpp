@@ -19,6 +19,19 @@ TEST(Matrix, can_set_and_get) {
     EXPECT_EQ((Complex)3, m(1, 0));
     EXPECT_EQ((Complex)4, m(1, 1));
 }
+TEST(Matrix, default_size_is_zero) {
+    Matrix m;
+    EXPECT_EQ(0, m.size());
+}
+TEST(Matrix, constructor_with_fill_value) {
+    Complex value = 1;
+    Matrix m{2, value};
+
+    EXPECT_EQ(value, m(0, 0));
+    EXPECT_EQ(value, m(0, 1));
+    EXPECT_EQ(value, m(1, 0));
+    EXPECT_EQ(value, m(1, 1));
+}
 TEST(Matrix, can_assign) {
 
     Matrix m(2);

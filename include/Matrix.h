@@ -18,7 +18,9 @@ class Matrix {
 public:
     size_t size() const {return sz;}
 
+    Matrix();
     Matrix(size_t size);
+    Matrix(size_t size, Complex fillValue);
     ~Matrix();
     Matrix& operator=(const Matrix& m);
 
