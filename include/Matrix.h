@@ -9,7 +9,7 @@
 #include <vector>
 using std::vector;
 
-typedef std::complex<float> Complex;
+typedef std::complex<double> Complex;
 
 // квадратная матрица
 class Matrix {
