@@ -11,7 +11,7 @@ class System {
 
     vector<Complex> state;
 public:
-    const size_t size; // qubit number
+    const size_t size; // number of qubits
 
     explicit System(size_t size);
 
