@@ -7,6 +7,14 @@
 Matrix::Matrix(size_t size): sz(size) {
     pMem = new Complex[sz*sz];
 }
+Matrix::Matrix(): Matrix(0){}
+Matrix::Matrix(size_t size, Complex fillValue): Matrix(size) {
+    for(int i = 0; i < size; i++) {
+        for(int j = 0; j < size; j++) {
+            (*this)(i, j) = fillValue;
+        }
+    }
+}
 Matrix::~Matrix() {
     delete[] pMem;
 }
@@ -62,6 +70,8 @@ Matrix &Matrix::operator=(const Matrix &m)  {
     copy(m.pMem, m.pMem + size()*size(), pMem);
     return *this;
 }
+
+
 
 
 
