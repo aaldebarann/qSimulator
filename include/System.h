@@ -14,17 +14,13 @@ public:
     const size_t size; // number of qubits
 
     explicit System(size_t size);
+    System(vector<Complex>& state);
 
     vector<Complex> getState() {
         return state;
     } // returns current state
-    void apply(vector<Matrix>& v) {
-        // составляем итоговую матрицу преобразования
-        Matrix m = v[0];
-        for(int i = 1; i < v.size(); i++)
-            m = m.kron(v[i]);
-        state = m*state;
-    }
+    void apply(Matrix& m); // применение матрицы к системе
+
 };
 
 
