@@ -96,7 +96,8 @@ TEST(Gates, correct_h) {
     EXPECT_EQ(expected, actual);
 }
 TEST(Gates, correct_p) {
-    Matrix expected = Z(1, 3);
+    gates::Z z{1};
+    Matrix expected = z.getMatrix(3);
 
     Gate* g = new gates::P{1, M_PI};
     Matrix actual = g->getMatrix(3);
