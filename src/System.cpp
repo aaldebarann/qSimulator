@@ -11,12 +11,17 @@ System::System(size_t sz): size(sz) {
     state[0] = 1;
 }
 
-void System::apply(Matrix &m) {
-    if(m.size() != (size_t)pow(2, this->size))
-        throw std::invalid_argument("Matrix size doesn't match system size");
-    state = m * state;
-}
-
 System::System(vector<Complex>& state): System(state.size()) {
     this->state = state;
+}
+
+void System::apply(Gate* g) {
+    Matrix m = g->getMatrix(size);
+    state = m * state;
+}
+void System::apply(const vector<Gate *>& gatesVector) {
+    for(Gate* g: gatesVector) {
+        Matrix m = g->getMatrix(size);
+        state = m * state;
+    }
 }
