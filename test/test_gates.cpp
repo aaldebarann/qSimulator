@@ -3,14 +3,15 @@
 //
 #include <gtest.h>
 #include "Gates.h"
-#include <math.h>
 
 TEST(Gates, correct_i) {
     Matrix expected{8, 0};
     for(int i = 0; i < 8; i++)
         expected(i, i) = 1;
 
-    Matrix actual = I(1, 3);
+    Gate* g = new gates::I{1};
+    Matrix actual = g->getMatrix(3);
+    delete g;
 
     EXPECT_EQ(expected, actual);
 }
@@ -25,7 +26,9 @@ TEST(Gates, correct_x) {
     expected(6, 4) = 1;
     expected(7, 5) = 1;
 
-    Matrix actual = X(1, 3);
+    Gate* g = new gates::X{1};
+    Matrix actual = g->getMatrix(3);
+    delete g;
 
     EXPECT_EQ(expected, actual);
 }
@@ -41,7 +44,9 @@ TEST(Gates, correct_y) {
     expected(6, 4) = i;
     expected(7, 5) = i;
 
-    Matrix actual = Y(1, 3);
+    Gate* g = new gates::Y{1};
+    Matrix actual = g->getMatrix(3);
+    delete g;
 
     EXPECT_EQ(expected, actual);
 }
@@ -56,7 +61,9 @@ TEST(Gates, correct_z) {
     expected(6, 6) = -1;
     expected(7, 7) = -1;
 
-    Matrix actual = Z(1, 3);
+    Gate* g = new gates::Z{1};
+    Matrix actual = g->getMatrix(3);
+    delete g;
 
     EXPECT_EQ(expected, actual);
 }
@@ -82,13 +89,18 @@ TEST(Gates, correct_h) {
     expected(7, 5) = tmp;
     expected(7, 7) = -tmp;
 
-    Matrix actual = H(1, 3);
+    Gate* g = new gates::H{1};
+    Matrix actual = g->getMatrix(3);
+    delete g;
 
     EXPECT_EQ(expected, actual);
 }
 TEST(Gates, correct_p) {
     Matrix expected = Z(1, 3);
-    Matrix actual = P(1, M_PI, 3);
+
+    Gate* g = new gates::P{1, M_PI};
+    Matrix actual = g->getMatrix(3);
+    delete g;
 
     for(int i = 0; i < expected.size(); i++) {
         for(int j = 0; j < expected.size(); j++) {
@@ -109,7 +121,9 @@ TEST(Gates, correct_cnot) {
     expected(6, 6) = 1;
     expected(7, 3) = 1;
 
-    Matrix actual = CNOT(0, 2, 3);
+    Gate* g = new gates::CNot(0, 2);
+    Matrix actual = g->getMatrix(3);
+    delete g;
 
     EXPECT_EQ(expected, actual);
 }
