@@ -6,6 +6,7 @@
 
 namespace gates {
     CNot::CNot(size_t control, size_t target) : target(target), control(control) {}
+    // !!!
 
     Matrix CNot::getMatrix(size_t systemSize) {
         if(control >= systemSize)
@@ -22,14 +23,14 @@ namespace gates {
         Matrix x = X();
 
         Matrix res1{1, 1};
-        for(int k = (int)systemSize - 1; k >= 0; k--) {
+        for(int k = 0; k < systemSize; k++) {
             if(k == control)
                 res1 = res1.kron(m1);
             else
                 res1 = res1.kron(id);
         }
         Matrix res2{1, 1};
-        for(int k = (int)systemSize - 1; k >= 0; k--) {
+        for(int k = 0; k < systemSize; k++) {
             if(k == control)
                 res2 = res2.kron(m2);
             else if(k == target)

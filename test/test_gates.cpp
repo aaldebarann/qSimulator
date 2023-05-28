@@ -122,7 +122,7 @@ TEST(Gates, correct_cnot) {
     expected(6, 6) = 1;
     expected(7, 3) = 1;
 
-    Gate* g = new gates::CNot(0, 2);
+    Gate* g = new gates::CNot(2, 0);
     Matrix actual = g->getMatrix(3);
     delete g;
 
