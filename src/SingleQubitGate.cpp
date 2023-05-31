@@ -8,7 +8,7 @@ Matrix gates::SingleQubitGate::getMatrix(size_t systemSize) {
     if(target >= systemSize)
         throw std::out_of_range("target qubit number is out of range");
 
-    Matrix result{1, 1}; // result (1)
+    Matrix result{1, 1}; // result = (1)
     Matrix m = matrix();
     Matrix id = I();
     for(int i = 0; i < systemSize; i++) {
