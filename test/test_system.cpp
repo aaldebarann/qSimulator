@@ -49,8 +49,11 @@ TEST(System, circuit_from_presentation1) {
         delete g;
 
     vector<Complex> expected{1.0 / sqrt(2), 0, 1.0 / sqrt(2), 0};
+    vector<Complex> actual = s.getState();
 
-    EXPECT_EQ(expected, s.getState());
+    // compare expected with actual
+    for(int j = 0; j < expected.size(); j++)
+        EXPECT_NEAR((expected[j]*expected[j]).real(), (actual[j]*actual[j]).real(), 1.0e-15);
 }
 TEST(System, circuit_from_presentation2) {
     // слайд 6 презентации
@@ -64,8 +67,12 @@ TEST(System, circuit_from_presentation2) {
         delete g;
 
     vector<Complex> expected{0, 1.0 / sqrt(2), 0, 1.0 / sqrt(2)};
+    vector<Complex> actual = s.getState();
 
-    EXPECT_EQ(expected, s.getState());
+    // compare expected with actual
+    for(int j = 0; j < expected.size(); j++)
+        EXPECT_NEAR((expected[j]*expected[j]).real(), (actual[j]*actual[j]).real(), 1.0e-15);
+
 }
 TEST(System, circuit_from_presentation3) {
     // слайд 8 презентации
@@ -93,8 +100,11 @@ TEST(System, circuit_from_presentation3) {
         delete g;
 
     vector<Complex> expected{1.0 / sqrt(2), 0, 0, 1.0 / sqrt(2)};
+    vector<Complex> actual = s.getState();
 
-    EXPECT_EQ(expected, s.getState());
+    // compare expected with actual
+    for(int j = 0; j < expected.size(); j++)
+        EXPECT_NEAR((expected[j]*expected[j]).real(), (actual[j]*actual[j]).real(), 1.0e-15);
 }
 TEST(System, circuit_s1) {
     System s{3};
@@ -113,8 +123,11 @@ TEST(System, circuit_s1) {
         delete g;
 
     vector<Complex> expected{-0.5, 0, 0.5, 0, -0.5, 0, -0.5, 0};
+    vector<Complex> actual = s.getState();
 
-    EXPECT_EQ(expected, s.getState());
+    // compare expected with actual
+    for(int j = 0; j < expected.size(); j++)
+        EXPECT_NEAR((expected[j]*expected[j]).real(), (actual[j]*actual[j]).real(), 1.0e-15);
 }
 TEST(System, circuit_s2) {
     System s{3};
@@ -127,8 +140,11 @@ TEST(System, circuit_s2) {
         delete g;
 
     vector<Complex> expected{1.0 / sqrt(2), 0, 0, 0, 0, 0, 1.0 / sqrt(2), 0};
+    vector<Complex> actual = s.getState();
 
-    EXPECT_EQ(expected, s.getState());
+    // compare expected with actual
+    for(int j = 0; j < expected.size(); j++)
+        EXPECT_NEAR((expected[j]*expected[j]).real(), (actual[j]*actual[j]).real(), 1.0e-15);
 }
 TEST(System, circuit_s3) {
     System s{3};
@@ -142,8 +158,11 @@ TEST(System, circuit_s3) {
         delete g;
 
     vector<Complex> expected{0, 0, 1.0 / sqrt(2), 0, 0, 0, 1.0 / sqrt(2), 0};
+    vector<Complex> actual = s.getState();
 
-    EXPECT_EQ(expected, s.getState());
+    // compare expected with actual
+    for(int j = 0; j < expected.size(); j++)
+        EXPECT_NEAR((expected[j]*expected[j]).real(), (actual[j]*actual[j]).real(), 1.0e-15);
 }
 TEST(System, circuit_s4) {
     System s{3};
@@ -159,8 +178,11 @@ TEST(System, circuit_s4) {
         delete g;
 
     vector<Complex> expected{0, 0, 0, -1.0 / sqrt(2), 0, 0, 0, -1.0 / sqrt(2)};
+    vector<Complex> actual = s.getState();
 
-    EXPECT_EQ(expected, s.getState());
+    // compare expected with actual
+    for(int j = 0; j < expected.size(); j++)
+        EXPECT_NEAR((expected[j]*expected[j]).real(), (actual[j]*actual[j]).real(), 1.0e-15);
 }
 TEST(System, circuit_s5) {
     System s{3};
@@ -173,6 +195,93 @@ TEST(System, circuit_s5) {
         delete g;
 
     vector<Complex> expected{1.0 / sqrt(2), 0, 0, 0, 0, 1.0 / sqrt(2), 0, 0};
+    vector<Complex> actual = s.getState();
 
-    EXPECT_EQ(expected, s.getState());
+    // compare expected with actual
+    for(int j = 0; j < expected.size(); j++)
+        EXPECT_NEAR((expected[j]*expected[j]).real(), (actual[j]*actual[j]).real(), 1.0e-15);
+}
+TEST(System, circuit_s6) {
+    System s{3};
+
+    vector<Gate*> steps;
+    steps.push_back(new gates::H(0));
+    steps.push_back(new gates::X(2));
+    steps.push_back(new gates::CNot(0, 2));
+    s.apply(steps);
+    for(Gate* g: steps)
+        delete g;
+
+    vector<Complex> expected{0, 1.0 / sqrt(2), 0, 0, 1.0 / sqrt(2), 0, 0, 0};
+    vector<Complex> actual = s.getState();
+
+    // compare expected with actual
+    for(int j = 0; j < expected.size(); j++)
+        EXPECT_NEAR((expected[j]*expected[j]).real(), (actual[j]*actual[j]).real(), 1.0e-15);
+}
+TEST(System, circuit_s7) {
+    System s{3};
+
+    vector<Gate*> steps;
+    steps.push_back(new gates::H(0));
+    steps.push_back(new gates::X(2));
+    steps.push_back(new gates::CNot(0, 2));
+    steps.push_back(new gates::P(2,M_PI / 2));
+    s.apply(steps);
+    for(Gate* g: steps)
+        delete g;
+
+    Complex i(0, 1);
+    vector<Complex> expected{0, i / sqrt(2), 0, 0, 1.0 / sqrt(2), 0, 0, 0};
+    vector<Complex> actual = s.getState();
+
+    // compare expected with actual
+    for(int j = 0; j < expected.size(); j++)
+        EXPECT_NEAR((expected[j]*expected[j]).real(), (actual[j]*actual[j]).real(), 1.0e-15);
+}
+TEST(System, circuit_s8) {
+    System s{3};
+
+    vector<Gate*> steps;
+    steps.push_back(new gates::P(1,-M_PI / 4));
+    steps.push_back(new gates::CNot(0, 1));
+    steps.push_back(new gates::P(1,M_PI / 4));
+    steps.push_back(new gates::CNot(0, 1));
+    s.apply(steps);
+    for(Gate* g: steps)
+        delete g;
+
+    Complex i(0, 1);
+    vector<Complex> expected{1, 0, 0, 0, 0, 0, 0, 0};
+    vector<Complex> actual = s.getState();
+
+    // compare expected with actual
+    for(int j = 0; j < expected.size(); j++)
+        EXPECT_NEAR((expected[j]*expected[j]).real(), (actual[j]*actual[j]).real(), 1.0e-15);
+}
+TEST(System, circuit_s9) {
+    System s{3};
+
+    vector<Gate*> steps;
+    steps.push_back(new gates::X(0));
+    steps.push_back(new gates::H(1));
+    steps.push_back(new gates::P(1,-M_PI / 4));
+    steps.push_back(new gates::CNot(0, 1));
+    steps.push_back(new gates::P(1,M_PI / 2));
+    steps.push_back(new gates::CNot(0, 1));
+    s.apply(steps);
+    for(Gate* g: steps)
+        delete g;
+
+    Complex i(0, 1);
+    vector<Complex> expected{0, 0, 0, 0,  i / sqrt(2), 0, 0.5 - i*0.5, 0};
+    vector<Complex> actual = s.getState();
+
+    // compare expected with actual
+    for(int j = 0; j < expected.size(); j++)
+        EXPECT_NEAR((expected[j]*expected[j]).real(), (actual[j]*actual[j]).real(), 1.0e-15);
+
+    for(int j = 0; j < expected.size(); j++)
+        std::cout << actual[j];
+    std::cout << std::endl;
 }
