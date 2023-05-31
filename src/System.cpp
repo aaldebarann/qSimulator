@@ -3,6 +3,7 @@
 //
 
 #include "System.h"
+#include <cstdlib>
 
 System::System(size_t sz): size(sz) {
     state.resize((size_t)pow(2, size));
@@ -24,4 +25,15 @@ void System::apply(const vector<Gate *>& gatesVector) {
         Matrix m = g->getMatrix(size);
         state = m * state;
     }
+}
+
+size_t System::measure() const {
+    double r = (double)std::rand() / RAND_MAX;
+    double sum = 0;
+    for(int j = 0; j < pow(2, (double)size); j++) {
+        sum += std::abs((state[j]*state[j]).real());
+        if(r < sum)
+            return j;
+    }
+    return size - 1;
 }

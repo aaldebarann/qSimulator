@@ -17,12 +17,13 @@ public:
     explicit System(size_t size);
     System(vector<Complex>& state);
 
-    vector<Complex> getState() {
+    vector<Complex> getState() const {
         return state;
     } // returns current state
     void apply(Gate* g); // применение вентиля к системе
     void apply(const vector<Gate*>& gatesVector);
 
+    size_t measure() const;
 };
 
 
