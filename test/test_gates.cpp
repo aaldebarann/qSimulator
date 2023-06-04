@@ -9,9 +9,7 @@ TEST(Gates, correct_i) {
     for(int i = 0; i < 8; i++)
         expected(i, i) = 1;
 
-    Gate* g = new gates::I{1};
-    Matrix actual = g->getMatrix(3);
-    delete g;
+    Matrix actual = forSystem(I(), 1, 3);
 
     EXPECT_EQ(expected, actual);
 }
@@ -26,9 +24,7 @@ TEST(Gates, correct_x) {
     expected(6, 4) = 1;
     expected(7, 5) = 1;
 
-    Gate* g = new gates::X{1};
-    Matrix actual = g->getMatrix(3);
-    delete g;
+    Matrix actual = forSystem(X(), 1, 3);
 
     EXPECT_EQ(expected, actual);
 }
@@ -44,9 +40,7 @@ TEST(Gates, correct_y) {
     expected(6, 4) = i;
     expected(7, 5) = i;
 
-    Gate* g = new gates::Y{1};
-    Matrix actual = g->getMatrix(3);
-    delete g;
+    Matrix actual = forSystem(Y(), 1, 3);
 
     EXPECT_EQ(expected, actual);
 }
@@ -61,9 +55,7 @@ TEST(Gates, correct_z) {
     expected(6, 6) = -1;
     expected(7, 7) = -1;
 
-    Gate* g = new gates::Z{1};
-    Matrix actual = g->getMatrix(3);
-    delete g;
+    Matrix actual = forSystem(Z(), 1, 3);
 
     EXPECT_EQ(expected, actual);
 }
@@ -89,19 +81,15 @@ TEST(Gates, correct_h) {
     expected(7, 5) = tmp;
     expected(7, 7) = -tmp;
 
-    Gate* g = new gates::H{1};
-    Matrix actual = g->getMatrix(3);
-    delete g;
+    Matrix actual = forSystem(H(), 1, 3);
 
     EXPECT_EQ(expected, actual);
 }
 TEST(Gates, correct_p) {
-    gates::Z z{1};
-    Matrix expected = z.getMatrix(3);
 
-    Gate* g = new gates::P{1, M_PI};
-    Matrix actual = g->getMatrix(3);
-    delete g;
+    Matrix expected = forSystem(Z(), 1, 3);
+
+    Matrix actual = forSystem(P(M_PI), 1, 3);
 
     for(int i = 0; i < expected.size(); i++) {
         for(int j = 0; j < expected.size(); j++) {
@@ -122,9 +110,7 @@ TEST(Gates, correct_cnot) {
     expected(6, 6) = 1;
     expected(7, 3) = 1;
 
-    Gate* g = new gates::CNot(2, 0);
-    Matrix actual = g->getMatrix(3);
-    delete g;
+    Matrix actual = CNOT(0, 2, 3);
 
     EXPECT_EQ(expected, actual);
 }

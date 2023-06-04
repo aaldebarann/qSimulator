@@ -7,12 +7,17 @@
 
 #include "Matrix.h"
 #include <cmath>
-#include "gates/I.h"
-#include "gates/X.h"
-#include "gates/Y.h"
-#include "gates/Z.h"
-#include "gates/H.h"
-#include "gates/P.h"
-#include "gates/CNot.h"
+
+// functions return matrix for quantum gates
+Matrix I(); // Identity gate
+Matrix X(); // NOT gate or Pauli-X
+Matrix Y(); // Pauli-Y gate
+Matrix Z(); // Pauli-Z gate
+Matrix H(); // Hadamard gate
+Matrix P(Complex phi); // Phase shift gate
+Matrix CNOT(size_t control, size_t target, size_t systemSize); // CNOT gate
+
+// matrix for n-dimensional system
+Matrix forSystem(Matrix singleQubitMatrix, size_t targetQubit, size_t systemSize);
 
 #endif //QSIMULATOR_GATES_H

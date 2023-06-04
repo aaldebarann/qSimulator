@@ -6,7 +6,8 @@
 #define QSIMULATOR_SYSTEM_H
 
 #include "Matrix.h"
-#include "Gates.h"
+#include "Circuit.h"
+
 
 class System {
 
@@ -20,9 +21,7 @@ public:
     vector<Complex> getState() const {
         return state;
     } // returns current state
-    void apply(Gate* g); // применение вентиля к системе
-    void apply(const vector<Gate*>& gatesVector);
-
+    void apply(Circuit& circ); // применение схемы к системе
     size_t measure() const;
 };
 

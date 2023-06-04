@@ -21,6 +21,8 @@ public:
     Matrix();
     Matrix(size_t size);
     Matrix(size_t size, Complex fillValue);
+    Matrix(const Matrix& m);
+    Matrix(Matrix&& m);
     ~Matrix();
     Matrix& operator=(const Matrix& m);
 

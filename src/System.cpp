@@ -15,18 +15,6 @@ System::System(size_t sz): size(sz) {
 System::System(vector<Complex>& state): System(state.size()) {
     this->state = state;
 }
-
-void System::apply(Gate* g) {
-    Matrix m = g->getMatrix(size);
-    state = m * state;
-}
-void System::apply(const vector<Gate *>& gatesVector) {
-    for(Gate* g: gatesVector) {
-        Matrix m = g->getMatrix(size);
-        state = m * state;
-    }
-}
-
 size_t System::measure() const {
     double r = (double)std::rand() / RAND_MAX;
     double sum = 0;
@@ -36,4 +24,10 @@ size_t System::measure() const {
             return j;
     }
     return size - 1;
+}
+
+void System::apply(Circuit &circ) {
+    for(Matrix& m: circ.getMatrices()) {
+        state = m * state;
+    }
 }

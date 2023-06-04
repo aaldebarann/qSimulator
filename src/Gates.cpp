@@ -46,102 +46,10 @@ Matrix P(Complex phi) {
     matrix(1, 1) = std::exp(phi * i);
     return matrix;
 }
-// functions return matrix for quantum gates in n-dimensional system
-Matrix I(size_t target, size_t numberOfQubits) {
-    if(target >= numberOfQubits)
-        throw std::out_of_range("target qubit number is out of range");
-
-    size_t size = (size_t)pow(2, (double )numberOfQubits);
-    Matrix matrix{size, 0}; // zero matrix
-    for(int i = 0; i < matrix.size(); i++) {
-        matrix(i, i) = 1;
-    }
-    return matrix;
-}
-Matrix X(size_t target, size_t numberOfQubits) {
-    if(target >= numberOfQubits)
-        throw std::out_of_range("target qubit number is out of range");
-
-    Matrix matrix{1, 1}; // matrix (1)
-    Matrix x = X();
-    Matrix id = I();
-    for(int i = 0; i < numberOfQubits; i++) {
-        if(i == target) {
-            matrix = matrix.kron(x);
-        } else {
-            matrix = matrix.kron(id);
-        }
-    }
-    return matrix;
-}
-Matrix Y(size_t target, size_t numberOfQubits) {
-    if(target >= numberOfQubits)
-        throw std::out_of_range("target qubit number is out of range");
-
-    Matrix matrix{1, 1}; // matrix (1)
-    Matrix y = Y();
-    Matrix id = I();
-    for(int i = 0; i < numberOfQubits; i++) {
-        if(i == target) {
-            matrix = matrix.kron(y);
-        } else {
-            matrix = matrix.kron(id);
-        }
-    }
-    return matrix;
-}
-Matrix Z(size_t target, size_t numberOfQubits) {
-    if(target >= numberOfQubits)
-        throw std::out_of_range("target qubit number is out of range");
-
-    Matrix matrix{1, 1}; // matrix (1)
-    Matrix z = Z();
-    Matrix id = I();
-    for(int i = 0; i < numberOfQubits; i++) {
-        if(i == target) {
-            matrix = matrix.kron(z);
-        } else {
-            matrix = matrix.kron(id);
-        }
-    }
-    return matrix;
-}
-Matrix H(size_t target, size_t numberOfQubits) {
-    if(target >= numberOfQubits)
-        throw std::out_of_range("target qubit number is out of range");
-
-    Matrix matrix{1, 1}; // matrix (1)
-    Matrix h = H();
-    Matrix id = I();
-    for(int i = 0; i < numberOfQubits; i++) {
-        if(i == target) {
-            matrix = matrix.kron(h);
-        } else {
-            matrix = matrix.kron(id);
-        }
-    }
-    return matrix;
-}
-Matrix P(size_t target, Complex phi, size_t numberOfQubits) {
-    if(target >= numberOfQubits)
-        throw std::out_of_range("target qubit number is out of range");
-
-    Matrix matrix{1, 1}; // matrix (1)
-    Matrix p = P(phi);
-    Matrix id = I();
-    for(int i = 0; i < numberOfQubits; i++) {
-        if(i == target) {
-            matrix = matrix.kron(p);
-        } else {
-            matrix = matrix.kron(id);
-        }
-    }
-    return matrix;
-}
-Matrix CNOT(size_t control, size_t target, size_t numberOfQubits) {
-    if(control >= numberOfQubits)
+Matrix CNOT(size_t control, size_t target, size_t systemSize) {
+    if(control >= systemSize)
         throw std::out_of_range("control qubit number is out of range");
-    if(target >= numberOfQubits)
+    if(target >= systemSize)
         throw std::out_of_range("target qubit number is out of range");
     if(control == target)
         throw std::invalid_argument("target and control can't be the same qubit");
@@ -153,14 +61,14 @@ Matrix CNOT(size_t control, size_t target, size_t numberOfQubits) {
     Matrix x = X();
 
     Matrix res1{1, 1};
-    for(int k = (int)numberOfQubits - 1; k >= 0; k--) {
+    for(int k = (int)systemSize - 1; k >= 0; k--) {
         if(k == control)
             res1 = res1.kron(m1);
         else
             res1 = res1.kron(id);
     }
     Matrix res2{1, 1};
-    for(int k = (int)numberOfQubits - 1; k >= 0; k--) {
+    for(int k = (int)systemSize - 1; k >= 0; k--) {
         if(k == control)
             res2 = res2.kron(m2);
         else if(k == target)
@@ -170,4 +78,21 @@ Matrix CNOT(size_t control, size_t target, size_t numberOfQubits) {
     }
     res1 += res2;
     return res1;
+}
+
+// convert matrix of single-qubit gate to matrix for n-dimensional system
+Matrix forSystem(Matrix singleQubitMatrix, size_t target, size_t systemSize) {
+    if(target >= systemSize) {
+        throw std::out_of_range("Target qubit number is out of range");
+    }
+    Matrix result{1, 1}; // result = (1)
+    Matrix id = I();
+    for(int i = (int)systemSize - 1; i >= 0; i--) {
+        if(i == target) {
+            result = result.kron(singleQubitMatrix);
+        } else {
+            result = result.kron(id);
+        }
+    }
+    return result;
 }

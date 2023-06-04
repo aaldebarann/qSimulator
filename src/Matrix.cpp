@@ -2,6 +2,7 @@
 // Created by Алексей on 14.05.2023.
 //
 
+#include <cstring>
 #include "../include/Matrix.h"
 
 Matrix::Matrix(size_t size): sz(size) {
@@ -69,6 +70,18 @@ Matrix &Matrix::operator=(const Matrix &m)  {
     pMem = new Complex[size()*size()];
     copy(m.pMem, m.pMem + size()*size(), pMem);
     return *this;
+}
+
+Matrix::Matrix(const Matrix &m) {
+    pMem = new Complex[m.size()*m.size()];
+    sz = m.size();
+    std::memcpy(pMem, m.pMem, sizeof(Complex)*m.size()*m.size());
+}
+
+Matrix::Matrix(Matrix &&m) {
+    pMem = m.pMem;
+    m.pMem = nullptr;
+    sz = m.size();
 }
 
 
