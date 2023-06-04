@@ -259,8 +259,7 @@ TEST(System, circuit_s9) {
 
     // compare expected with actual
     for(int j = 0; j < expected.size(); j++) {
-        double expectedValue = std::abs((expected[j] * expected[j]).real());
-        double actualValue = std::abs((actual[j] * actual[j]).real());
-        EXPECT_NEAR(expectedValue, actualValue, 1.0e-15);
+        EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-15);
+        EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-15)
     }
 }
