@@ -3,7 +3,6 @@
 //
 #include <iostream>
 #include <System.h>
-#include <Gates.h>
 #include <chrono>
 using namespace std;
 
@@ -12,9 +11,9 @@ int main() {
     cout << "system size: "<< size << endl;
     System s{size};
     chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
-    vector<Gate*> steps;
-    steps.push_back(new gates::H(0));
-    s.apply(steps);
+    Circuit circ(size);
+    circ.h(0);
+    s.apply(circ);
 
     chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
     cout << chrono::duration_cast<std::chrono::milliseconds>(end - begin).count()<<" ms"<< endl;
@@ -24,6 +23,4 @@ int main() {
     for(int i = 0; i < 10; i++)
         cout << "Measure "<<i<<": "<<s.measure()<< endl;
 
-    for(Gate* g: steps)
-        delete g;
 }
