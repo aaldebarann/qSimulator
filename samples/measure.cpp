@@ -24,7 +24,6 @@ int main() {
         cout << s.measure() << endl;
     }
     */
-
     // single qubit measure
     for(int i = 0; i < 100; i++) {
         System s1(s);
