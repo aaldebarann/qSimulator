@@ -42,6 +42,32 @@ TEST(System, can_measure) {
     s.apply(circ1);
     EXPECT_EQ(5, s.measure());
 }
+TEST(System, can_measure_single_qubit) {
+    System s{3};
+
+    Circuit circ(3);
+    circ.h(0);
+    circ.h(1);
+    circ.p(-M_PI / 4, 1);
+    circ.p(-M_PI / 3, 0);
+    s.apply(circ);
+
+    s.measure(0);
+    s.measure(1);
+    vector<Complex> state = s.measure(2);
+
+    double norm = 0;
+    int count = 0;
+    Complex zero(0);
+    for(int i = 0; i < state.size(); i++) {
+        norm += std::abs((state[i] * state[i]).real());
+        if(state[i] != zero)
+            count++;
+    }
+
+    EXPECT_EQ(1, norm);
+    EXPECT_EQ(1, count);
+}
 TEST(System, circuit_from_presentation1) {
     // слайд 5 презентации
     System s{2};
@@ -260,6 +286,6 @@ TEST(System, circuit_s9) {
     // compare expected with actual
     for(int j = 0; j < expected.size(); j++) {
         EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-15);
-        EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-15)
+        EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-15);
     }
 }

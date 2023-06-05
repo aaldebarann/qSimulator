@@ -21,8 +21,11 @@ public:
     vector<Complex> getState() const {
         return state;
     } // returns current state
+
     void apply(Circuit& circ); // применение схемы к системе
-    size_t measure() const;
+
+    size_t measure() const; // system measure
+    vector<Complex> measure(size_t target); // system measure
 };
 
 
