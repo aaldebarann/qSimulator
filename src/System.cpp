@@ -20,12 +20,13 @@ System::System(vector<Complex>& state): System(state.size()) {
 size_t System::measure() const {
     double r = (double)std::rand() / RAND_MAX;
     double sum = 0;
-    for(int j = 0; j < pow(2, (double)size); j++) {
-        sum += std::abs((state[j]*state[j]).real());
+    for(int j = 0; j < state.size(); j++) {
+        sum += std::abs(state[j].real()*state[j].real());
+        sum += std::abs(state[j].imag()*state[j].imag());
         if(r < sum)
             return j;
     }
-    return size - 1;
+    return state.size() - 1;
 }
 // single qubit measure
 vector<Complex> System::measure(size_t target) {
@@ -33,14 +34,14 @@ vector<Complex> System::measure(size_t target) {
     size_t n = state.size();
     for(int i = 0; i < n; i++) {
         if ((i & (1 << target)) == 0) {
-            amplitude0 += std::abs((state[i] * state[i]).real());
+            amplitude0 += state[i].real()*state[i].real() + state[i].imag()*state[i].imag();
         }
     }
     double r = (double)std::rand() / RAND_MAX;
     if(r < amplitude0) {
         // target qubit is in state |0>
         for(int i = 0; i < n; i++) {
-            if ((i & (1 << target)) == 1) {
+            if ((i & (1 << target)) != 0) {
                 state[i] = 0;
             }
         }
@@ -55,7 +56,8 @@ vector<Complex> System::measure(size_t target) {
     // normalization
     double norm = 0;
     for(int i = 0; i < n; i++) {
-        norm += std::abs((state[i] * state[i]).real());
+        norm += state[i].real() * state[i].real();
+        norm += state[i].imag() * state[i].imag();
     }
     norm = std::sqrt(norm);
     for(int i = 0; i < n; i++) {
