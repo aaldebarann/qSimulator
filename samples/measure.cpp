@@ -79,7 +79,7 @@ int main() {
         // system measure
         int a[8] = {};
         cout << "system measure" << endl;
-        for(int i = 0; i < 100; i++) {
+        for(int i = 0; i < 1000; i++) {
             a[s.measure()]++;
         }
         for(int i: a) {
@@ -89,7 +89,7 @@ int main() {
         // single qubit measure
         cout << "single qubit measure" << endl;
         int b[8] = {};
-        for(int i = 0; i < 100; i++) {
+        for(int i = 0; i < 1000; i++) {
             System s1(s);
             s1.measure(0);
             s1.measure(1);
