@@ -45,8 +45,8 @@ void Circuit::ccnot(size_t control1, size_t control2, size_t target) {
 }
 
 void Circuit::add(size_t bits) {
-    if(3 * bits > size)
-        throw std::out_of_range("classical addition requires 3n bits to add two n-bit numbers");
+    if(3 * bits + 1 > size)
+        throw std::out_of_range("classical addition requires 3n + 1 bits to add two n-bit numbers");
     for(int i = 0; i < bits; i++) {
         int tmp = i * 3;
         // carry gate
