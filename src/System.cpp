@@ -34,7 +34,8 @@ vector<Complex> System::measure(size_t target) {
     size_t n = state.size();
     for(int i = 0; i < n; i++) {
         if ((i & (1 << target)) == 0) {
-            amplitude0 += state[i].real()*state[i].real() + state[i].imag()*state[i].imag();
+            amplitude0 += state[i].real()*state[i].real();
+            amplitude0 += state[i].imag()*state[i].imag();
         }
     }
     double r = (double)std::rand() / RAND_MAX;

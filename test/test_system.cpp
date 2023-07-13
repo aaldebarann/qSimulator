@@ -54,18 +54,20 @@ TEST(System, can_measure_single_qubit) {
 
     s.measure(0);
     s.measure(1);
-    vector<Complex> state = s.measure(2);
+    s.measure(2);
+    vector<Complex> state = s.getState();
 
     double norm = 0;
     int count = 0;
     Complex zero(0);
     for(int i = 0; i < state.size(); i++) {
-        norm += std::abs((state[i] * state[i]).real());
+        norm += state[i].real() * state[i].real();
+        norm += state[i].imag() * state[i].imag();
         if(state[i] != zero)
             count++;
     }
-
-    EXPECT_EQ(1, norm);
+    norm = std::sqrt(norm);
+    EXPECT_DOUBLE_EQ(1.0, norm);
     EXPECT_EQ(1, count);
 }
 TEST(System, circuit_from_presentation1) {
