@@ -14,7 +14,7 @@ public:
 
     explicit Circuit(size_t size);
     ~Circuit() = default;
-
+    // base quantum gates
     void i(size_t target);
     void x(size_t target);
     void y(size_t target);
@@ -23,6 +23,8 @@ public:
     void p(Complex phaseShift, size_t target);
     void cnot(size_t control, size_t target);
     void ccnot(size_t control1, size_t control2, size_t target);
+    // classical addition
+    void add(size_t bits);
 
     vector<Matrix> getMatrices() {
         return v;
