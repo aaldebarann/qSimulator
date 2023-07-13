@@ -79,6 +79,67 @@ Matrix CNOT(size_t control, size_t target, size_t systemSize) {
     res1 += res2;
     return res1;
 }
+Matrix CCNOT(size_t control1, size_t control2, size_t target, size_t systemSize) {
+    if(control1 >= systemSize || control2 >= systemSize)
+        throw std::out_of_range("control qubit number is out of range");
+    if(target >= systemSize)
+        throw std::out_of_range("target qubit number is out of range");
+    if(control1 == target || control2 == target || control1 == control2)
+        throw std::invalid_argument("arguments must be different");
+
+
+    Matrix m1{2, 0}, m0{2, 0};
+    m1(1, 1) = m0(0, 0) = 1;
+    Matrix id = I();
+    Matrix x = X();
+
+    Matrix res1{1, 1};
+    for(int k = (int)systemSize - 1; k >= 0; k--) {
+        if(k == control1)
+            res1 = res1.kron(m1);
+        else if(k == control2)
+            res1 = res1.kron(m1);
+        else if(k == target)
+            res1 = res1.kron(x);
+        else
+            res1 = res1.kron(id);
+    }
+    Matrix res2{1, 1};
+    for(int k = (int)systemSize - 1; k >= 0; k--) {
+        if(k == control1)
+            res2 = res2.kron(m0);
+        else if(k == control2)
+            res2 = res2.kron(m1);
+        else if(k == target)
+            res2 = res2.kron(id);
+        else
+            res2 = res2.kron(id);
+    }
+    Matrix res3{1, 1};
+    for(int k = (int)systemSize - 1; k >= 0; k--) {
+        if(k == control1)
+            res3 = res3.kron(m1);
+        else if(k == control2)
+            res3 = res3.kron(m0);
+        else if(k == target)
+            res3 = res3.kron(id);
+        else
+            res3 = res3.kron(id);
+    }
+    Matrix res4{1, 1};
+    for(int k = (int)systemSize - 1; k >= 0; k--) {
+        if(k == control1)
+            res4 = res4.kron(m0);
+        else if(k == control2)
+            res4 = res4.kron(m0);
+        else if(k == target)
+            res4 = res4.kron(id);
+        else
+            res4 = res4.kron(id);
+    }
+    res1 += res2 += res3 += res4;
+    return res1;
+}
 
 // convert matrix of single-qubit gate to matrix for n-dimensional system
 Matrix forSystem(Matrix singleQubitMatrix, size_t target, size_t systemSize) {

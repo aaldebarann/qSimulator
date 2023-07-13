@@ -39,3 +39,7 @@ void Circuit::p(Complex phaseShift, size_t target) {
 void Circuit::cnot(size_t control, size_t target) {
     v.push_back(CNOT(control, target, size));
 }
+
+void Circuit::ccnot(size_t control1, size_t control2, size_t target) {
+    v.push_back(CCNOT(control1, control2, target, size));
+}

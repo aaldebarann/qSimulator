@@ -114,3 +114,19 @@ TEST(Gates, correct_cnot) {
 
     EXPECT_EQ(expected, actual);
 }
+TEST(Gates, correct_ccnot) {
+    Matrix expected{8, 0};
+
+    expected(0, 0) = 1;
+    expected(1, 1) = 1;
+    expected(2, 2) = 1;
+    expected(3, 3) = 1;
+    expected(4, 4) = 1;
+    expected(5, 5) = 1;
+    expected(6, 7) = 1;
+    expected(7, 6) = 1;
+
+    Matrix actual = CCNOT(2, 1, 0, 3);
+
+    EXPECT_EQ(expected, actual);
+}

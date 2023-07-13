@@ -15,7 +15,8 @@ Matrix Y(); // Pauli-Y gate
 Matrix Z(); // Pauli-Z gate
 Matrix H(); // Hadamard gate
 Matrix P(Complex phi); // Phase shift gate
-Matrix CNOT(size_t control, size_t target, size_t systemSize); // CNOT gate
+Matrix CNOT(size_t control, size_t target, size_t systemSize); // cnot gate
+Matrix CCNOT(size_t control1, size_t control2, size_t target, size_t systemSize); // ccnot gate (toffoli gate)
 
 // matrix for n-dimensional system
 Matrix forSystem(Matrix singleQubitMatrix, size_t targetQubit, size_t systemSize);

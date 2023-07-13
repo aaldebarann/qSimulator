@@ -22,6 +22,7 @@ public:
     void h(size_t target);
     void p(Complex phaseShift, size_t target);
     void cnot(size_t control, size_t target);
+    void ccnot(size_t control1, size_t control2, size_t target);
 
     vector<Matrix> getMatrices() {
         return v;
