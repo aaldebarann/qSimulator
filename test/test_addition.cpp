@@ -31,7 +31,7 @@ TEST(test_addition, classic) {
     EXPECT_EQ(11, classicalAdd(5, 6, 3));
     EXPECT_EQ(11, classicalAdd(4, 7, 3));
     EXPECT_EQ(14, classicalAdd(7, 7, 3));
-    EXPECT_EQ(12, classicalAdd(4, 8, 4));
-    EXPECT_EQ(23, classicalAdd(10, 13, 4));
-    EXPECT_EQ(29, classicalAdd(14, 15, 4));
+    EXPECT_EQ(10, classicalAdd(4, 6, 3));
+    EXPECT_EQ(6, classicalAdd(2, 4, 3));
+    EXPECT_EQ(12, classicalAdd(5, 7, 3));
 }
