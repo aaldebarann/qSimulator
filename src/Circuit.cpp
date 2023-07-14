@@ -6,35 +6,32 @@
 #include "Gates.h"
 
 Circuit::Circuit(size_t size): size(size) {
-    matrix = new Matrix((size_t)pow(2, size), 0);
-    for(int i = 0; i < matrix->size(); i++) {
-        (*matrix)(i, i) = 1;
-    }
+
 }
 
 void Circuit::i(size_t target) {
-    (*matrix) = forSystem(I(), target, size) * (*matrix);
+    v.push_back(forSystem(I(), target, size));
 }
 void Circuit::x(size_t target) {
-    (*matrix) = forSystem(X(), target, size) * (*matrix);
+    v.push_back(forSystem(X(), target, size));
 }
 void Circuit::y(size_t target) {
-    (*matrix) = forSystem(Y(), target, size) * (*matrix);
+    v.push_back(forSystem(Y(), target, size));
 }
 void Circuit::z(size_t target) {
-    (*matrix) = forSystem(Z(), target, size) * (*matrix);
+    v.push_back(forSystem(Z(), target, size));
 }
 void Circuit::h(size_t target) {
-    (*matrix) = forSystem(H(), target, size) * (*matrix);
+    v.push_back(forSystem(H(), target, size));
 }
 void Circuit::p(Complex phaseShift, size_t target) {
-    (*matrix) = forSystem(P(phaseShift), target, size) * (*matrix);
+    v.push_back(forSystem(P(phaseShift), target, size));
 }
 void Circuit::cnot(size_t control, size_t target) {
-    (*matrix) = CNOT(control, target, size) * (*matrix);
+    v.push_back(CNOT(control, target, size));
 }
 void Circuit::ccnot(size_t control1, size_t control2, size_t target) {
-    (*matrix) = CCNOT(control1, control2, target, size) * (*matrix);
+    v.push_back(CCNOT(control1, control2, target, size));
 }
 
 void Circuit::add(size_t bits) {

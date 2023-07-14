@@ -8,7 +8,7 @@
 #include "Matrix.h"
 
 class Circuit {
-    Matrix* matrix;
+    vector<Matrix> v;
 public:
     const size_t size;
 
@@ -26,8 +26,8 @@ public:
     // classical addition
     void add(size_t bits);
 
-    Matrix getMatrix() {
-        return *matrix;
+    vector<Matrix> getMatrices() {
+        return v;
     };
 };
 
