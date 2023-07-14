@@ -6,42 +6,35 @@
 #include "Gates.h"
 
 Circuit::Circuit(size_t size): size(size) {
-
+    matrix = new Matrix((size_t)pow(2, size), 0);
+    for(int i = 0; i < matrix->size(); i++) {
+        (*matrix)(i, i) = 1;
+    }
 }
 
 void Circuit::i(size_t target) {
-    Matrix* id = new Matrix(I());
-    Matrix* m = new Matrix(forSystem(*id, target, size));
-    v.push_back(*m);
-    delete m;
-    delete id;
+    (*matrix) = forSystem(I(), target, size) * (*matrix);
 }
 void Circuit::x(size_t target) {
-    v.push_back(forSystem(X(), target, size));
+    (*matrix) = forSystem(X(), target, size) * (*matrix);
 }
-
 void Circuit::y(size_t target) {
-    v.push_back(forSystem(Y(), target, size));
+    (*matrix) = forSystem(Y(), target, size) * (*matrix);
 }
-
 void Circuit::z(size_t target) {
-    v.push_back(forSystem(Z(), target, size));
+    (*matrix) = forSystem(Z(), target, size) * (*matrix);
 }
-
 void Circuit::h(size_t target) {
-    v.push_back(forSystem(H(), target, size));
+    (*matrix) = forSystem(H(), target, size) * (*matrix);
 }
-
 void Circuit::p(Complex phaseShift, size_t target) {
-    v.push_back(forSystem(P(phaseShift), target, size));
+    (*matrix) = forSystem(P(phaseShift), target, size) * (*matrix);
 }
-
 void Circuit::cnot(size_t control, size_t target) {
-    v.push_back(CNOT(control, target, size));
+    (*matrix) = CNOT(control, target, size) * (*matrix);
 }
-
 void Circuit::ccnot(size_t control1, size_t control2, size_t target) {
-    v.push_back(CCNOT(control1, control2, target, size));
+    (*matrix) = CCNOT(control1, control2, target, size) * (*matrix);
 }
 
 void Circuit::add(size_t bits) {
@@ -54,10 +47,10 @@ void Circuit::add(size_t bits) {
         cnot(tmp+1, tmp+2);
         ccnot(tmp, tmp+2, tmp+3);
     }
-    cnot(3*bits - 3, 3*bits - 2);
+    cnot(3*bits - 2, 3*bits - 1);
     // sum gate
-    cnot(3*bits - 3, 3*bits - 2);
-    cnot(3*bits - 4, 3*bits - 2);
+    cnot(3*bits - 2, 3*bits - 1);
+    cnot(3*bits - 3, 3*bits - 1);
 
     for(int i = 1; i < bits; i++) {
         int tmp = ((int)bits - i - 1) * 3;
