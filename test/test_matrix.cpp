@@ -104,6 +104,44 @@ TEST(Matrix, cant_multiply_with_wrong_size) {
     vector<Complex> v{4};
     ASSERT_ANY_THROW(m*v);
 }
+TEST(Matrix, matrix_multiplication) {
+    Matrix m1{2};
+    m1(0, 0) = 1;
+    m1(0, 1) = 2;
+    m1(1, 0) = 3;
+    m1(1, 1) = 4;
+    /*
+     * m1 =
+     * 1 2
+     * 3 4
+     */
+    Matrix m2{2, 1};
+    /*
+     * m2 =
+     * 1 1
+     * 1 1
+     */
+    Matrix expected{2};
+    expected(0, 0) = 3;
+    expected(0, 1) = 3;
+    expected(1, 0) = 7;
+    expected(1, 1) = 7;
+    /*
+     * m1 * m2 =
+     * 3 3
+     * 7 7
+     */
+
+    Matrix actual = m1 * m2;
+    std:: cout << actual.size() << std::endl;
+    for(int i = 0; i < 2; i++) {
+        for(int j = 0; j < 2; j++) {
+            std::cout << actual(i, j) << " ";
+        }
+        std::cout << std::endl;
+    }
+    EXPECT_EQ(expected, m1 * m2);
+}
 TEST(Matrix, kronecker_product) {
 
     Matrix m1(2);

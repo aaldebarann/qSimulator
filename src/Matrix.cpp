@@ -84,6 +84,21 @@ Matrix::Matrix(Matrix &&m) {
     sz = m.size();
 }
 
+Matrix Matrix::operator*(Matrix &m) {
+    if(size() != m.size())
+        throw std::invalid_argument("multiplication of matrices with different sizes");
+    Matrix res(size());
+    for(int i = 0; i < size(); i++) {
+        for(int j = 0; j < size(); j++) {
+            res(i, j) = 0;
+            for(int k = 0; k < size(); k++) {
+                res(i, j) += (*this)(i, k) * m(k, j);
+            }
+        }
+    }
+    return res;
+}
+
 
 
 

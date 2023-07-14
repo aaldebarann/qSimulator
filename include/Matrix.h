@@ -30,6 +30,7 @@ public:
     bool operator==(const Matrix&) const;
     Matrix& operator+=(Matrix& m);
     vector<Complex> operator*(const vector<Complex>& v);
+    Matrix operator*(Matrix& m);
 
     Matrix kron(Matrix& x); // computes the Kronecker product
 };
