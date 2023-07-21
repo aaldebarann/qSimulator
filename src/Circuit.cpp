@@ -11,28 +11,28 @@ Circuit::Circuit(size_t size): size(size) {
 
 void Circuit::i(size_t target) {
     v.push_back(forSystem(I(), target, size));
-}
+} // Identity gate
 void Circuit::x(size_t target) {
     v.push_back(forSystem(X(), target, size));
-}
+} // NOT gate (Pauli-X)
 void Circuit::y(size_t target) {
     v.push_back(forSystem(Y(), target, size));
-}
+} // Pauli-Y
 void Circuit::z(size_t target) {
     v.push_back(forSystem(Z(), target, size));
-}
+} // Pauli-Z
 void Circuit::h(size_t target) {
     v.push_back(forSystem(H(), target, size));
-}
+} // Hadamar gate
 void Circuit::p(Complex phaseShift, size_t target) {
     v.push_back(forSystem(P(phaseShift), target, size));
-}
+} // Phase shift
 void Circuit::cnot(size_t control, size_t target) {
     v.push_back(CNOT(control, target, size));
-}
+} // Controled not
 void Circuit::ccnot(size_t control1, size_t control2, size_t target) {
     v.push_back(CCNOT(control1, control2, target, size));
-}
+} // Toffoli gate
 
 void Circuit::add(size_t bits) {
     if(3 * bits + 1 > size)

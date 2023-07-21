@@ -45,7 +45,7 @@ Matrix P(Complex phi) {
     matrix(0, 1) = matrix(1, 0) = 0;
     matrix(1, 1) = std::exp(phi * i);
     return matrix;
-}
+} // Phase shift
 Matrix CNOT(size_t control, size_t target, size_t systemSize) {
     if(control >= systemSize)
         throw std::out_of_range("control qubit number is out of range");
@@ -78,7 +78,7 @@ Matrix CNOT(size_t control, size_t target, size_t systemSize) {
     }
     res1 += res2;
     return res1;
-}
+} // Controlled not
 Matrix CCNOT(size_t control1, size_t control2, size_t target, size_t systemSize) {
     if(control1 >= systemSize || control2 >= systemSize)
         throw std::out_of_range("control qubit number is out of range");
