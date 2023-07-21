@@ -21,10 +21,14 @@ public:
     void z(size_t target); // Pauli-Z
     void h(size_t target); // Hadamar gate
     void p(Complex phaseShift, size_t target); // Phase shift
-    void cnot(size_t control, size_t target); // Controled not
-    void ccnot(size_t control1, size_t control2, size_t target); // Toffoli gate
+    void cnot(size_t control, size_t target); // Controlled not gate
+    void ccnot(size_t control1, size_t control2, size_t target); // ccnot gate (toffoli gate)
+    void cp(Complex phi, size_t target1, size_t target2); // Controlled phase rotation
     // classical addition
     void add(size_t bits);
+    // QFT
+    void qtf();
+    void qtf_inverse();
 
     vector<Matrix> getMatrices() {
         return v;

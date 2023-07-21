@@ -139,7 +139,22 @@ Matrix CCNOT(size_t control1, size_t control2, size_t target, size_t systemSize)
     }
     res1 += res2 += res3 += res4;
     return res1;
-}
+} // Toffoli gate
+Matrix CPHASE(Complex phi, size_t target1, size_t target2, size_t systemSize) {
+    size_t matrixSize = pow(2, systemSize);
+    Matrix result(matrixSize, 0);
+    int mask = (1 << target1) + (1 << target2);
+
+    Complex i(0, 1);
+    for(int j = 0; j < matrixSize; j++) {
+        if((j & mask) == mask) {
+            result(j, j) = std::exp(phi * i);
+        } else {
+            result(j, j) = 1;
+        }
+    }
+    return result;
+} // Controlled phase rotation
 
 // convert matrix of single-qubit gate to matrix for n-dimensional system
 Matrix forSystem(Matrix singleQubitMatrix, size_t target, size_t systemSize) {

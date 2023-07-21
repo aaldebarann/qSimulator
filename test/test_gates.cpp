@@ -130,3 +130,28 @@ TEST(Gates, correct_ccnot) {
 
     EXPECT_EQ(expected, actual);
 }
+TEST(Gates, correct_cphase) {
+    Matrix expected{8, 0};
+
+    Complex phi = 0.5 * M_PI;
+    Complex i (0, 1);
+    // Complex t = 2 * M_PI * i *  0.125; // k = 3
+
+    expected(0, 0) = 1;
+    expected(1, 1) = 1;
+    expected(2, 2) = 1;
+    expected(3, 3) = std::exp(phi * i);
+    expected(4, 4) = 1;
+    expected(5, 5) = 1;
+    expected(6, 6) = 1;
+    expected(7, 7) = std::exp(phi * i);
+
+    Matrix actual = CPHASE(phi, 0, 1, 3);
+
+    for(int i = 0; i < 8; i++) {
+        for(int j = 0; j < 8; j++) {
+            EXPECT_DOUBLE_EQ(expected(i, j).real(), actual(i, j).real());
+            EXPECT_DOUBLE_EQ(expected(i, j).imag(), actual(i, j).imag());
+        }
+    }
+}

@@ -33,6 +33,9 @@ void Circuit::cnot(size_t control, size_t target) {
 void Circuit::ccnot(size_t control1, size_t control2, size_t target) {
     v.push_back(CCNOT(control1, control2, target, size));
 } // Toffoli gate
+void Circuit::cp(Complex phi, size_t target1, size_t target2) {
+    v.push_back(CPHASE(phi, target1, target2, size));
+} // Controlled phase rotation
 
 void Circuit::add(size_t bits) {
     if(3 * bits + 1 > size)
@@ -58,5 +61,24 @@ void Circuit::add(size_t bits) {
         // sum gate
         cnot(tmp + 1, tmp + 2);
         cnot(tmp, tmp + 2);
+    }
+}
+
+void Circuit::qtf() {
+    for(int i = 0; i < size; i++) {
+        h(i);
+        for(int k = 2; k + i <= size; k++) {
+            Complex tmp = (1.0 / (1 << k));
+            cp(2 * M_PI * tmp, i, k + i - 1);
+        }
+    }
+}
+void Circuit::qtf_inverse() {
+    for(int i = (int)size - 1; i >= 0; i--) {
+        h(i);
+        for(int k = (int)size - i; k >= 2; k--) {
+            Complex tmp = (1.0 / (1 << k));
+            cp(-2 * M_PI * tmp, i, k + i - 1);
+        }
     }
 }
