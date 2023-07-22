@@ -4,6 +4,7 @@
 
 #include "Circuit.h"
 #include "Gates.h"
+#include <cmath>
 
 Circuit::Circuit(size_t size): size(size) {
 
@@ -76,6 +77,27 @@ void Circuit::qtf() {
 void Circuit::iqtf() {
     for(int i = (int)size - 1; i >= 0; i--) {
         for(int k = (int)size - i; k >= 2; k--) {
+            Complex tmp = (1.0 / (1 << k));
+            cp(-2 * M_PI * tmp, i, k + i - 1);
+        }
+        h(i);
+    }
+}
+
+void Circuit::qtf_approximate() {
+    int threshold = (int)log2(size) + 1;
+    for(int i = 0; i < size; i++) {
+        h(i);
+        for(int k = 2; k + i <= size && k <= threshold; k++) {
+            Complex tmp = (1.0 / (1 << k));
+            cp(2 * M_PI * tmp, i, k + i - 1);
+        }
+    }
+}
+void Circuit::iqtf_approximate() {
+    int threshold = (int)log2(size) + 1;
+    for(int i = (int)size - 1; i >= 0; i--) {
+        for(int k = std::min((int)size - i, threshold); k >= 2; k--) {
             Complex tmp = (1.0 / (1 << k));
             cp(-2 * M_PI * tmp, i, k + i - 1);
         }

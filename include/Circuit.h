@@ -29,6 +29,8 @@ public:
     // QFT
     void qtf();
     void iqtf();
+    void qtf_approximate();
+    void iqtf_approximate();
 
     vector<Matrix> getMatrices() {
         return v;
