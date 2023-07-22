@@ -73,12 +73,12 @@ void Circuit::qtf() {
         }
     }
 }
-void Circuit::qtf_inverse() {
+void Circuit::iqtf() {
     for(int i = (int)size - 1; i >= 0; i--) {
-        h(i);
         for(int k = (int)size - i; k >= 2; k--) {
             Complex tmp = (1.0 / (1 << k));
             cp(-2 * M_PI * tmp, i, k + i - 1);
         }
+        h(i);
     }
 }

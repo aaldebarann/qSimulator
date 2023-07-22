@@ -28,7 +28,7 @@ public:
     void add(size_t bits);
     // QFT
     void qtf();
-    void qtf_inverse();
+    void iqtf();
 
     vector<Matrix> getMatrices() {
         return v;
