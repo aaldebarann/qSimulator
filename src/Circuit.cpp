@@ -38,9 +38,9 @@ void Circuit::cp(Complex phi, size_t target1, size_t target2) {
     v.push_back(CPHASE(phi, target1, target2, size));
 } // Controlled phase rotation
 
-void Circuit::add(size_t bits) {
+void Circuit::add_classic(size_t bits) {
     if(3 * bits + 1 > size)
-        throw std::out_of_range("classical addition requires 3n + 1 bits to add two n-bit numbers");
+        throw std::out_of_range("classical addition requires 3n + 1 bits to add_classic two n-bit numbers");
     for(int i = 0; i < bits; i++) {
         int tmp = i * 3;
         // carry gate
@@ -102,5 +102,31 @@ void Circuit::iqtf_approximate() {
             cp(-2 * M_PI * tmp, i, k + i - 1);
         }
         h(i);
+    }
+}
+void Circuit::add_quantum(size_t bits) {
+    if(2 * bits > size)
+        throw std::out_of_range("quantum addition requires 2n bits to add_classic two n-bit numbers");
+    for(int i = 0; i < bits; i++) {
+        int tmp = i * 3;
+        // carry gate
+        ccnot(tmp+1, tmp+2, tmp+3);
+        cnot(tmp+1, tmp+2);
+        ccnot(tmp, tmp+2, tmp+3);
+    }
+    cnot(3*bits - 2, 3*bits - 1);
+    // sum gate
+    cnot(3*bits - 2, 3*bits - 1);
+    cnot(3*bits - 3, 3*bits - 1);
+
+    for(int i = 1; i < bits; i++) {
+        int tmp = ((int)bits - i - 1) * 3;
+        // reverse carry gate
+        ccnot(tmp, tmp + 2, tmp + 3);
+        cnot(tmp + 1, tmp + 2);
+        ccnot(tmp + 1, tmp + 2, tmp + 3);
+        // sum gate
+        cnot(tmp + 1, tmp + 2);
+        cnot(tmp, tmp + 2);
     }
 }

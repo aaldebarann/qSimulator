@@ -25,7 +25,7 @@ unsigned classicalAdd(unsigned a, unsigned b, size_t bits) {
     s.apply(init);
     // применяем схему классического сложения
     Circuit circ(3*bits + 1);
-    circ.add(bits);
+    circ.add_classic(bits);
     s.apply(circ);
     // измеряем состояние системы
     unsigned res = s.measure();

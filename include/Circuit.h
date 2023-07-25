@@ -25,7 +25,8 @@ public:
     void ccnot(size_t control1, size_t control2, size_t target); // ccnot gate (toffoli gate)
     void cp(Complex phi, size_t target1, size_t target2); // Controlled phase rotation
     // classical addition
-    void add(size_t bits);
+    void add_classic(size_t bits);
+    void add_quantum(size_t bits);
     // QFT
     void qtf();
     void iqtf();
