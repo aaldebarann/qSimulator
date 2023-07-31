@@ -7,7 +7,7 @@
 
 #include "Matrix.h"
 #include "Circuit.h"
-
+#include <map>
 
 class System {
 
@@ -24,8 +24,10 @@ public:
 
     void apply(Circuit& circ); // применение схемы к системе
 
-    size_t measure() const; // system measure
-    vector<Complex> measure(size_t target); // system measure
+    // system measure
+    size_t measure() const; // returns result of system measure (doesn't change system state)
+    std::map<int, int> measure(size_t t) const;
+    vector<Complex> measure(size_t target); // returns state after single-qubit measure (changes system state)
 };
 
 

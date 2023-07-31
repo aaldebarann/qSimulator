@@ -72,3 +72,16 @@ void System::apply(Circuit &circ) {
         state = m * state;
     }
 }
+
+std::map<int, int> System::measure(size_t t) const {
+    std::map<int, int> m;
+    for(int i = 0; i < t; i++) {
+        int res = measure();
+        auto x = m.find(res);
+        if(x != m.end())
+            x->second++;
+        else
+            m.insert({res, 1});
+    }
+    return m;
+}

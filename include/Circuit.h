@@ -27,11 +27,13 @@ public:
     // classical addition
     void add_classic(size_t bits);
     void add_quantum(size_t bits);
+    void add_quantum_approximate(size_t bits);
     // QFT
-    void qtf();
-    void iqtf();
-    void qtf_approximate();
-    void iqtf_approximate();
+    // from first qubit to last - 1 qubit
+    void qft(size_t first, size_t last);
+    void iqft(size_t first, size_t last);
+    void qft_approximate(size_t first, size_t last);
+    void iqft_approximate(size_t first, size_t last);
 
     vector<Matrix> getMatrices() {
         return v;

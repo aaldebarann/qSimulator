@@ -20,7 +20,7 @@ TEST(test_addition, classic_3bit_circuit) {
 
     s.apply(circ);
     size_t res = s.measure();
-    std::cout << res << std::endl;
+    EXPECT_EQ(res, 644);
 }
 
 TEST(test_addition, classic) {
@@ -34,4 +34,33 @@ TEST(test_addition, classic) {
     EXPECT_EQ(10, classicalAdd(4, 6, 3));
     EXPECT_EQ(6, classicalAdd(2, 4, 3));
     EXPECT_EQ(12, classicalAdd(5, 7, 3));
+}
+
+TEST(test_addition, qqq1) {
+    std::map<int, int> m;
+    for (int i = 0; i < 1000; i++) {
+        int res = quantumAdd(1, 1, 2);
+        auto x = m.find(res);
+        if(x != m.end())
+            x->second++;
+        else
+            m.insert({res, 1});
+    }
+    for(auto p: m) {
+        std::cout << p.first << ":  "<<p.second<<std::endl;
+    }
+}
+TEST(test_addition, qqq2) {
+    std::map<int, int> m;
+    for (int i = 0; i < 100; i++) {
+        int res = quantumAdd(4, 5, 3);
+        auto x = m.find(res);
+        if (x != m.end())
+            x->second++;
+        else
+            m.insert({res, 1});
+    }
+    for (auto p: m) {
+        std::cout <<"\""<< p.first <<"\"" << ":  " << p.second << std::endl;
+    }
 }
