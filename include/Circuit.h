@@ -10,7 +10,7 @@
 using std::string;
 
 class Circuit {
-    vector<Matrix> v; // вектор из матриц гейтов
+    vector<Matrix*> v; // вектор из матриц гейтов
     vector<string> gates; // вектор из строк с поисаниями гейтов
 public:
     const size_t size;
@@ -36,7 +36,7 @@ public:
     void qft(size_t first, size_t last, bool approximate = false);
     void iqft(size_t first, size_t last, bool approximate = false);
 
-    vector<Matrix> getMatrices() {
+    vector<Matrix*> getMatrices() {
         return v;
     };
 };

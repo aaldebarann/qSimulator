@@ -32,7 +32,7 @@ public:
     vector<Complex> operator*(const vector<Complex>& v);
     Matrix operator*(Matrix& m);
 
-    Matrix kron(Matrix& x); // computes the Kronecker product
+    Matrix* kron(Matrix& x); // computes the Kronecker product
 };
 
 

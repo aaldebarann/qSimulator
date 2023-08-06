@@ -168,23 +168,23 @@ TEST(Matrix, kronecker_product) {
      * -3   6  -4  8
      *  9 -12  12 -16
      */
-    Matrix result = m1.kron(m2);
+    Matrix* result = m1.kron(m2);
 
-    EXPECT_EQ((Complex)-1, result(0, 0));
-    EXPECT_EQ((Complex)2, result(0, 1));
-    EXPECT_EQ((Complex)-2, result(0, 2));
-    EXPECT_EQ((Complex)4, result(0, 3));
-    EXPECT_EQ((Complex)3, result(1, 0));
-    EXPECT_EQ((Complex)-4, result(1, 1));
-    EXPECT_EQ((Complex)6, result(1, 2));
-    EXPECT_EQ((Complex)-8, result(1, 3));
-    EXPECT_EQ((Complex)-3, result(2, 0));
-    EXPECT_EQ((Complex)6, result(2, 1));
-    EXPECT_EQ((Complex)-4, result(2, 2));
-    EXPECT_EQ((Complex)8, result(2, 3));
-    EXPECT_EQ((Complex)9, result(3, 0));
-    EXPECT_EQ((Complex)-12, result(3, 1));
-    EXPECT_EQ((Complex)12, result(3, 2));
-    EXPECT_EQ((Complex)-16, result(3, 3));
+    EXPECT_EQ((Complex)-1, (*result)(0, 0));
+    EXPECT_EQ((Complex)2, (*result)(0, 1));
+    EXPECT_EQ((Complex)-2, (*result)(0, 2));
+    EXPECT_EQ((Complex)4, (*result)(0, 3));
+    EXPECT_EQ((Complex)3, (*result)(1, 0));
+    EXPECT_EQ((Complex)-4, (*result)(1, 1));
+    EXPECT_EQ((Complex)6, (*result)(1, 2));
+    EXPECT_EQ((Complex)-8, (*result)(1, 3));
+    EXPECT_EQ((Complex)-3, (*result)(2, 0));
+    EXPECT_EQ((Complex)6, (*result)(2, 1));
+    EXPECT_EQ((Complex)-4, (*result)(2, 2));
+    EXPECT_EQ((Complex)8, (*result)(2, 3));
+    EXPECT_EQ((Complex)9, (*result)(3, 0));
+    EXPECT_EQ((Complex)-12, (*result)(3, 1));
+    EXPECT_EQ((Complex)12, (*result)(3, 2));
+    EXPECT_EQ((Complex)-16, (*result)(3, 3));
 
 }

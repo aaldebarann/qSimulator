@@ -8,6 +8,7 @@
 #include "System.h"
 #include "Circuit.h"
 #include <chrono>
+#include <iostream>
 
 unsigned classicalAdd(unsigned a, unsigned b, size_t bits) {
     if(bits > 4)
@@ -24,6 +25,7 @@ unsigned classicalAdd(unsigned a, unsigned b, size_t bits) {
         b = b >> 1;
     }
     s.apply(*init);
+    delete init;
     // применяем схему классического сложения
     Circuit* circ = new Circuit(3*bits + 1);
     circ->add_classic(bits);
@@ -31,7 +33,7 @@ unsigned classicalAdd(unsigned a, unsigned b, size_t bits) {
     s.apply(*circ);
     std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
     std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count()<<" ms"<< std::endl;
-
+    delete circ;
     // измеряем состояние системы
     unsigned res = s.measure();
     // интерпретируем результат как сумму
@@ -111,7 +113,7 @@ unsigned quantumAdd(unsigned a, unsigned b, size_t bits, bool approximate = fals
     end = std::chrono::steady_clock::now();
     std::cout << "8" << std::endl;
     std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count()<<" milliseconds"<< std::endl;
-    s.apply(*circ);
+    s.apply(*circ2);
     begin = end;
     end = std::chrono::steady_clock::now();
     std::cout << "9" << std::endl;

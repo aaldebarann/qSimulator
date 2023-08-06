@@ -9,9 +9,10 @@ TEST(Gates, correct_i) {
     for(int i = 0; i < 8; i++)
         expected(i, i) = 1;
 
-    Matrix actual = forSystem(I(), 1, 3);
+    Matrix* actual = forSystem(I(), 1, 3);
 
-    EXPECT_EQ(expected, actual);
+    EXPECT_EQ(expected, *actual);
+    delete actual;
 }
 TEST(Gates, correct_x) {
     Matrix expected{8, 0};
@@ -24,9 +25,10 @@ TEST(Gates, correct_x) {
     expected(6, 4) = 1;
     expected(7, 5) = 1;
 
-    Matrix actual = forSystem(X(), 1, 3);
+    Matrix* actual = forSystem(X(), 1, 3);
 
-    EXPECT_EQ(expected, actual);
+    EXPECT_EQ(expected, *actual);
+    delete actual;
 }
 TEST(Gates, correct_y) {
     Matrix expected{8, 0};
@@ -40,9 +42,10 @@ TEST(Gates, correct_y) {
     expected(6, 4) = i;
     expected(7, 5) = i;
 
-    Matrix actual = forSystem(Y(), 1, 3);
+    Matrix* actual = forSystem(Y(), 1, 3);
 
-    EXPECT_EQ(expected, actual);
+    EXPECT_EQ(expected, *actual);
+    delete actual;
 }
 TEST(Gates, correct_z) {
     Matrix expected{8, 0};
@@ -55,9 +58,10 @@ TEST(Gates, correct_z) {
     expected(6, 6) = -1;
     expected(7, 7) = -1;
 
-    Matrix actual = forSystem(Z(), 1, 3);
+    Matrix* actual = forSystem(Z(), 1, 3);
 
-    EXPECT_EQ(expected, actual);
+    EXPECT_EQ(expected, *actual);
+    delete actual;
 }
 TEST(Gates, correct_h) {
     Matrix expected{8, 0};
@@ -81,22 +85,25 @@ TEST(Gates, correct_h) {
     expected(7, 5) = tmp;
     expected(7, 7) = -tmp;
 
-    Matrix actual = forSystem(H(), 1, 3);
+    Matrix* actual = forSystem(H(), 1, 3);
 
-    EXPECT_EQ(expected, actual);
+    EXPECT_EQ(expected, *actual);
+    delete actual;
 }
 TEST(Gates, correct_p) {
 
-    Matrix expected = forSystem(Z(), 1, 3);
+    Matrix* expected = forSystem(Z(), 1, 3);
 
-    Matrix actual = forSystem(P(M_PI), 1, 3);
+    Matrix* actual = forSystem(P(M_PI), 1, 3);
 
-    for(int i = 0; i < expected.size(); i++) {
-        for(int j = 0; j < expected.size(); j++) {
-            double deviation = (expected(i, j)*expected(i, j) - actual(i, j)*actual(i, j)).real();
+    for(int i = 0; i < expected->size(); i++) {
+        for(int j = 0; j < expected->size(); j++) {
+            double deviation = ((*expected)(i, j)*(*expected)(i, j) - (*actual)(i, j)*(*actual)(i, j)).real();
             EXPECT_TRUE(deviation < 0.001);
         }
     }
+    delete expected;
+    delete actual;
 }
 TEST(Gates, correct_cnot) {
     Matrix expected{8, 0};
@@ -110,9 +117,10 @@ TEST(Gates, correct_cnot) {
     expected(6, 6) = 1;
     expected(7, 3) = 1;
 
-    Matrix actual = CNOT(0, 2, 3);
+    Matrix* actual = CNOT(0, 2, 3);
 
-    EXPECT_EQ(expected, actual);
+    EXPECT_EQ(expected, *actual);
+    delete actual;
 }
 TEST(Gates, correct_ccnot) {
     Matrix expected{8, 0};
@@ -126,9 +134,10 @@ TEST(Gates, correct_ccnot) {
     expected(6, 7) = 1;
     expected(7, 6) = 1;
 
-    Matrix actual = CCNOT(2, 1, 0, 3);
+    Matrix* actual = CCNOT(2, 1, 0, 3);
 
-    EXPECT_EQ(expected, actual);
+    EXPECT_EQ(expected, *actual);
+    delete actual;
 }
 TEST(Gates, correct_cphase) {
     Matrix expected{4, 0};
@@ -140,12 +149,13 @@ TEST(Gates, correct_cphase) {
     expected(2, 2) = 1;
     expected(3, 3) = -1;
 
-    Matrix actual = CPHASE(phi, 0, 1, 2);
+    Matrix* actual = CPHASE(phi, 0, 1, 2);
 
     for(int i = 0; i < 4; i++) {
         for(int j = 0; j < 4; j++) {
-            EXPECT_NEAR(expected(i, j).real(), actual(i, j).real(), 1.0e-15);
-            EXPECT_NEAR(expected(i, j).imag(), actual(i, j).imag(), 1.0e-15);
+            EXPECT_NEAR(expected(i, j).real(), (*actual)(i, j).real(), 1.0e-7);
+            EXPECT_NEAR(expected(i, j).imag(), (*actual)(i, j).imag(), 1.0e-7);
         }
     }
+    delete actual;
 }

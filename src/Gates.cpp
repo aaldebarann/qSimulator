@@ -46,7 +46,7 @@ Matrix P(Complex phi) {
     matrix(1, 1) = std::exp(phi * i);
     return matrix;
 } // Phase shift
-Matrix CNOT(size_t control, size_t target, size_t systemSize) {
+Matrix* CNOT(size_t control, size_t target, size_t systemSize) {
     if(control >= systemSize)
         throw std::out_of_range("control qubit number is out of range");
     if(target >= systemSize)
@@ -60,26 +60,26 @@ Matrix CNOT(size_t control, size_t target, size_t systemSize) {
     Matrix id = I();
     Matrix x = X();
 
-    Matrix res1{1, 1};
+    Matrix* res1 = new Matrix{1, 1};
     for(int k = (int)systemSize - 1; k >= 0; k--) {
         if(k == control)
-            res1 = res1.kron(m1);
+            res1 = res1->kron(m1);
         else
-            res1 = res1.kron(id);
+            res1 = res1->kron(id);
     }
-    Matrix res2{1, 1};
+    Matrix* res2 = new Matrix{1, 1};
     for(int k = (int)systemSize - 1; k >= 0; k--) {
         if(k == control)
-            res2 = res2.kron(m2);
+            res2 = res2->kron(m2);
         else if(k == target)
-            res2 = res2.kron(x);
+            res2 = res2->kron(x);
         else
-            res2 = res2.kron(id);
+            res2 = res2->kron(id);
     }
-    res1 += res2;
+    (*res1) += (*res2);
     return res1;
 } // Controlled not
-Matrix CCNOT(size_t control1, size_t control2, size_t target, size_t systemSize) {
+Matrix* CCNOT(size_t control1, size_t control2, size_t target, size_t systemSize) {
     if(control1 >= systemSize || control2 >= systemSize)
         throw std::out_of_range("control qubit number is out of range");
     if(target >= systemSize)
@@ -93,81 +93,81 @@ Matrix CCNOT(size_t control1, size_t control2, size_t target, size_t systemSize)
     Matrix id = I();
     Matrix x = X();
 
-    Matrix res1{1, 1};
+    Matrix* res1 = new Matrix{1, 1};
     for(int k = (int)systemSize - 1; k >= 0; k--) {
         if(k == control1)
-            res1 = res1.kron(m1);
+            res1 = res1->kron(m1);
         else if(k == control2)
-            res1 = res1.kron(m1);
+            res1 = res1->kron(m1);
         else if(k == target)
-            res1 = res1.kron(x);
+            res1 = res1->kron(x);
         else
-            res1 = res1.kron(id);
+            res1 = res1->kron(id);
     }
-    Matrix res2{1, 1};
+    Matrix* res2 = new Matrix{1, 1};
     for(int k = (int)systemSize - 1; k >= 0; k--) {
         if(k == control1)
-            res2 = res2.kron(m0);
+            res2 = res2->kron(m0);
         else if(k == control2)
-            res2 = res2.kron(m1);
+            res2 = res2->kron(m1);
         else if(k == target)
-            res2 = res2.kron(id);
+            res2 = res2->kron(id);
         else
-            res2 = res2.kron(id);
+            res2 = res2->kron(id);
     }
-    Matrix res3{1, 1};
+    Matrix* res3 = new Matrix{1, 1};
     for(int k = (int)systemSize - 1; k >= 0; k--) {
         if(k == control1)
-            res3 = res3.kron(m1);
+            res3 = res3->kron(m1);
         else if(k == control2)
-            res3 = res3.kron(m0);
+            res3 = res3->kron(m0);
         else if(k == target)
-            res3 = res3.kron(id);
+            res3 = res3->kron(id);
         else
-            res3 = res3.kron(id);
+            res3 = res3->kron(id);
     }
-    Matrix res4{1, 1};
+    Matrix* res4 = new Matrix{1, 1};
     for(int k = (int)systemSize - 1; k >= 0; k--) {
         if(k == control1)
-            res4 = res4.kron(m0);
+            res4 = res4->kron(m0);
         else if(k == control2)
-            res4 = res4.kron(m0);
+            res4 = res4->kron(m0);
         else if(k == target)
-            res4 = res4.kron(id);
+            res4 = res4->kron(id);
         else
-            res4 = res4.kron(id);
+            res4 = res4->kron(id);
     }
-    res1 += res2 += res3 += res4;
+    *res1 += *res2 += *res3 += *res4;
     return res1;
 } // Toffoli gate
-Matrix CPHASE(Complex phi, size_t target1, size_t target2, size_t systemSize) {
+Matrix* CPHASE(Complex phi, size_t target1, size_t target2, size_t systemSize) {
     size_t matrixSize = pow(2, systemSize);
-    Matrix result(matrixSize, 0);
+    Matrix* result = new Matrix(matrixSize, 0);
     int mask = (1 << target1) + (1 << target2);
 
     Complex i(0, 1);
     for(int j = 0; j < matrixSize; j++) {
         if((j & mask) == mask) {
-            result(j, j) = std::exp(phi * i);
+            (*result)(j, j) = std::exp(phi * i);
         } else {
-            result(j, j) = 1;
+            (*result)(j, j) = 1;
         }
     }
     return result;
 } // Controlled phase rotation
 
 // convert matrix of single-qubit gate to matrix for n-dimensional system
-Matrix forSystem(Matrix singleQubitMatrix, size_t target, size_t systemSize) {
+Matrix* forSystem(Matrix singleQubitMatrix, size_t target, size_t systemSize) {
     if(target >= systemSize) {
         throw std::out_of_range("Target qubit number is out of range");
     }
-    Matrix result{1, 1}; // result = (1)
+    Matrix* result = new Matrix{1, 1}; // result = (1)
     Matrix id = I();
     for(int i = (int)systemSize - 1; i >= 0; i--) {
         if(i == target) {
-            result = result.kron(singleQubitMatrix);
+            result = result->kron(singleQubitMatrix);
         } else {
-            result = result.kron(id);
+            result = result->kron(id);
         }
     }
     return result;

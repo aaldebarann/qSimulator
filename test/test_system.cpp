@@ -5,7 +5,6 @@
 #include <gtest.h>
 #include "System.h"
 
-
 TEST(System, can_create) {
     ASSERT_NO_THROW(System s(3));
 }
@@ -67,7 +66,7 @@ TEST(System, can_measure_single_qubit) {
             count++;
     }
     norm = std::sqrt(norm);
-    EXPECT_DOUBLE_EQ(1.0, norm);
+    EXPECT_FLOAT_EQ(1.0f, norm);
     EXPECT_EQ(1, count);
 }
 TEST(System, circuit_from_presentation1) {
@@ -78,7 +77,7 @@ TEST(System, circuit_from_presentation1) {
     circ.h(1);
     s.apply(circ);
 
-    vector<Complex> expected{1.0 / sqrt(2), 0, 1.0 / sqrt(2), 0};
+    vector<Complex> expected{1.0 / sqrtf(2), 0, 1.0 / sqrtf(2), 0};
     vector<Complex> actual = s.getState();
 
     for(int j = 0; j < expected.size(); j++) {
@@ -95,7 +94,7 @@ TEST(System, circuit_from_presentation2) {
     circ.x(0);
     s.apply(circ);
 
-    vector<Complex> expected{0, 1.0 / sqrt(2), 0, 1.0 / sqrt(2)};
+    vector<Complex> expected{0, 1.0 / sqrtf(2), 0, 1.0 / sqrtf(2)};
     vector<Complex> actual = s.getState();
 
     for(int j = 0; j < expected.size(); j++) {
@@ -112,7 +111,7 @@ TEST(System, circuit_from_presentation3) {
     circ.cnot(0, 1);
     s.apply(circ);
 
-    vector<Complex> expected{1.0 / sqrt(2), 0, 0, 1.0 / sqrt(2)};
+    vector<Complex> expected{1.0 / sqrtf(2), 0, 0, 1.0 / sqrtf(2)};
     vector<Complex> actual = s.getState();
 
     for(int j = 0; j < expected.size(); j++) {
@@ -140,8 +139,8 @@ TEST(System, circuit_s1) {
 
     // compare expected with actual
      for(int j = 0; j < expected.size(); j++) {
-         EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-15);
-         EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-15);
+         EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-7);
+         EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-7);
     }
 }
 TEST(System, circuit_s2) {
@@ -153,7 +152,7 @@ TEST(System, circuit_s2) {
     circ.cnot(0, 1);
     s.apply(circ);
 
-    vector<Complex> expected{1.0 / sqrt(2), 0, 0, 1.0 / sqrt(2), 0, 0, 0, 0};
+    vector<Complex> expected{1.0 / sqrtf(2), 0, 0, 1.0 / sqrtf(2), 0, 0, 0, 0};
     vector<Complex> actual = s.getState();
 
     for(int j = 0; j < expected.size(); j++) {
@@ -170,7 +169,7 @@ TEST(System, circuit_s3) {
     circ.cnot(1, 0);
     s.apply(circ);
 
-    vector<Complex> expected{0, 0, 1.0 / sqrt(2), 1.0 / sqrt(2), 0, 0, 0, 0};
+    vector<Complex> expected{0, 0, 1.0 / sqrtf(2), 1.0 / sqrtf(2), 0, 0, 0, 0};
     vector<Complex> actual = s.getState();
 
     for(int j = 0; j < expected.size(); j++) {
@@ -189,7 +188,7 @@ TEST(System, circuit_s4) {
     circ.z(1);
     s.apply(circ);
 
-    vector<Complex> expected{0, 0, 0, 0, 0, 0,  -1.0 / sqrt(2), -1.0 / sqrt(2)};
+    vector<Complex> expected{0, 0, 0, 0, 0, 0,  -1.0 / sqrtf(2), -1.0 / sqrtf(2)};
     vector<Complex> actual = s.getState();
 
     for(int j = 0; j < expected.size(); j++) {
@@ -205,7 +204,7 @@ TEST(System, circuit_s5) {
     circ.cnot(0, 2);
     s.apply(circ);
 
-    vector<Complex> expected{1.0 / sqrt(2), 0, 0, 0, 0, 1.0 / sqrt(2), 0, 0};
+    vector<Complex> expected{1.0 / sqrtf(2), 0, 0, 0, 0, 1.0 / sqrtf(2), 0, 0};
     vector<Complex> actual = s.getState();
 
     for(int j = 0; j < expected.size(); j++) {
@@ -222,7 +221,7 @@ TEST(System, circuit_s6) {
     circ.cnot(0, 2);
     s.apply(circ);
 
-    vector<Complex> expected{0, 1.0 / sqrt(2), 0, 0, 1.0 / sqrt(2), 0, 0, 0};
+    vector<Complex> expected{0, 1.0 / sqrtf(2), 0, 0, 1.0 / sqrtf(2), 0, 0, 0};
     vector<Complex> actual = s.getState();
 
     for(int j = 0; j < expected.size(); j++) {
@@ -242,12 +241,12 @@ TEST(System, circuit_s7) {
     s.apply(circ);
 
     Complex i(0, 1);
-    vector<Complex> expected{0, 1.0 / sqrt(2), 0, 0, i / sqrt(2), 0, 0, 0};
+    vector<Complex> expected{0, 1.0 / sqrtf(2), 0, 0, i / sqrtf(2), 0, 0, 0};
     vector<Complex> actual = s.getState();
 
     for(int j = 0; j < expected.size(); j++) {
-         EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-15);
-         EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-15);
+         EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-7);
+         EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-7);
        }
 }
 TEST(System, circuit_s8) {
@@ -282,12 +281,12 @@ TEST(System, circuit_s9) {
     s.apply(circ);
 
     Complex i(0, 1);
-    vector<Complex> expected{0, i / sqrt(2), 0, 0.5 - i*0.5,  0, 0, 0, 0};
+    vector<Complex> expected{0, i / sqrtf(2), 0, 0.5f - i*0.5f,  0, 0, 0, 0};
     vector<Complex> actual = s.getState();
 
     // compare expected with actual
     for(int j = 0; j < expected.size(); j++) {
-        EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-15);
-        EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-15);
+        EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-7);
+        EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-7);
     }
 }

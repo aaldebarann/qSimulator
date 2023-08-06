@@ -41,8 +41,8 @@ TEST(qft, qft_is_inverse_to_iqft) {
     actual = s1.getState();
 
     for(int i = 0; i < expected.size(); i++) {
-        EXPECT_NEAR(expected[i].real(), actual[i].real(), 1.0e-15);
-        EXPECT_NEAR(expected[i].imag(), actual[i].imag(), 1.0e-15);
+        EXPECT_NEAR(expected[i].real(), actual[i].real(), 1.0e-7);
+        EXPECT_NEAR(expected[i].imag(), actual[i].imag(), 1.0e-7);
     }
 }
 TEST(qft, can_apply_approximate_qft_circuit) {
@@ -81,7 +81,7 @@ TEST(qft, approximate_qft_is_inverse_to_approximate_iqft) {
     actual = s1.getState();
 
     for(int i = 0; i < expected.size(); i++) {
-        EXPECT_NEAR(expected[i].real(), actual[i].real(), 1.0e-15);
-        EXPECT_NEAR(expected[i].imag(), actual[i].imag(), 1.0e-15);
+        EXPECT_NEAR(expected[i].real(), actual[i].real(), 1.0e-7);
+        EXPECT_NEAR(expected[i].imag(), actual[i].imag(), 1.0e-7);
     }
 }

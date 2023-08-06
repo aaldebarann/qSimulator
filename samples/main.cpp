@@ -10,10 +10,10 @@ int main() {
     size_t size = 14;
     cout << "system size: "<< size << endl;
     System s{size};
-    Circuit circ(size);
-    circ.h(0);
+    Circuit* circ = new Circuit(size);
+    circ->h(0);
     chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
-    s.apply(circ);
+    s.apply(*circ);
     chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
     cout << chrono::duration_cast<std::chrono::milliseconds>(end - begin).count()<<" ms"<< endl;
 

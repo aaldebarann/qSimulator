@@ -17,7 +17,7 @@ void Circuit::i(size_t target) {
 } // Identity gate
 void Circuit::x(size_t target) {
     v.push_back(forSystem(X(), target, size));
-    gates.push_back("X(" + std::to_string(target) + ")");
+    // gates.push_back("X(" + std::to_string(target) + ")");
 } // NOT gate (Pauli-X)
 void Circuit::y(size_t target) {
     v.push_back(forSystem(Y(), target, size));
