@@ -11,10 +11,18 @@
 #include <iostream>
 
 unsigned classicalAdd(unsigned a, unsigned b, size_t bits) {
+    std::cout << "begin" << std::endl;
+    std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+    std::chrono::steady_clock::time_point end;
+
     if(bits > 4)
         throw std::out_of_range("classical addition can be executed with no more than 4 bits");
     System s(3*bits + 1);
     // кодируем слагаемые в состоянии системы
+    end = std::chrono::steady_clock::now();
+    std::cout << "1" << std::endl;
+    std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << " milliseconds" << std::endl;
+
     Circuit* init = new Circuit(3*bits + 1);
     for(int i = 0; i < bits; i++) {
         if(a % 2 == 1)
@@ -24,18 +32,35 @@ unsigned classicalAdd(unsigned a, unsigned b, size_t bits) {
             init->x(3*i + 2);
         b = b >> 1;
     }
+    begin = end;
+    end = std::chrono::steady_clock::now();
+    std::cout << "2" << std::endl;
+    std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << " milliseconds" << std::endl;
+
     s.apply(*init);
+    begin = end;
+    end = std::chrono::steady_clock::now();
+    std::cout << "3" << std::endl;
+    std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << " milliseconds" << std::endl;
     delete init;
     // применяем схему классического сложения
     Circuit* circ = new Circuit(3*bits + 1);
     circ->add_classic(bits);
-    std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+    begin = end;
+    end = std::chrono::steady_clock::now();
+    std::cout << "4" << std::endl;
+    std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << " milliseconds" << std::endl;
     s.apply(*circ);
-    std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-    std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count()<<" ms"<< std::endl;
-    delete circ;
+    begin = end;
+    end = std::chrono::steady_clock::now();
+    std::cout << "5" << std::endl;
+    std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << " milliseconds" << std::endl;    delete circ;
     // измеряем состояние системы
     unsigned res = s.measure();
+    begin = end;
+    end = std::chrono::steady_clock::now();
+    std::cout << "6" << std::endl;
+    std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << " milliseconds" << std::endl;
     // интерпретируем результат как сумму
     unsigned sum = 0;
     for(int i = 0; i < bits; i++) {
@@ -44,6 +69,11 @@ unsigned classicalAdd(unsigned a, unsigned b, size_t bits) {
         res = res >> 1;
     }
     sum += (res % 2) << bits;
+
+    begin = end;
+    end = std::chrono::steady_clock::now();
+    std::cout << "7" << std::endl;
+    std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << " milliseconds" << std::endl;
     return sum;
 }
 unsigned quantumAdd(unsigned a, unsigned b, size_t bits, bool approximate = false) {

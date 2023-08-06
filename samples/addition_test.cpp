@@ -11,7 +11,7 @@ using namespace std;
 void test_classic(size_t a, size_t b, size_t bits) {
     cout << "classical add"<<endl;
     std::map<int, int> m;
-    for (int i = 0; i < 200; i++) {
+    for (int i = 0; i < 1; i++) {
         int res = classicalAdd(a, b, bits);
         auto x = m.find(res);
         if (x != m.end())
@@ -57,7 +57,7 @@ int main() {
     test_quantum(0, 2, 2);
     test_quantum(2, 4, 3);
     */
-    test_quantum(31, 29, 5);
+    //test_quantum(31, 29, 5);
 
 /*
     test_classic(0, 0, 1);
@@ -69,6 +69,6 @@ int main() {
     test_classic(2, 0, 2);
     test_classic(0, 2, 2);
     test_classic(2, 4, 3);
-    test_classic(5, 2, 3);
     */
+    test_classic(6, 7, 3);
 }
