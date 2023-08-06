@@ -81,22 +81,22 @@ TEST(Matrix, can_multiply_by_vector) {
     Matrix m(2);
     /*
      * 1 2
-     * 3 4
+     * 5 7
      */
     m(0, 0) = 1;
     m(0, 1) = 2;
-    m(1, 0) = 3;
-    m(1, 1) = 4;
+    m(1, 0) = 5;
+    m(1, 1) = 7;
     vector<Complex> v(2);
     // (-1, 1)
     v[0] = -1;
     v[1] = 1;
 
     vector<Complex> res = m*v;
-    // (1, 1)
+    // (1, 2)
 
     EXPECT_EQ((Complex)1, res[0]);
-    EXPECT_EQ((Complex)1, res[1]);
+    EXPECT_EQ((Complex)2, res[1]);
 
 }
 TEST(Matrix, cant_multiply_with_wrong_size) {

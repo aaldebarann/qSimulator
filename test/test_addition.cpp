@@ -36,31 +36,29 @@ TEST(test_addition, classic) {
     EXPECT_EQ(12, classicalAdd(5, 7, 3));
 }
 
-TEST(test_addition, qqq1) {
-    std::map<int, int> m;
-    for (int i = 0; i < 1000; i++) {
-        int res = quantumAdd(1, 1, 2);
-        auto x = m.find(res);
-        if(x != m.end())
-            x->second++;
-        else
-            m.insert({res, 1});
-    }
-    for(auto p: m) {
-        std::cout << p.first << ":  "<<p.second<<std::endl;
-    }
+TEST(test_addition, quantum) {
+    EXPECT_EQ(3, quantumAdd(1, 2, 2));
+    EXPECT_EQ(3, quantumAdd(0, 3, 2));
+    EXPECT_EQ(0, quantumAdd(1, 3, 2));
+    EXPECT_EQ(1, quantumAdd(4, 5, 3));
+    EXPECT_EQ(3, quantumAdd(5, 6, 3));
+    EXPECT_EQ(3, quantumAdd(4, 7, 3));
+    EXPECT_EQ(6, quantumAdd(7, 7, 3));
+    EXPECT_EQ(2, quantumAdd(4, 6, 3));
+    EXPECT_EQ(6, quantumAdd(2, 4, 3));
+    EXPECT_EQ(4, quantumAdd(5, 7, 3));
+    EXPECT_EQ(27, quantumAdd(28, 31, 5));
 }
-TEST(test_addition, qqq2) {
-    std::map<int, int> m;
-    for (int i = 0; i < 100; i++) {
-        int res = quantumAdd(4, 5, 3);
-        auto x = m.find(res);
-        if (x != m.end())
-            x->second++;
-        else
-            m.insert({res, 1});
-    }
-    for (auto p: m) {
-        std::cout <<"\""<< p.first <<"\"" << ":  " << p.second << std::endl;
-    }
+TEST(test_addition, quantum_approximate) {
+    EXPECT_EQ(3, quantumAdd(1, 2, 2, true));
+    EXPECT_EQ(3, quantumAdd(0, 3, 2, true));
+    EXPECT_EQ(0, quantumAdd(1, 3, 2, true));
+    EXPECT_EQ(1, quantumAdd(4, 5, 3, true));
+    EXPECT_EQ(3, quantumAdd(5, 6, 3, true));
+    EXPECT_EQ(3, quantumAdd(4, 7, 3, true));
+    EXPECT_EQ(6, quantumAdd(7, 7, 3, true));
+    EXPECT_EQ(2, quantumAdd(4, 6, 3, true));
+    EXPECT_EQ(6, quantumAdd(2, 4, 3, true));
+    EXPECT_EQ(4, quantumAdd(5, 7, 3, true));
+    EXPECT_EQ(27, quantumAdd(28, 31, 5, true));
 }

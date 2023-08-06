@@ -48,14 +48,14 @@ TEST(qft, qft_is_inverse_to_iqft) {
 TEST(qft, can_apply_approximate_qft_circuit) {
     System s(3);
     Circuit circ(3);
-    circ.qft_approximate(0, 3);
+    circ.qft(0, 3, true);
 
     ASSERT_NO_THROW(s.apply(circ));
 }
 TEST(qft, can_apply_approximate_iqft_circuit) {
     System s(3);
     Circuit circ(3);
-    circ.iqft_approximate(0, 3);
+    circ.iqft(0, 3, true);
 
     ASSERT_NO_THROW(s.apply(circ));
 }
@@ -71,8 +71,8 @@ TEST(qft, approximate_qft_is_inverse_to_approximate_iqft) {
     s2.apply(init);
 
     Circuit circ(3);
-    circ.qft_approximate(0, 3);
-    circ.iqft_approximate(0, 3);
+    circ.qft(0, 3, true);
+    circ.iqft(0, 3, true);
 
     s1.apply(circ);
 
