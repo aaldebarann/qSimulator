@@ -58,9 +58,9 @@ void Circuit::add_classic(size_t bits) {
     for(int i = 0; i < bits; i++) {
         int tmp = i * 3;
         // carry gate
-        //ccnot(tmp+1, tmp+2, tmp+3);
+        ccnot(tmp+1, tmp+2, tmp+3);
         cnot(tmp+1, tmp+2);
-        //ccnot(tmp, tmp+2, tmp+3);
+        ccnot(tmp, tmp+2, tmp+3);
     }
     cnot(3*bits - 2, 3*bits - 1);
     // sum gate
@@ -70,9 +70,9 @@ void Circuit::add_classic(size_t bits) {
     for(int i = 1; i < bits; i++) {
         int tmp = ((int)bits - i - 1) * 3;
         // reverse carry gate
-        //ccnot(tmp, tmp + 2, tmp + 3);
+        ccnot(tmp, tmp + 2, tmp + 3);
         cnot(tmp + 1, tmp + 2);
-        //ccnot(tmp + 1, tmp + 2, tmp + 3);
+        ccnot(tmp + 1, tmp + 2, tmp + 3);
         // sum gate
         cnot(tmp + 1, tmp + 2);
         cnot(tmp, tmp + 2);
