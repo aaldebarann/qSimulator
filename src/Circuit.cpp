@@ -154,3 +154,9 @@ void Circuit::print() {
         std::cout << s << std::endl;
     }
 }
+
+Circuit::~Circuit() {
+    for(Matrix* m: v) {
+        delete m;
+    }
+}

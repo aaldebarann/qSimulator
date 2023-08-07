@@ -17,7 +17,7 @@ public:
     void print();
 
     explicit Circuit(size_t size);
-    ~Circuit() = default;
+    ~Circuit();
     // base quantum gates
     void i(size_t target); // Identity gate
     void x(size_t target); // NOT gate (Pauli-X)
