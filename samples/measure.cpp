@@ -4,6 +4,7 @@
 #include <iostream>
 #include <System.h>
 #include <fstream>
+#include <corecrt_math_defines.h>
 
 using namespace std;
 

@@ -46,7 +46,7 @@ TEST(test_addition, quantum) {
     EXPECT_EQ(6, quantumAdd(7, 7, 3));
     EXPECT_EQ(2, quantumAdd(4, 6, 3));
     EXPECT_EQ(6, quantumAdd(2, 4, 3));
-    EXPECT_EQ(4, quantumAdd(5, 7, 3));
+    EXPECT_EQ(28, quantumAdd(31, 29, 5));
     EXPECT_EQ(27, quantumAdd(28, 31, 5));
 }
 TEST(test_addition, quantum_approximate) {

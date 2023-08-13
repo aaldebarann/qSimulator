@@ -15,7 +15,7 @@ unsigned classicalAdd(unsigned a, unsigned b, size_t bits) {
     std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
     std::chrono::steady_clock::time_point end;
 
-    if(bits > 4)
+    if(bits > 6)
         throw std::out_of_range("classical addition can be executed with no more than 4 bits");
     System s(3*bits + 1);
     // кодируем слагаемые в состоянии системы
