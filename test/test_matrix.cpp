@@ -133,13 +133,6 @@ TEST(Matrix, matrix_multiplication) {
      */
 
     Matrix actual = m1 * m2;
-    std:: cout << actual.size() << std::endl;
-    for(int i = 0; i < 2; i++) {
-        for(int j = 0; j < 2; j++) {
-            std::cout << actual(i, j) << " ";
-        }
-        std::cout << std::endl;
-    }
     EXPECT_EQ(expected, m1 * m2);
 }
 TEST(Matrix, kronecker_product) {
@@ -168,23 +161,23 @@ TEST(Matrix, kronecker_product) {
      * -3   6  -4  8
      *  9 -12  12 -16
      */
-    Matrix* result = m1.kron(m2);
+    m1.kron(m2);
 
-    EXPECT_EQ((Complex)-1, (*result)(0, 0));
-    EXPECT_EQ((Complex)2, (*result)(0, 1));
-    EXPECT_EQ((Complex)-2, (*result)(0, 2));
-    EXPECT_EQ((Complex)4, (*result)(0, 3));
-    EXPECT_EQ((Complex)3, (*result)(1, 0));
-    EXPECT_EQ((Complex)-4, (*result)(1, 1));
-    EXPECT_EQ((Complex)6, (*result)(1, 2));
-    EXPECT_EQ((Complex)-8, (*result)(1, 3));
-    EXPECT_EQ((Complex)-3, (*result)(2, 0));
-    EXPECT_EQ((Complex)6, (*result)(2, 1));
-    EXPECT_EQ((Complex)-4, (*result)(2, 2));
-    EXPECT_EQ((Complex)8, (*result)(2, 3));
-    EXPECT_EQ((Complex)9, (*result)(3, 0));
-    EXPECT_EQ((Complex)-12, (*result)(3, 1));
-    EXPECT_EQ((Complex)12, (*result)(3, 2));
-    EXPECT_EQ((Complex)-16, (*result)(3, 3));
+    EXPECT_EQ((Complex)-1, m1(0, 0));
+    EXPECT_EQ((Complex)2, m1(0, 1));
+    EXPECT_EQ((Complex)-2, m1(0, 2));
+    EXPECT_EQ((Complex)4, m1(0, 3));
+    EXPECT_EQ((Complex)3, m1(1, 0));
+    EXPECT_EQ((Complex)-4, m1(1, 1));
+    EXPECT_EQ((Complex)6, m1(1, 2));
+    EXPECT_EQ((Complex)-8, m1(1, 3));
+    EXPECT_EQ((Complex)-3, m1(2, 0));
+    EXPECT_EQ((Complex)6, m1(2, 1));
+    EXPECT_EQ((Complex)-4, m1(2, 2));
+    EXPECT_EQ((Complex)8, m1(2, 3));
+    EXPECT_EQ((Complex)9, m1(3, 0));
+    EXPECT_EQ((Complex)-12, m1(3, 1));
+    EXPECT_EQ((Complex)12, m1(3, 2));
+    EXPECT_EQ((Complex)-16, m1(3, 3));
 
 }

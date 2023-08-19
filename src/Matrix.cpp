@@ -44,10 +44,10 @@ vector<Complex> Matrix::operator* (const vector<Complex>& v) {
     return result;
 }
 
-Matrix* Matrix::kron(Matrix &x) {
-    Matrix* result = new Matrix(this->size() * x.size());
+void Matrix::kron(Matrix &x) {
     size_t N = x.size();
     size_t M = this->size();
+    Matrix* result = new Matrix(M * N);
     /*
     for(int i = 0; i < result.size(); i++) {
         for(int j = 0; j < result.size(); j++) {
@@ -64,7 +64,12 @@ Matrix* Matrix::kron(Matrix &x) {
             }
         }
     }
-    return result;
+    // copy result to *this
+    delete[] pMem;
+    sz = result->sz;
+    pMem = result->pMem;
+    result->pMem = nullptr;
+    delete result;
 }
 
 bool Matrix::operator==(const Matrix &m) const {

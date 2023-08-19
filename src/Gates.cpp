@@ -63,18 +63,18 @@ Matrix* CNOT(size_t control, size_t target, size_t systemSize) {
     Matrix* res1 = new Matrix{1, 1};
     for(int k = (int)systemSize - 1; k >= 0; k--) {
         if(k == control)
-            res1 = res1->kron(m1);
+            res1->kron(m1);
         else
-            res1 = res1->kron(id);
+            res1->kron(id);
     }
     Matrix* res2 = new Matrix{1, 1};
     for(int k = (int)systemSize - 1; k >= 0; k--) {
         if(k == control)
-            res2 = res2->kron(m2);
+            res2->kron(m2);
         else if(k == target)
-            res2 = res2->kron(x);
+            res2->kron(x);
         else
-            res2 = res2->kron(id);
+            res2->kron(id);
     }
     (*res1) += (*res2);
     return res1;
@@ -96,46 +96,46 @@ Matrix* CCNOT(size_t control1, size_t control2, size_t target, size_t systemSize
     Matrix* res1 = new Matrix{1, 1};
     for(int k = (int)systemSize - 1; k >= 0; k--) {
         if(k == control1)
-            res1 = res1->kron(m1);
+            res1->kron(m1);
         else if(k == control2)
-            res1 = res1->kron(m1);
+            res1->kron(m1);
         else if(k == target)
-            res1 = res1->kron(x);
+            res1->kron(x);
         else
-            res1 = res1->kron(id);
+            res1->kron(id);
     }
     Matrix* res2 = new Matrix{1, 1};
     for(int k = (int)systemSize - 1; k >= 0; k--) {
         if(k == control1)
-            res2 = res2->kron(m0);
+            res2->kron(m0);
         else if(k == control2)
-            res2 = res2->kron(m1);
+            res2->kron(m1);
         else if(k == target)
-            res2 = res2->kron(id);
+            res2->kron(id);
         else
-            res2 = res2->kron(id);
+            res2->kron(id);
     }
     Matrix* res3 = new Matrix{1, 1};
     for(int k = (int)systemSize - 1; k >= 0; k--) {
         if(k == control1)
-            res3 = res3->kron(m1);
+            res3->kron(m1);
         else if(k == control2)
-            res3 = res3->kron(m0);
+            res3->kron(m0);
         else if(k == target)
-            res3 = res3->kron(id);
+            res3->kron(id);
         else
-            res3 = res3->kron(id);
+            res3->kron(id);
     }
     Matrix* res4 = new Matrix{1, 1};
     for(int k = (int)systemSize - 1; k >= 0; k--) {
         if(k == control1)
-            res4 = res4->kron(m0);
+            res4->kron(m0);
         else if(k == control2)
-            res4 = res4->kron(m0);
+            res4->kron(m0);
         else if(k == target)
-            res4 = res4->kron(id);
+            res4->kron(id);
         else
-            res4 = res4->kron(id);
+            res4->kron(id);
     }
     *res1 += *res2 += *res3 += *res4;
     return res1;
@@ -165,9 +165,9 @@ Matrix* forSystem(Matrix singleQubitMatrix, size_t target, size_t systemSize) {
     Matrix id = I();
     for(int i = (int)systemSize - 1; i >= 0; i--) {
         if(i == target) {
-            result = result->kron(singleQubitMatrix);
+            result->kron(singleQubitMatrix);
         } else {
-            result = result->kron(id);
+            result->kron(id);
         }
     }
     return result;
