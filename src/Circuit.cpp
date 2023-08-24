@@ -75,7 +75,17 @@ void Circuit::cp(double phi, size_t target1, size_t target2) {
     gates.push_back("CP(" + std::to_string(phi) + ", "
     + std::to_string(target1)+ ", " + std::to_string(target2) + ")");
 } // Controlled phase rotation
+void Circuit::ccp(double phi, size_t control1, size_t control2, size_t target) {
+    matrices.push_back(CCP(phi, control1, control2, target, size));
+    gates.push_back("CCP(" + std::to_string(phi) + ", "
+        + std::to_string(control1) + ", " + std::to_string(control2) + ", " + std::to_string(target) + ")");
+} // Controlled phase rotation
+void Circuit::cccp(double phi, size_t control1, size_t control2, size_t control3, size_t target) {
+    matrices.push_back(CCCP(phi, control1, control2, control3, target, size));
+    gates.push_back("CCCP(" + std::to_string(phi) + ", "
+        + std::to_string(control1) + ", " + std::to_string(control2) + ", " + std::to_string(control3) + ", " + std::to_string(target) + ")");
 
+}
 // composed gates
 void Circuit::add(size_t bits) {
     if(3 * bits + 1 > size)
@@ -103,7 +113,10 @@ void Circuit::add(size_t bits) {
         cnot(tmp, tmp + 2);
     }
 }
+
 void Circuit::qft(size_t first, size_t last, bool approximate) {
+    if (last - 1 > size)
+        throw std::out_of_range("qft out of range");   
     int threshold = (int)log2(last - first) + 1;
     for(int i = 0; i < last - first; i++) {
         h(i + first);
@@ -116,6 +129,8 @@ void Circuit::qft(size_t first, size_t last, bool approximate) {
     }
 }
 void Circuit::iqft(size_t first, size_t last, bool approximate) {
+    if (last - 1 > size)
+        throw std::out_of_range("iqft out of range");
     int threshold;
     if(approximate)
         threshold = (int)log2(last - first) + 1;
@@ -129,13 +144,14 @@ void Circuit::iqft(size_t first, size_t last, bool approximate) {
         h(first + i);
     }
 }
+
 void Circuit::qadd(size_t firstQubit, size_t bits, bool approximate) {
-    if(2 * bits > size)
+    if(2 * bits + firstQubit > size)
         throw std::out_of_range("quantum addition requires 2n bits to add_classic two n-bit numbers");
     int threshold = (int)log2(bits) + 1;
     for(int i = 0; i < bits; i++) {
         for(int j = 0; j < bits; j++) {
-            if(approximate && j > threshold)
+            if(approximate && i > threshold)
                 break;
             double tmp = (1.0 / (1 << (i + 1)));
             cp(2 * M_PI * tmp, j + firstQubit,  j + bits - i + firstQubit);
@@ -143,7 +159,7 @@ void Circuit::qadd(size_t firstQubit, size_t bits, bool approximate) {
     }
 }
 void Circuit::iqadd(size_t firstQubit, size_t bits, bool approximate) {
-    if (2 * bits > size)
+    if (2 * bits + firstQubit > size)
         throw std::out_of_range("quantum addition requires 2n bits to add_classic two n-bit numbers");
     
     int threshold;
@@ -161,10 +177,119 @@ void Circuit::iqadd(size_t firstQubit, size_t bits, bool approximate) {
         }
     }
 }
-void Circuit::qaddMod(size_t firstQubit, size_t bits, bool approximate) {
-    if (2 * bits + 3 + firstQubit > size)
-        throw std::out_of_range("qaddMod gate requires at least 2*bits + 3 qubits");
 
+void Circuit::qadd_1c(size_t control, size_t firstQubit, size_t bits, bool approximate) {
+    if (2 * bits + firstQubit + 1 > size)
+        throw std::out_of_range("quantum addition requires 2n bits to add_classic two n-bit numbers");
+    int threshold = (int)log2(bits) + 1;
+    for (int i = 0; i < bits; i++) {
+        for (int j = 0; j < bits; j++) {
+            if (approximate && j > threshold)
+                break;
+            double tmp = (1.0 / (1 << (i + 1)));
+            ccp(2 * M_PI * tmp, control, j + firstQubit, j + bits - i + firstQubit);
+        }
+    }
+}
+void Circuit::iqadd_1c(size_t control, size_t firstQubit, size_t bits, bool approximate) {
+    if (2 * bits + firstQubit + 1 > size)
+        throw std::out_of_range("quantum addition requires 2n bits to add_classic two n-bit numbers");
+
+    int threshold;
+    if (approximate)
+        threshold = (int)log2(bits) + 1;
+    else
+        threshold = bits - 1;
+
+    for (int i = bits - 1; i >= 0; i--) {
+        for (int j = threshold; j >= 0; j--) {
+            if (approximate && j > threshold)
+                break;
+            double tmp = (1.0 / (1 << (i + 1)));
+            ccp(-2 * M_PI * tmp, control, j + firstQubit, j + bits - i + firstQubit);
+        }
+    }
+}
+void Circuit::qadd_2c(size_t control1, size_t control2, size_t firstQubit, size_t bits, bool approximate) {
+    if (2 * bits + firstQubit + 2 > size)
+        throw std::out_of_range("quantum addition requires 2n bits to add_classic two n-bit numbers");
+    int threshold = (int)log2(bits) + 1;
+    for (int i = 0; i < bits; i++) {
+        for (int j = 0; j < bits; j++) {
+            if (approximate && j > threshold)
+                break;
+            double tmp = (1.0 / (1 << (i + 1)));
+            cccp(2 * M_PI * tmp, control1, control2, j + firstQubit, j + bits - i + firstQubit);
+        }
+    }
+}
+void Circuit::iqadd_2c(size_t control1, size_t control2, size_t firstQubit, size_t bits, bool approximate) {
+    if (2 * bits + firstQubit + 1 > size)
+        throw std::out_of_range("quantum addition requires 2n bits to add_classic two n-bit numbers");
+
+    int threshold;
+    if (approximate)
+        threshold = (int)log2(bits) + 1;
+    else
+        threshold = bits - 1;
+
+    for (int i = bits - 1; i >= 0; i--) {
+        for (int j = threshold; j >= 0; j--) {
+            if (approximate && j > threshold)
+                break;
+            double tmp = (1.0 / (1 << (i + 1)));
+            cccp(-2 * M_PI * tmp, control1, control2, j + firstQubit, j + bits - i + firstQubit);
+        }
+    }
+}
+void Circuit::qaddMod_2c(unsigned a, unsigned N, size_t control1, size_t control2, size_t firstQubit, size_t bits, bool approximate) {
+    if (2 * bits + firstQubit + 4 > size)
+        throw std::out_of_range("requires 2n + 4 bits to add_classic two n-bit numbers");
+    unsigned aCopy = a, NCopy = N;
+    // ÔADD(a)
+    for (int i = 0; i < bits; i++) {
+        if (a % 2 == 1)
+            x(1 + bits - i);
+        a /= 2;
+    }
+    a = aCopy;
+    qadd_2c(0, 1, 2, bits, approximate);
+    // inverse ÔADD(N)
+    for (int i = 0; i < bits; i++) {
+        if (N % 2 != a % 2)
+            x(1 + bits - i);
+        N /= 2;
+        a /= 2;
+    }
+    N = NCopy;
+    a = aCopy;
+    iqadd(2, bits, approximate);
+
+    iqft(2, 2*bits + 3, approximate);
+    cnot(2*bits + 2, 2*bits + 3);
+    qft(2 + bits, 2*bits + 3, approximate);
+    
+    // ÔADD(N)
+    // N is already in register 
+    qadd_1c(2*bits + 3, 2, bits, approximate);
+    // inverse ÔADD(a)
+    for (int i = 0; i < bits; i++) {
+        if (N % 2 != a % 2)
+            x(1 + bits - i);
+        N /= 2;
+        a /= 2;
+    }
+    N = NCopy;
+    a = aCopy;
+    iqadd_2c(0, 1, 2, bits, approximate);
+    iqft(2, 2*bits + 3, approximate);
+    x(2*bits + 2);
+    cnot(2*bits + 2, 2*bits + 3);
+    x(2*bits + 2);
+    qft(2, 2*bits + 3, approximate);
+    // ÔADD(a)
+    // a is already in register
+    qadd_2c(0, 1, 2, bits, approximate);
 }
 
 void Circuit::print() {
