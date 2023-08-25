@@ -6,7 +6,8 @@
 #include "Gates.h"
 #include <cmath>
 #include <iostream>
-#include <corecrt_math_defines.h>
+#include <climits>
+// #include <corecrt_math_defines.h>
 
 Circuit::Circuit(size_t size): size(size) {
 
@@ -47,7 +48,7 @@ void Circuit::t(size_t target) {
 } // T gate
 void Circuit::tDagger(size_t target) {
     matrices.push_back(forSystem(P(-M_PI * 0.25), target, size));
-    gates.push_back("T†(" + std::to_string(target) + ")");
+    gates.push_back("Tï¿½(" + std::to_string(target) + ")");
 } // T gate
 void Circuit::cnot(size_t control, size_t target) {
     matrices.push_back(CNOT(control, target, size));
@@ -117,7 +118,7 @@ void Circuit::add(size_t bits) {
 void Circuit::qft(size_t first, size_t last, bool approximate) {
     if (last - 1 > size)
         throw std::out_of_range("qft out of range");   
-    int threshold = (int)log2(last - first) + 1;
+    int threshold = (int)log2(last - first + 1) + 2;
     for(int i = 0; i < last - first; i++) {
         h(i + first);
         for(int k = 2; k + i <= last - first; k++) {
@@ -133,7 +134,7 @@ void Circuit::iqft(size_t first, size_t last, bool approximate) {
         throw std::out_of_range("iqft out of range");
     int threshold;
     if(approximate)
-        threshold = (int)log2(last - first) + 1;
+        threshold = (int)log2(last - first + 1) + 2;
     else
         threshold = INT_MAX; // just a big number
     for(int i = (int)(last - first) - 1; i >= 0; i--) {
@@ -242,7 +243,7 @@ void Circuit::qaddMod_2c(unsigned a, unsigned N, size_t control1, size_t control
     if (2 * bits + firstQubit + 3 > size)
         throw std::out_of_range("qaddMod_2c out of range");
     unsigned aCopy = a, NCopy = N;
-    // ÔADD(a)
+    // ï¿½ADD(a)
     for (int i = 0; i < bits; i++) {
         if (a % 2 == 1)
             x(1 + bits - i);
@@ -250,7 +251,7 @@ void Circuit::qaddMod_2c(unsigned a, unsigned N, size_t control1, size_t control
     }
     a = aCopy;
     qadd_2c(0, 1, 2, bits, approximate);
-    // inverse ÔADD(N)
+    // inverse ï¿½ADD(N)
     for (int i = 0; i < bits; i++) {
         if (N % 2 != a % 2)
             x(1 + bits - i);
@@ -265,10 +266,10 @@ void Circuit::qaddMod_2c(unsigned a, unsigned N, size_t control1, size_t control
     cnot(2*bits + 1, 2*bits + 2);
     qft(2 + bits, 2*bits + 2, approximate);
     
-    // ÔADD(N)
+    // ï¿½ADD(N)
     // N is already in register 
     qadd_1c(2*bits + 2, 2, bits, approximate);
-    // inverse ÔADD(a)
+    // inverse ï¿½ADD(a)
     for (int i = 0; i < bits; i++) {
         if (N % 2 != a % 2)
             x(1 + bits - i);
@@ -283,7 +284,7 @@ void Circuit::qaddMod_2c(unsigned a, unsigned N, size_t control1, size_t control
     cnot(2*bits + 1, 2*bits + 2);
     x(2*bits + 1);
     qft(2 + bits, 2*bits + 2, approximate);
-    // ÔADD(a)
+    // ï¿½ADD(a)
     // a is already in register
     qadd_2c(0, 1, 2, bits, approximate);
 }
