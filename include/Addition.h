@@ -84,5 +84,85 @@ unsigned quantumAdd(unsigned a, unsigned b, size_t bits, bool approximate = fals
     }
     return sum;
 }
-
+/*
+unsigned quantumAdd_1c(unsigned a, unsigned b, size_t bits, bool approximate = false) {
+    if(bits > 7)
+        throw std::out_of_range("quantum addition can be executed with no more than 7 bits");
+    System s(2*bits + 1);
+    // кодируем слагаемые в состоянии системы
+    Circuit* init = new Circuit(2*bits + 1);
+    for(int i = 0; i < bits; i++) {
+        if(a % 2 == 1)
+            init->x(2*bits - 1 -  i);
+        a /= 2;
+        if(b % 2 == 1)
+            init->x(bits - 1 - i);
+        b /= 2;
+    }
+    init->x(2*bits);
+    s.apply(*init);
+    delete init;
+    // применяем схему квантового сложения
+    Circuit* circ = new Circuit(2*bits + 1);
+    // к слагаемому a необходимо применить КПФ
+    circ->qft(bits, bits + bits, approximate);
+    // схема квантового сложения
+    circ->qadd_1c(2*bits, 0, bits, approximate);
+    // чтобы получить результат, необходимо обратное КПФ
+    circ->iqft(bits, bits + bits, approximate);
+    s.apply(*circ);
+    delete circ;
+    // измеряем состояние системы
+    unsigned res = s.measure();
+    // интерпретируем результат как сумму
+    unsigned sum = 0;
+    res = res >> bits;
+    for(int i = 0; i < bits; i++) {
+        sum = sum << 1;
+        sum += res % 2;
+        res = res >> 1;
+    }
+    return sum;
+}
+unsigned quantumAdd_2c(unsigned a, unsigned b, size_t bits, bool approximate = false) {
+    if(bits > 7)
+        throw std::out_of_range("quantum addition can be executed with no more than 7 bits");
+    System s(2*bits + 2);
+    // кодируем слагаемые в состоянии системы
+    Circuit* init = new Circuit(2*bits + 2);
+    for(int i = 0; i < bits; i++) {
+        if(a % 2 == 1)
+            init->x(2*bits - 1 -  i);
+        a /= 2;
+        if(b % 2 == 1)
+            init->x(bits - 1 - i);
+        b /= 2;
+    }
+    init->x(2*bits);
+    init->x(2*bits + 1);
+    s.apply(*init);
+    delete init;
+    // применяем схему квантового сложения
+    Circuit* circ = new Circuit(2*bits + 2);
+    // к слагаемому a необходимо применить КПФ
+    circ->qft(bits, bits + bits, approximate);
+    // схема квантового сложения
+    circ->qadd_2c(2*bits, 2*bits + 1, 0, bits, approximate);
+    // чтобы получить результат, необходимо обратное КПФ
+    circ->iqft(bits, bits + bits, approximate);
+    s.apply(*circ);
+    delete circ;
+    // измеряем состояние системы
+    unsigned res = s.measure();
+    // интерпретируем результат как сумму
+    unsigned sum = 0;
+    res = res >> bits;
+    for(int i = 0; i < bits; i++) {
+        sum = sum << 1;
+        sum += res % 2;
+        res = res >> 1;
+    }
+    return sum;
+}
+*/
 #endif //QSIMULATOR_ADDITION_H

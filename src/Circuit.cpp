@@ -9,6 +9,8 @@
 #include <climits>
 // #include <corecrt_math_defines.h>
 
+//#define HIGH_LEVEL_GATES_LOG
+
 Circuit::Circuit(size_t size): size(size) {
 
 }
@@ -117,7 +119,12 @@ void Circuit::add(size_t bits) {
 
 void Circuit::qft(size_t first, size_t last, bool approximate) {
     if (last - 1 > size)
-        throw std::out_of_range("qft out of range");   
+        throw std::out_of_range("qft out of range");
+#ifdef HIGH_LEVEL_GATES_LOG
+    gates.push_back("QFT(" + std::to_string(first) + ", "
+                    + std::to_string(last)+ ", " + std::to_string(approximate) + ")");
+    gates.emplace_back("{");
+#endif
     int threshold = (int)log2(last - first + 1) + 2;
     for(int i = 0; i < last - first; i++) {
         h(i + first);
@@ -128,10 +135,18 @@ void Circuit::qft(size_t first, size_t last, bool approximate) {
             cp(2 * M_PI * tmp, first + i, first + k + i - 1);
         }
     }
+#ifdef HIGH_LEVEL_GATES_LOG
+    gates.emplace_back("}");
+#endif
 }
 void Circuit::iqft(size_t first, size_t last, bool approximate) {
     if (last - 1 > size)
         throw std::out_of_range("iqft out of range");
+#ifdef HIGH_LEVEL_GATES_LOG
+    gates.push_back("QFT-1(" + std::to_string(first) + ", "
+                    + std::to_string(last)+ ", " + std::to_string(approximate) + ")");
+    gates.emplace_back("{");
+#endif
     int threshold;
     if(approximate)
         threshold = (int)log2(last - first + 1) + 2;
@@ -144,11 +159,20 @@ void Circuit::iqft(size_t first, size_t last, bool approximate) {
         }
         h(first + i);
     }
+
+#ifdef HIGH_LEVEL_GATES_LOG
+    gates.emplace_back("}");
+#endif
 }
 
 void Circuit::qadd(size_t firstQubit, size_t bits, bool approximate) {
     if(2 * bits + firstQubit > size)
         throw std::out_of_range("quantum addition requires 2n + 1 bits for two n-bit numbers");
+#ifdef HIGH_LEVEL_GATES_LOG
+    gates.push_back("qADD(" + std::to_string(firstQubit) + ", "
+                    + std::to_string(bits)+ ", " + std::to_string(approximate) + ")");
+    gates.emplace_back("{");
+#endif
     int threshold = (int)log2(bits) + 1;
     for(int i = 0; i < bits; i++) {
         for(int j = 0; j < bits - i; j++) {
@@ -158,12 +182,20 @@ void Circuit::qadd(size_t firstQubit, size_t bits, bool approximate) {
             cp(2 * M_PI * tmp, j + i + firstQubit,  bits + i + firstQubit);
         }
     }
+#ifdef HIGH_LEVEL_GATES_LOG
+    gates.emplace_back("}");
+#endif
 }
 void Circuit::iqadd(size_t firstQubit, size_t bits, bool approximate) {
     if (2 * bits + firstQubit > size)
         throw std::out_of_range("quantum addition requires 2n bits for two n-bit numbers");
+#ifdef HIGH_LEVEL_GATES_LOG
+    gates.push_back("qADD-1(" + std::to_string(firstQubit) + ", "
+                    + std::to_string(bits)+ ", " + std::to_string(approximate) + ")");
+    gates.emplace_back("{");
+#endif
     int threshold  = (int)log2(bits) + 1;
-    
+
     for (int i = bits - 1; i >= 0; i--) {
         for (int j = bits - i - 1; j >= 0; j--) {
             if (approximate && j > threshold)
@@ -172,121 +204,196 @@ void Circuit::iqadd(size_t firstQubit, size_t bits, bool approximate) {
             cp(-2 * M_PI * tmp, j + i + firstQubit, bits + i + firstQubit);
         }
     }
+#ifdef HIGH_LEVEL_GATES_LOG
+    gates.emplace_back("}");
+#endif
 }
 
 void Circuit::qadd_1c(size_t control, size_t firstQubit, size_t bits, bool approximate) {
     if (2 * bits + firstQubit > size)
         throw std::out_of_range("quantum addition requires 2n bits to add_classic two n-bit numbers");
+#ifdef HIGH_LEVEL_GATES_LOG
+    gates.push_back("qADD_1c(" + std::to_string(control) + ", "+ std::to_string(firstQubit) + ", "
+                    + std::to_string(bits)+ ", " + std::to_string(approximate) + ")");
+    gates.emplace_back("{");
+#endif
     int threshold = (int)log2(bits) + 1;
-    for (int i = 0; i < bits; i++) {
-        for (int j = i; j < bits; j++) {
-            if (approximate && j > threshold)
+    for(int i = 0; i < bits; i++) {
+        for(int j = 0; j < bits - i; j++) {
+            if(approximate && j > threshold)
                 break;
-            double tmp = (1.0 / (1 << (i + 1)));
-            ccp(2 * M_PI * tmp, control, j + firstQubit, j + bits - i + firstQubit);
+            double tmp = (1.0 / (1 << (j + 1)));
+            ccp(2 * M_PI * tmp, control, j + i + firstQubit,  bits + i + firstQubit);
         }
     }
+#ifdef HIGH_LEVEL_GATES_LOG
+    gates.emplace_back("}");
+#endif
 }
 void Circuit::iqadd_1c(size_t control, size_t firstQubit, size_t bits, bool approximate) {
     if (2 * bits + firstQubit > size)
         throw std::out_of_range("quantum addition requires 2n bits to add_classic two n-bit numbers");
-
-    int threshold;
-    if (approximate)
-        threshold = (int)log2(bits) + 1;
-    else
-        threshold = bits - 1;
-
+#ifdef HIGH_LEVEL_GATES_LOG
+    gates.push_back("qADD_1c-1(" + std::to_string(control) + ", "+ std::to_string(firstQubit) + ", "
+                    + std::to_string(bits)+ ", " + std::to_string(approximate) + ")");
+    gates.emplace_back("{");
+#endif
+    int threshold  = (int)log2(bits) + 1;
     for (int i = bits - 1; i >= 0; i--) {
-        for (int j = threshold; j >= i; j--) {
+        for (int j = bits - i - 1; j >= 0; j--) {
             if (approximate && j > threshold)
-                break;
-            double tmp = (1.0 / (1 << (i + 1)));
-            ccp(-2 * M_PI * tmp, control, j + firstQubit, j + bits - i + firstQubit);
+                continue;
+            double tmp = (1.0 / (1 << (j + 1)));
+            ccp(-2 * M_PI * tmp, control, j + i + firstQubit, bits + i + firstQubit);
         }
     }
+#ifdef HIGH_LEVEL_GATES_LOG
+    gates.emplace_back("}");
+#endif
 }
 void Circuit::qadd_2c(size_t control1, size_t control2, size_t firstQubit, size_t bits, bool approximate) {
     if (2 * bits + firstQubit > size)
         throw std::out_of_range("qadd_2c out of range");
+#ifdef HIGH_LEVEL_GATES_LOG
+    gates.push_back("qADD_2c(" + std::to_string(control1) + ", "+  std::to_string(control2)+ ", "+ std::to_string(firstQubit) + ", "
+                    + std::to_string(bits)+ ", " + std::to_string(approximate) + ")");
+    gates.emplace_back("{");
+#endif
+
     int threshold = (int)log2(bits) + 1;
-    for (int i = 0; i < bits; i++) {
-        for (int j = i; j < bits; j++) {
-            if (approximate && j > threshold)
+    for(int i = 0; i < bits; i++) {
+        for(int j = 0; j < bits - i; j++) {
+            if(approximate && j > threshold)
                 break;
-            double tmp = (1.0 / (1 << (i + 1)));
-            cccp(2 * M_PI * tmp, control1, control2, j + firstQubit, j + bits - i + firstQubit);
+            double tmp = (1.0 / (1 << (j + 1)));
+            cccp(2 * M_PI * tmp, control1, control2, j + i + firstQubit,  bits + i + firstQubit);
         }
     }
+#ifdef HIGH_LEVEL_GATES_LOG
+    gates.emplace_back("}");
+#endif
 }
 void Circuit::iqadd_2c(size_t control1, size_t control2, size_t firstQubit, size_t bits, bool approximate) {
     if (2 * bits + firstQubit > size)
         throw std::out_of_range("quantum addition requires 2n bits to add_classic two n-bit numbers");
 
-    int threshold;
-    if (approximate)
-        threshold = (int)log2(bits) + 1;
-    else
-        threshold = bits - 1;
-
+#ifdef HIGH_LEVEL_GATES_LOG
+    gates.push_back("qADD_2c-1(" + std::to_string(control1) + ", "+ std::to_string(control2)+ + ", "+ std::to_string(firstQubit) + ", "
+                    + std::to_string(bits)+ ", " + std::to_string(approximate) + ")");
+    gates.emplace_back("{");
+#endif
+    int threshold  = (int)log2(bits) + 1;
     for (int i = bits - 1; i >= 0; i--) {
-        for (int j = threshold; j >= i; j--) {
+        for (int j = bits - i - 1; j >= 0; j--) {
             if (approximate && j > threshold)
-                break;
-            double tmp = (1.0 / (1 << (i + 1)));
-            cccp(-2 * M_PI * tmp, control1, control2, j + firstQubit, j + bits - i + firstQubit);
+                continue;
+            double tmp = (1.0 / (1 << (j + 1)));
+            cccp(-2 * M_PI * tmp, control1, control2, j + i + firstQubit, bits + i + firstQubit);
         }
     }
+#ifdef HIGH_LEVEL_GATES_LOG
+    gates.emplace_back("}");
+#endif
 }
-void Circuit::qaddMod_2c(unsigned a, unsigned N, size_t control1, size_t control2, size_t firstQubit, size_t bits, bool approximate) {
+void Circuit::qaddMod_2c_tmp(unsigned a, unsigned N, size_t control1, size_t control2, size_t firstQubit, size_t bits, bool approximate) {
     bits++; // one extra bit to avoid overflow
-    if (2 * bits + firstQubit + 3 > size)
+    if (2 * bits + firstQubit + 1 > size)
         throw std::out_of_range("qaddMod_2c out of range");
     unsigned aCopy = a, NCopy = N;
     // �ADD(a)
     for (int i = 0; i < bits; i++) {
         if (a % 2 == 1)
-            x(1 + bits - i);
+            x(bits - i - 1);
         a /= 2;
     }
     a = aCopy;
-    qadd_2c(0, 1, 2, bits, approximate);
-    // inverse �ADD(N)
+    // qadd_2c(0, 1, 2, bits, approximate);
+    // inverse qADD(N)
     for (int i = 0; i < bits; i++) {
         if (N % 2 != a % 2)
-            x(1 + bits - i);
+            x(bits - i - 1);
         N /= 2;
         a /= 2;
     }
     N = NCopy;
     a = aCopy;
-    iqadd(2, bits, approximate);
+    iqadd(0, bits, approximate);
 
-    iqft(2 + bits, 2*bits + 2, approximate);
-    cnot(2*bits + 1, 2*bits + 2);
-    qft(2 + bits, 2*bits + 2, approximate);
-    
+    iqft(bits, 2*bits, approximate);
+    cnot(bits, 2*bits );
+    qft(bits, 2*bits , approximate);
+
     // �ADD(N)
-    // N is already in register 
-    qadd_1c(2*bits + 2, 2, bits, approximate);
+    // N is already in register
+    qadd_1c(2*bits, 0, bits, approximate);
     // inverse �ADD(a)
     for (int i = 0; i < bits; i++) {
         if (N % 2 != a % 2)
-            x(1 + bits - i);
+            x(bits - i - 1);
         N /= 2;
         a /= 2;
     }
     N = NCopy;
     a = aCopy;
-    iqadd_2c(0, 1, 2, bits, approximate);
-    iqft(2 + bits, 2*bits + 2, approximate);
-    x(2*bits + 1);
-    cnot(2*bits + 1, 2*bits + 2);
-    x(2*bits + 1);
-    qft(2 + bits, 2*bits + 2, approximate);
+    // iqadd_2c(0, 1, 2, bits, approximate);
+    iqft(bits, 2*bits , approximate);
+    x(bits);
+    cnot(bits, 2*bits);
+    x(bits);
+    qft(bits, 2*bits, approximate);
     // �ADD(a)
     // a is already in register
-    qadd_2c(0, 1, 2, bits, approximate);
+    // qadd_2c(0, 1, 2, bits, approximate);
+}
+void Circuit::qaddMod_2c(unsigned a, unsigned N, size_t control1, size_t control2, size_t firstQubit, size_t bits, bool approximate) {
+    bits++; // one extra bit to avoid overflow
+    if (2 * bits + firstQubit + 1 > size)
+        throw std::out_of_range("qaddMod_2c out of range");
+    unsigned aCopy = a, NCopy = N;
+    // �ADD(a)
+    for (int i = 0; i < bits; i++) {
+        if (a % 2 == 1)
+            x(bits - i - 1 + firstQubit);
+        a /= 2;
+    }
+    a = aCopy;
+    qadd_2c(control1, control2, firstQubit, bits, approximate);
+    // inverse qADD(N)
+    for (int i = 0; i < bits; i++) {
+        if (N % 2 != a % 2)
+            x(bits - i - 1 + firstQubit);
+        N /= 2;
+        a /= 2;
+    }
+    N = NCopy;
+    a = aCopy;
+    iqadd(firstQubit, bits, approximate);
+
+    iqft(firstQubit + bits, firstQubit + 2*bits, approximate);
+    cnot(firstQubit + bits, firstQubit + 2*bits);
+    qft(firstQubit + bits, firstQubit + 2*bits, approximate);
+    
+    // �ADD(N)
+    // N is already in register 
+    qadd_1c(firstQubit + 2*bits, firstQubit, bits, approximate);
+    // inverse �ADD(a)
+    for (int i = 0; i < bits; i++) {
+        if (N % 2 != a % 2)
+            x(bits - i - 1 + firstQubit);
+        N /= 2;
+        a /= 2;
+    }
+    N = NCopy;
+    a = aCopy;
+    iqadd_2c(control1, control2, firstQubit, bits, approximate);
+    iqft(firstQubit + bits, 2*bits + firstQubit, approximate);
+    x(firstQubit + bits);
+    cnot(firstQubit + bits, firstQubit + 2*bits);
+    x(firstQubit + bits);
+    qft(firstQubit + bits, firstQubit + 2*bits, approximate);
+    // �ADD(a)
+    // a is already in register
+    qadd_2c(control1, control2, firstQubit, bits, approximate);
 }
 
 void Circuit::print() {

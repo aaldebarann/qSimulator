@@ -14,12 +14,7 @@ private:
     vector<Matrix*> matrices; // вектор из матриц гейтов
     vector<string> gates; // вектор из строк с поисаниями гейтов
     
-    void qadd_1c(size_t control, size_t firstQubit, size_t bits, bool approximate = false);
-    void iqadd_1c(size_t control, size_t firstQubit, size_t bits, bool approximate = false);
-    void qadd_2c(size_t control1, size_t control2, size_t firstQubit, size_t bits, bool approximate = false);
-    void iqadd_2c(size_t control1, size_t control2, size_t firstQubit, size_t bits, bool approximate = false);
-    
-    // квантовое сложение с двумя контролирующими кубитами
+
     /*
     void qadd_1с(size_t control, size_t firstQubit, size_t bits, bool approximate = false); // quantum addition
     void qadd_2с(size_t control1, size_t control2, size_t firstQubit, size_t bits, bool approximate = false); // quantum addition
@@ -60,7 +55,12 @@ public:
     void qadd(size_t firstQubit, size_t bits, bool approximate = false); // quantum addition
     void iqadd(size_t firstQubit, size_t bits, bool approximate = false); // inverse quantum addition
 
+    void qadd_1c(size_t control, size_t firstQubit, size_t bits, bool approximate = false);
+    void iqadd_1c(size_t control, size_t firstQubit, size_t bits, bool approximate = false);
+    void qadd_2c(size_t control1, size_t control2, size_t firstQubit, size_t bits, bool approximate = false);
+    void iqadd_2c(size_t control1, size_t control2, size_t firstQubit, size_t bits, bool approximate = false);
     void qaddMod_2c(unsigned summand, unsigned module, size_t control1, size_t control2, size_t firstQubit, size_t bits, bool approximate = false);
+    void qaddMod_2c_tmp(unsigned summand, unsigned module, size_t control1, size_t control2, size_t firstQubit, size_t bits, bool approximate = false);
 
 
     vector<Matrix*> getMatrices() {
