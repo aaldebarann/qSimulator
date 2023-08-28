@@ -295,60 +295,16 @@ void Circuit::iqadd_2c(size_t control1, size_t control2, size_t firstQubit, size
     gates.emplace_back("}");
 #endif
 }
-void Circuit::qaddMod_2c_tmp(unsigned a, unsigned N, size_t control1, size_t control2, size_t firstQubit, size_t bits, bool approximate) {
-    bits++; // one extra bit to avoid overflow
-    if (2 * bits + firstQubit + 1 > size)
-        throw std::out_of_range("qaddMod_2c out of range");
-    unsigned aCopy = a, NCopy = N;
-    // �ADD(a)
-    for (int i = 0; i < bits; i++) {
-        if (a % 2 == 1)
-            x(bits - i - 1);
-        a /= 2;
-    }
-    a = aCopy;
-    // qadd_2c(0, 1, 2, bits, approximate);
-    // inverse qADD(N)
-    for (int i = 0; i < bits; i++) {
-        if (N % 2 != a % 2)
-            x(bits - i - 1);
-        N /= 2;
-        a /= 2;
-    }
-    N = NCopy;
-    a = aCopy;
-    iqadd(0, bits, approximate);
-
-    iqft(bits, 2*bits, approximate);
-    cnot(bits, 2*bits );
-    qft(bits, 2*bits , approximate);
-
-    // �ADD(N)
-    // N is already in register
-    qadd_1c(2*bits, 0, bits, approximate);
-    // inverse �ADD(a)
-    for (int i = 0; i < bits; i++) {
-        if (N % 2 != a % 2)
-            x(bits - i - 1);
-        N /= 2;
-        a /= 2;
-    }
-    N = NCopy;
-    a = aCopy;
-    // iqadd_2c(0, 1, 2, bits, approximate);
-    iqft(bits, 2*bits , approximate);
-    x(bits);
-    cnot(bits, 2*bits);
-    x(bits);
-    qft(bits, 2*bits, approximate);
-    // �ADD(a)
-    // a is already in register
-    // qadd_2c(0, 1, 2, bits, approximate);
-}
 void Circuit::qaddMod_2c(unsigned a, unsigned N, size_t control1, size_t control2, size_t firstQubit, size_t bits, bool approximate) {
     bits++; // one extra bit to avoid overflow
     if (2 * bits + firstQubit + 1 > size)
         throw std::out_of_range("qaddMod_2c out of range");
+#ifdef HIGH_LEVEL_GATES_LOG
+    gates.push_back("qaddMod_2c(" + std::to_string(a) + std::to_string(N) + ", "+ ", "+
+    std::to_string(control1) + ", "+ std::to_string(control2)+ + ", "+ std::to_string(firstQubit)
+    + ", " + std::to_string(bits)+ ", " + std::to_string(approximate) + ")");
+    gates.emplace_back("{");
+#endif
     unsigned aCopy = a, NCopy = N;
     // �ADD(a)
     for (int i = 0; i < bits; i++) {
@@ -394,6 +350,26 @@ void Circuit::qaddMod_2c(unsigned a, unsigned N, size_t control1, size_t control
     // �ADD(a)
     // a is already in register
     qadd_2c(control1, control2, firstQubit, bits, approximate);
+
+    for (int i = 0; i < bits; i++) {
+        if (a % 2 == 1)
+            x(bits - i - 1 + firstQubit);
+        a /= 2;
+    }
+#ifdef HIGH_LEVEL_GATES_LOG
+    gates.emplace_back("}");
+#endif
+}
+
+void Circuit::cMultMod(unsigned a, unsigned N, size_t control, size_t firstQubit, size_t bits, bool approximate) {
+    if (2 * (bits + 1) + bits + firstQubit + 1> size)
+        throw std::out_of_range("cMultMod out of range");
+
+    qft(firstQubit + 2*bits + 1, firstQubit + 3*bits + 2, approximate);
+    for(int i = 0; i < bits; i++) {
+        qaddMod_2c((1 << i) * a, N, control, firstQubit + i, firstQubit + bits, bits, approximate);
+    }
+    iqft(firstQubit + 2*bits + 1, firstQubit + 3*bits + 2, approximate);
 }
 
 void Circuit::print() {

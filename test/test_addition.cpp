@@ -415,45 +415,6 @@ TEST(test_qaddMod, can_apply_approximate) {
     ASSERT_NO_THROW(s.apply(*circ));
     delete circ;
 }
-TEST(test_qaddMod, utitled) {
-    System s1(7), s2(7);
-
-    Circuit* init = new Circuit(7);
-    init->x(4);
-    init->qft(3, 6, false);
-    s1.apply(*init);
-    s2.apply(*init);
-    delete init;
-
-    Circuit* circ = new Circuit(7);
-    circ->qaddMod_2c_tmp(2, 3, 0, 1, 0, 2, false);
-    s1.apply(*circ);
-    delete circ;
-
-    Circuit* tmp = new Circuit(7);
-    tmp->x(1);
-    s2.apply(*tmp);
-    delete tmp;
-
-    vector<Complex> v1 = s1.getState(), v2 = s2.getState();
-    for(int i = 0; i < v1.size(); i++) {
-        if(std::abs(v1[i].real() - v2[i].real()) > 1.e-6 ||
-           std::abs(v1[i].imag() - v2[i].imag()) > 1.e-6 ) {
-            int k = i;
-            for(int j = 0; j < 7; j++) {
-                std::cout << k % 2;
-                k /= 2;
-            }
-            std::cout << std::endl;
-
-        }
-    }
-    vector<Complex> expected = s2.getState(), actual = s1.getState();
-    for(int j = 0; j < expected.size(); j++) {
-        EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-7);
-        EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-7);
-    }
-}
 TEST(test_qaddMod, control_qubit_in_zero_state) {
     System s1(9), s2(9);
 
@@ -469,11 +430,6 @@ TEST(test_qaddMod, control_qubit_in_zero_state) {
     circ->qaddMod_2c(2, 3, 0, 1, 2, 2, false);
     s1.apply(*circ);
     delete circ;
-
-    Circuit* tmp = new Circuit(9);
-    tmp->x(3);
-    s2.apply(*tmp);
-    delete tmp;
 
     vector<Complex> expected = s2.getState(), actual = s1.getState();
     for(int j = 0; j < expected.size(); j++) {
@@ -497,11 +453,6 @@ TEST(test_qaddMod, control_qubit_in_zero_state_2) {
     s1.apply(*circ);
     delete circ;
 
-    Circuit* tmp = new Circuit(9);
-    tmp->x(4);
-    s2.apply(*tmp);
-    delete tmp;
-
     vector<Complex> expected = s2.getState(), actual = s1.getState();
     for(int j = 0; j < expected.size(); j++) {
         EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-7);
@@ -523,11 +474,6 @@ TEST(test_qaddMod, control_qubit_in_zero_state_3) {
     circ->qaddMod_2c(1, 2, 0, 1, 2, 2, false);
     s1.apply(*circ);
     delete circ;
-
-    Circuit* tmp = new Circuit(9);
-    tmp->x(4);
-    s2.apply(*tmp);
-    delete tmp;
 
     vector<Complex> expected = s2.getState(), actual = s1.getState();
     for(int j = 0; j < expected.size(); j++) {
@@ -551,11 +497,6 @@ TEST(test_qaddMod, control_qubit_in_zero_state_4) {
     s1.apply(*circ);
     delete circ;
 
-    Circuit* tmp = new Circuit(9);
-    tmp->x(3);
-    s2.apply(*tmp);
-    delete tmp;
-
     vector<Complex> expected = s2.getState(), actual = s1.getState();
     for(int j = 0; j < expected.size(); j++) {
         EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-7);
@@ -577,11 +518,6 @@ TEST(test_qaddMod, control_qubit_in_zero_state_approximate_2) {
     circ->qaddMod_2c(1, 3, 0, 1, 2, 2, true);
     s1.apply(*circ);
     delete circ;
-
-    Circuit* tmp = new Circuit(9);
-    tmp->x(4);
-    s2.apply(*tmp);
-    delete tmp;
 
     vector<Complex> expected = s2.getState(), actual = s1.getState();
     for(int j = 0; j < expected.size(); j++) {
@@ -605,11 +541,6 @@ TEST(test_qaddMod, control_qubit_in_zero_state_approximate_3) {
     s1.apply(*circ);
     delete circ;
 
-    Circuit* tmp = new Circuit(9);
-    tmp->x(4);
-    s2.apply(*tmp);
-    delete tmp;
-
     vector<Complex> expected = s2.getState(), actual = s1.getState();
     for(int j = 0; j < expected.size(); j++) {
         EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-7);
@@ -632,11 +563,6 @@ TEST(test_qaddMod, control_qubit_in_zero_state_approximate_4) {
     s1.apply(*circ);
     delete circ;
 
-    Circuit* tmp = new Circuit(9);
-    tmp->x(3);
-    s2.apply(*tmp);
-    delete tmp;
-
     vector<Complex> expected = s2.getState(), actual = s1.getState();
     for(int j = 0; j < expected.size(); j++) {
         EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-7);
@@ -658,11 +584,6 @@ TEST(test_qaddMod, control_qubit_in_zero_state_approximate) {
     circ->qaddMod_2c(2, 3, 0, 1, 2, 2, true);
     s1.apply(*circ);
     delete circ;
-
-    Circuit* tmp = new Circuit(9);
-    tmp->x(3);
-    s2.apply(*tmp);
-    delete tmp;
 
     vector<Complex> expected = s2.getState(), actual = s1.getState();
     for(int j = 0; j < expected.size(); j++) {
@@ -689,7 +610,6 @@ TEST(test_qaddMod, _0_plus_1_mod_3) {
     Circuit* expect = new Circuit(9);
     expect->x(0);
     expect->x(1);
-    expect->x(4);
     expect->x(7);
     s2.apply(*expect);
     delete expect;
@@ -720,7 +640,6 @@ TEST(test_qaddMod, _1_plus_1_mod_2) {
     Circuit* expect = new Circuit(9);
     expect->x(0);
     expect->x(1);
-    expect->x(4);
     s2.apply(*expect);
     delete expect;
 
@@ -750,7 +669,6 @@ TEST(test_qaddMod, _1_plus_2_mod_3) {
     Circuit* expect = new Circuit(9);
     expect->x(0);
     expect->x(1);
-    expect->x(3);
     s2.apply(*expect);
     delete expect;
 
@@ -780,7 +698,6 @@ TEST(test_qaddMod, _2_plus_1_mod_3) {
     Circuit* expect = new Circuit(9);
     expect->x(0);
     expect->x(1);
-    expect->x(4);
     s2.apply(*expect);
     delete expect;
 
@@ -810,7 +727,6 @@ TEST(test_qaddMod, _2_plus_2_mod_3) {
     Circuit* expect = new Circuit(9);
     expect->x(0);
     expect->x(1);
-    expect->x(3);
     expect->x(7);
     s2.apply(*expect);
     delete expect;
@@ -841,8 +757,6 @@ TEST(test_qaddMod, _2_plus_3_mod_3) {
     Circuit* expect = new Circuit(9);
     expect->x(0);
     expect->x(1);
-    expect->x(3);
-    expect->x(4);
     expect->x(6);
     s2.apply(*expect);
     delete expect;
@@ -874,8 +788,6 @@ TEST(test_qaddMod, _3_plus_6_mod_7) {
     Circuit* expect = new Circuit(11);
     expect->x(0);
     expect->x(1);
-    expect->x(3);
-    expect->x(4);
     expect->x(8);
     s2.apply(*expect);
     delete expect;
@@ -907,7 +819,6 @@ TEST(test_qaddMod, _5_plus_4_mod_7) {
     Circuit* expect = new Circuit(11);
     expect->x(0);
     expect->x(1);
-    expect->x(3);
     expect->x(8);
     s2.apply(*expect);
     delete expect;
@@ -939,8 +850,6 @@ TEST(test_qaddMod, _3_plus_6_mod_7_approximate) {
     Circuit* expect = new Circuit(11);
     expect->x(0);
     expect->x(1);
-    expect->x(3);
-    expect->x(4);
     expect->x(8);
     s2.apply(*expect);
     delete expect;
@@ -972,7 +881,6 @@ TEST(test_qaddMod, _5_plus_4_mod_7_approximate) {
     Circuit* expect = new Circuit(11);
     expect->x(0);
     expect->x(1);
-    expect->x(3);
     expect->x(8);
     s2.apply(*expect);
     delete expect;
