@@ -59,9 +59,15 @@ public:
     void iqadd_1c(size_t control, size_t firstQubit, size_t bits, bool approximate = false);
     void qadd_2c(size_t control1, size_t control2, size_t firstQubit, size_t bits, bool approximate = false);
     void iqadd_2c(size_t control1, size_t control2, size_t firstQubit, size_t bits, bool approximate = false);
-    void qaddMod_2c(unsigned summand, unsigned module, size_t control1, size_t control2, size_t firstQubit, size_t bits, bool approximate = false);
+    void qaddMod_2c(unsigned summand, unsigned module, size_t control1, size_t control2, size_t firstQubit, size_t bits,
+                    bool approximate = false);
+    void iqaddMod_2c(unsigned summand, unsigned module, size_t control1, size_t control2, size_t firstQubit, size_t bits,
+                     bool approximate = false);
 
     void cMultMod(unsigned a, unsigned module, size_t control, size_t firstQubit, size_t bits, bool approximate = false);
+    void icMultMod(unsigned a, unsigned module, size_t control, size_t firstQubit, size_t bits, bool approximate = false);
+    void u(unsigned a, unsigned module, size_t control, size_t firstQubit, size_t bits, bool approximate);
+
 
     vector<Matrix*> getMatrices() {
         return matrices;

@@ -84,6 +84,8 @@ void System::apply(Circuit &circ) {
         state = *m * state;
         i++;
     }
+    size_t st = measure();
+    string sys = tmp(size, st);
 }
 
 std::map<int, int> System::measure(size_t t) const {
