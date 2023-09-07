@@ -44,8 +44,7 @@ public:
 
     void ccp(double phi, size_t control1, size_t control2, size_t target); // Phase rotation with two controll qubits
     void cccp(double phi, size_t control1, size_t control2, size_t control3, size_t target);
-                                                                           // void cccp(double phi, size_t control1, size_t control2, size_t control3, size_t target);
-                                                                           //void cсcp(double phi, size_t control1, size_t control2, size_t control3, size_t target); // Phase rotation with three controll qubits
+    void cswap(size_t control, size_t target1, size_t target2);
     void add(size_t bits); // classical addition
     // QFT
     // from first qubit to last - 1 qubit
@@ -67,7 +66,6 @@ public:
     void cMultMod(unsigned a, unsigned module, size_t control, size_t firstQubit, size_t bits, bool approximate = false);
     void icMultMod(unsigned a, unsigned module, size_t control, size_t firstQubit, size_t bits, bool approximate = false);
     void u(unsigned a, unsigned module, size_t control, size_t firstQubit, size_t bits, bool approximate);
-
 
     vector<Matrix*> getMatrices() {
         return matrices;

@@ -89,6 +89,14 @@ void Circuit::cccp(double phi, size_t control1, size_t control2, size_t control3
         + std::to_string(control1) + ", " + std::to_string(control2) + ", " + std::to_string(control3) + ", " + std::to_string(target) + ")");
 
 }
+void Circuit::cswap(size_t control, size_t target1, size_t target2) {
+    cnot(target2, target1);
+    ccnot(control, target1, target2);
+    cnot(target2, target1);
+    // matrices.push_back(CSWAP( control, target1, target2, size));
+    gates.push_back("CSWAP(" + std::to_string(control) + ", "
+                    + std::to_string(target1)+ ", " + std::to_string(target2) + ")");
+}
 // composed gates
 void Circuit::add(size_t bits) {
     if(3 * bits + 1 > size)
@@ -427,7 +435,7 @@ void Circuit::cMultMod(unsigned a, unsigned N, size_t control, size_t firstQubit
 
     qft(firstQubit + 2*bits + 1, firstQubit + 3*bits + 2, approximate);
     for(int i = 0; i < bits; i++) {
-        qaddMod_2c((1 << i) * a, N, control, firstQubit + i, firstQubit + bits, bits, approximate);
+        qaddMod_2c((1 << i) * a, N, control, firstQubit + bits - i - 1, firstQubit + bits, bits, approximate);
     }
     iqft(firstQubit + 2*bits + 1, firstQubit + 3*bits + 2, approximate);
 }
@@ -438,7 +446,7 @@ void Circuit::icMultMod(unsigned a, unsigned N, size_t control, size_t firstQubi
 
     qft(firstQubit + 2*bits + 1, firstQubit + 3*bits + 2, approximate);
     for(int i = 0; i < bits; i++) {
-        iqaddMod_2c((1 << i) * a, N, control, firstQubit + i, firstQubit + bits, bits, approximate);
+        iqaddMod_2c((1 << i) * a, N, control, firstQubit + bits - i - 1, firstQubit + bits, bits, approximate);
     }
     iqft(firstQubit + 2*bits + 1, firstQubit + 3*bits + 2, approximate);
 
@@ -467,9 +475,10 @@ void Circuit::u(unsigned a, unsigned N, size_t control, size_t firstQubit, size_
     if (3 * bits + firstQubit + 3 > size)
         throw std::out_of_range("controlled-U(a) out of range");
     cMultMod(a, N, control, firstQubit, bits, approximate);
-    // swap?
+    for(int i = 0; i < bits; i++) {
+        cswap(control, firstQubit + i, firstQubit + 2*bits + 2 + i);
+    }
     icMultMod(inverse(a, N), N, control, firstQubit, bits, approximate);
-
 }
 
 void Circuit::print() {
@@ -477,4 +486,5 @@ void Circuit::print() {
         std::cout << s << std::endl;
     }
 }
+
 

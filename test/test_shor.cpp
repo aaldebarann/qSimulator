@@ -46,7 +46,7 @@ TEST(cMultMod, _0_plus_2_mul_2_mod_3) {
 
     Circuit* init = new Circuit(10);
     init->x(0);
-    init->x(2);
+    init->x(1);
     s1.apply(*init);
     delete init;
 
@@ -57,7 +57,7 @@ TEST(cMultMod, _0_plus_2_mul_2_mod_3) {
 
     Circuit* expect = new Circuit(10);
     expect->x(0);
-    expect->x(2);
+    expect->x(1);
     expect->x(8);
     s2.apply(*expect);
     delete expect;
@@ -103,7 +103,7 @@ TEST(cMultMod, _1_plus_2_mul_2_mod_3) {
 
     Circuit* init = new Circuit(10);
     init->x(0);
-    init->x(2);
+    init->x(1);
     init->x(8);
     s1.apply(*init);
     delete init;
@@ -115,7 +115,7 @@ TEST(cMultMod, _1_plus_2_mul_2_mod_3) {
 
     Circuit* expect = new Circuit(10);
     expect->x(0);
-    expect->x(2);
+    expect->x(1);
     expect->x(7);
     s2.apply(*expect);
     delete expect;
@@ -131,7 +131,7 @@ TEST(cMultMod, _1_plus_2_mul_1_mod_3) {
 
     Circuit* init = new Circuit(10);
     init->x(0);
-    init->x(1);
+    init->x(2);
     init->x(8);
     s1.apply(*init);
     delete init;
@@ -143,7 +143,7 @@ TEST(cMultMod, _1_plus_2_mul_1_mod_3) {
 
     Circuit* expect = new Circuit(10);
     expect->x(0);
-    expect->x(1);
+    expect->x(2);
     s2.apply(*expect);
     delete expect;
 
@@ -158,7 +158,7 @@ TEST(cMultMod, _0_plus_2_mul_2_mod_3_approximate) {
 
     Circuit* init = new Circuit(10);
     init->x(0);
-    init->x(2);
+    init->x(1);
     s1.apply(*init);
     delete init;
 
@@ -169,7 +169,7 @@ TEST(cMultMod, _0_plus_2_mul_2_mod_3_approximate) {
 
     Circuit* expect = new Circuit(10);
     expect->x(0);
-    expect->x(2);
+    expect->x(1);
     expect->x(8);
     s2.apply(*expect);
     delete expect;
@@ -215,7 +215,7 @@ TEST(cMultMod, _1_plus_2_mul_2_mod_3_approximate) {
 
     Circuit* init = new Circuit(10);
     init->x(0);
-    init->x(2);
+    init->x(1);
     init->x(8);
     s1.apply(*init);
     delete init;
@@ -227,7 +227,7 @@ TEST(cMultMod, _1_plus_2_mul_2_mod_3_approximate) {
 
     Circuit* expect = new Circuit(10);
     expect->x(0);
-    expect->x(2);
+    expect->x(1);
     expect->x(7);
     s2.apply(*expect);
     delete expect;
@@ -243,7 +243,7 @@ TEST(cMultMod, _1_plus_2_mul_1_mod_3_approximate) {
 
     Circuit* init = new Circuit(10);
     init->x(0);
-    init->x(1);
+    init->x(2);
     init->x(8);
     s1.apply(*init);
     delete init;
@@ -255,7 +255,7 @@ TEST(cMultMod, _1_plus_2_mul_1_mod_3_approximate) {
 
     Circuit* expect = new Circuit(10);
     expect->x(0);
-    expect->x(1);
+    expect->x(2);
     s2.apply(*expect);
     delete expect;
 
@@ -324,7 +324,7 @@ TEST(icMultMod, _1_minus_2_mul_2_mod_3) {
 
     Circuit* init = new Circuit(10);
     init->x(0);
-    init->x(2);
+    init->x(1);
     init->x(8);
     s1.apply(*init);
     delete init;
@@ -336,7 +336,7 @@ TEST(icMultMod, _1_minus_2_mul_2_mod_3) {
 
     Circuit* expect = new Circuit(10);
     expect->x(0);
-    expect->x(2);
+    expect->x(1);
     s2.apply(*expect);
     delete expect;
 
@@ -351,7 +351,7 @@ TEST(icMultMod, _1_minus_2_mul_1_mod_3) {
 
     Circuit* init = new Circuit(10);
     init->x(0);
-    init->x(1);
+    init->x(2);
     init->x(8);
     s1.apply(*init);
     delete init;
@@ -363,7 +363,7 @@ TEST(icMultMod, _1_minus_2_mul_1_mod_3) {
 
     Circuit* expect = new Circuit(10);
     expect->x(0);
-    expect->x(1);
+    expect->x(2);
     expect->x(7);
     s2.apply(*expect);
     delete expect;
@@ -409,7 +409,7 @@ TEST(icMultMod, _1_minus_2_mul_2_mod_3_approximate) {
 
     Circuit* init = new Circuit(10);
     init->x(0);
-    init->x(2);
+    init->x(1);
     init->x(8);
     s1.apply(*init);
     delete init;
@@ -421,7 +421,7 @@ TEST(icMultMod, _1_minus_2_mul_2_mod_3_approximate) {
 
     Circuit* expect = new Circuit(10);
     expect->x(0);
-    expect->x(2);
+    expect->x(1);
     s2.apply(*expect);
     delete expect;
 
@@ -436,7 +436,7 @@ TEST(icMultMod, _1_minus_2_mul_1_mod_3_approximate) {
 
     Circuit* init = new Circuit(10);
     init->x(0);
-    init->x(1);
+    init->x(2);
     init->x(8);
     s1.apply(*init);
     delete init;
@@ -448,7 +448,7 @@ TEST(icMultMod, _1_minus_2_mul_1_mod_3_approximate) {
 
     Circuit* expect = new Circuit(10);
     expect->x(0);
-    expect->x(1);
+    expect->x(2);
     expect->x(7);
     s2.apply(*expect);
     delete expect;
@@ -457,5 +457,166 @@ TEST(icMultMod, _1_minus_2_mul_1_mod_3_approximate) {
     for(int j = 0; j < expected.size(); j++) {
         EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-6);
         EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-6);
+    }
+}
+
+TEST(controlledUa, can_apply) {
+    System s(10);
+    Circuit* circ = new Circuit(10);
+    circ->u(2, 3, 0, 1, 2, false);
+    ASSERT_NO_THROW(s.apply(*circ));
+    delete circ;
+}
+TEST(controlledUa, control_qubit_is_zero) {
+    System s1(10), s2(10);
+
+    Circuit* init = new Circuit(10);
+    init->x(1);
+
+    Circuit* circ = new Circuit(10);
+    circ->u(2, 3, 0, 1, 2, false);
+    s1.apply(*circ);
+    delete circ;
+
+    Circuit* expect = new Circuit(10);
+    expect->x(1);
+
+    vector<Complex> expected = s2.getState(), actual = s1.getState();
+    for(int j = 0; j < expected.size(); j++) {
+        EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-5);
+        EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-5);
+    }
+}
+TEST(controlledUa, _2_mul_2_mod_3) {
+    System s1(10), s2(10);
+
+    Circuit* init = new Circuit(10);
+    init->x(0);
+    init->x(1);
+
+    Circuit* circ = new Circuit(10);
+    circ->u(2, 3, 0, 1, 2, false);
+    s1.apply(*circ);
+    delete circ;
+
+    Circuit* expect = new Circuit(10);
+    expect->x(0);
+    expect->x(2);
+
+    vector<Complex> expected = s2.getState(), actual = s1.getState();
+    for(int j = 0; j < expected.size(); j++) {
+        EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-5);
+        EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-5);
+    }
+}
+TEST(controlledUa, _3_mul_1_mod_3) {
+    System s1(10), s2(10);
+
+    Circuit* init = new Circuit(10);
+    init->x(0);
+    init->x(2);
+
+    Circuit* circ = new Circuit(10);
+    circ->u(3, 3, 0, 1, 2, false);
+    s1.apply(*circ);
+    delete circ;
+
+    Circuit* expect = new Circuit(10);
+    expect->x(0);
+
+    vector<Complex> expected = s2.getState(), actual = s1.getState();
+    for(int j = 0; j < expected.size(); j++) {
+        EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-5);
+        EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-5);
+    }
+}
+TEST(controlledUa, _1_mul_2_mod_3) {
+    System s1(10), s2(10);
+
+    Circuit* init = new Circuit(10);
+    init->x(0);
+    init->x(1);
+
+    Circuit* circ = new Circuit(10);
+    circ->u(1, 3, 0, 1, 2, false);
+    s1.apply(*circ);
+    delete circ;
+
+    Circuit* expect = new Circuit(10);
+    expect->x(0);
+    init->x(1);
+
+    vector<Complex> expected = s2.getState(), actual = s1.getState();
+    for(int j = 0; j < expected.size(); j++) {
+        EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-5);
+        EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-5);
+    }
+}
+TEST(controlledUa, _2_mul_1_mod_3) {
+    System s1(10), s2(10);
+
+    Circuit* init = new Circuit(10);
+    init->x(0);
+    init->x(2);
+
+    Circuit* circ = new Circuit(10);
+    circ->u(2, 3, 0, 1, 2, false);
+    s1.apply(*circ);
+    delete circ;
+
+    Circuit* expect = new Circuit(10);
+    expect->x(0);
+    init->x(1);
+
+    vector<Complex> expected = s2.getState(), actual = s1.getState();
+    for(int j = 0; j < expected.size(); j++) {
+        EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-5);
+        EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-5);
+    }
+}
+TEST(controlledUa, _0_mul_3_mod_3) {
+    System s1(10), s2(10);
+
+    Circuit* init = new Circuit(10);
+    init->x(0);
+    init->x(1);
+    init->x(2);
+
+    Circuit* circ = new Circuit(10);
+    circ->u(0, 3, 0, 1, 2, false);
+    s1.apply(*circ);
+    delete circ;
+
+    Circuit* expect = new Circuit(10);
+    expect->x(0);
+
+    vector<Complex> expected = s2.getState(), actual = s1.getState();
+    for(int j = 0; j < expected.size(); j++) {
+        EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-5);
+        EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-5);
+    }
+}
+TEST(controlledUa, _1_mul_3_mod_3) {
+    System s1(10), s2(10);
+
+    Circuit* init = new Circuit(10);
+    init->x(0);
+    init->x(1);
+    init->x(2);
+
+    Circuit* circ = new Circuit(10);
+    circ->u(1, 3, 0, 1, 2, false);
+    s1.apply(*circ);
+    delete circ;
+
+    Circuit* expect = new Circuit(10);
+    expect->x(0);
+    expect->x(1);
+    expect->x(2);
+
+    vector<Complex> expected = s2.getState(), actual = s1.getState();
+    for(int j = 0; j < expected.size(); j++) {
+        EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-5);
+        EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-5);
     }
 }
