@@ -13,7 +13,6 @@ class Circuit {
 private:
     vector<Matrix*> matrices; // вектор из матриц гейтов
     vector<string> gates; // вектор из строк с поисаниями гейтов
-    
 
     /*
     void qadd_1с(size_t control, size_t firstQubit, size_t bits, bool approximate = false); // quantum addition

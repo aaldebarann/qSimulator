@@ -67,25 +67,10 @@ vector<Complex> System::measure(size_t target) {
     return state;
 }
 
-string tmp(size_t size, size_t st) {
-    string sys;
-    for(int i = 0; i < size; i++) {
-        sys += std::to_string(st%2);
-        st /= 2;
-    }
-    return sys;
-}
-
 void System::apply(Circuit &circ) {
-    int i = 0;
     for(Matrix* m: circ.getMatrices()) {
-        size_t st = measure();
-        string sys = tmp(size, st);
         state = *m * state;
-        i++;
     }
-    size_t st = measure();
-    string sys = tmp(size, st);
 }
 
 std::map<int, int> System::measure(size_t t) const {
