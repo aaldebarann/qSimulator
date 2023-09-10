@@ -136,6 +136,7 @@ void StateVector::it(size_t target) {
     p(-M_PI * 0.25, target);
 } // T gate
 void StateVector::cnot(size_t control, size_t target) {
+    // TODO: Где проверки на выход за границы системы????????????
     gates.push_back("CNOT(" + std::to_string(control) + ", " + std::to_string(target) + ")");
     size_t mask = 1 << target;
     size_t controlMask = 1 << control;
@@ -407,109 +408,39 @@ void StateVector::qaddMod_2c(unsigned a, unsigned N, size_t control1, size_t con
     bits++; // one extra bit to avoid overflow
     if (bits + firstQubit + 1 > size)
         throw std::out_of_range("qaddMod_2c out of range");
-    // TODO:
-    unsigned aCopy = a, NCopy = N;
-    // �ADD(a)
-    for (int i = 0; i < bits; i++) {
-        if (a % 2 == 1)
-            x(bits - i - 1 + firstQubit);
-        a /= 2;
-    }
-    a = aCopy;
-    qadd_2c(control1, control2, firstQubit, bits, approximate);
-    // inverse qADD(N)
-    for (int i = 0; i < bits; i++) {
-        if (N % 2 != a % 2)
-            x(bits - i - 1 + firstQubit);
-        N /= 2;
-        a /= 2;
-    }
-    N = NCopy;
-    a = aCopy;
-    iqadd(firstQubit, bits, approximate);
 
-    iqft(firstQubit + bits, firstQubit + 2*bits, approximate);
-    cnot(firstQubit + bits, firstQubit + 2*bits);
-    qft(firstQubit + bits, firstQubit + 2*bits, approximate);
-
-    // �ADD(N)
-    // N is already in register 
-    qadd_1c(firstQubit + 2*bits, firstQubit, bits, approximate);
-    // inverse �ADD(a)
-    for (int i = 0; i < bits; i++) {
-        if (N % 2 != a % 2)
-            x(bits - i - 1 + firstQubit);
-        N /= 2;
-        a /= 2;
-    }
-    N = NCopy;
-    a = aCopy;
-    iqadd_2c(control1, control2, firstQubit, bits, approximate);
-    iqft(firstQubit + bits, 2*bits + firstQubit, approximate);
-    x(firstQubit + bits);
-    cnot(firstQubit + bits, firstQubit + 2*bits);
-    x(firstQubit + bits);
-    qft(firstQubit + bits, firstQubit + 2*bits, approximate);
-    // �ADD(a)
-    // a is already in register
-    qadd_2c(control1, control2, firstQubit, bits, approximate);
-
-    for (int i = 0; i < bits; i++) {
-        if (a % 2 == 1)
-            x(bits - i - 1 + firstQubit);
-        a /= 2;
-    }
+    qadd_2c(a, control1, control2, firstQubit, bits, approximate);
+    iqadd(N, firstQubit, bits, approximate);
+    iqft(firstQubit, firstQubit + bits, approximate);
+    cnot(firstQubit, firstQubit + bits);
+    qft(firstQubit, firstQubit + bits, approximate);
+    qadd_1c(N, firstQubit + bits, firstQubit, bits, approximate);
+    iqadd_2c(a, control1, control2, firstQubit, bits, approximate);
+    iqft(firstQubit, bits + firstQubit, approximate);
+    x(firstQubit);
+    cnot(firstQubit, firstQubit + bits);
+    x(firstQubit);
+    qft(firstQubit, firstQubit + bits, approximate);
+    qadd_2c(a, control1, control2, firstQubit, bits, approximate);
 }
 void StateVector::iqaddMod_2c(unsigned int a, unsigned int N, size_t control1, size_t control2, size_t firstQubit, size_t bits, bool approximate) {
     bits++; // one extra bit to avoid overflow
-    if (2 * bits + firstQubit + 1 > size)
+    if (bits + firstQubit + 1 > size)
         throw std::out_of_range("iqaddMod_2c out of range");
-    unsigned aCopy = a, NCopy = N;
 
-    // put a in register
-    for (int i = 0; i < bits; i++) {
-        if (a % 2 == 1)
-            x(bits - i - 1 + firstQubit);
-        a /= 2;
-    }
-    a = aCopy;
-    iqadd_2c(control1, control2, firstQubit, bits, approximate);
-    iqft(firstQubit + bits, firstQubit + 2*bits, approximate);
-    x(firstQubit + bits);
-    cnot(firstQubit + bits, firstQubit + 2*bits);
-    x(firstQubit + bits);
-    qft(firstQubit + bits, 2*bits + firstQubit, approximate);
-    qadd_2c(control1, control2, firstQubit, bits, approximate);
-    // put N in register
-    for (int i = 0; i < bits; i++) {
-        if (N % 2 != a % 2)
-            x(bits - i - 1 + firstQubit);
-        N /= 2;
-        a /= 2;
-    }
-    N = NCopy;
-    a = aCopy;
-    iqadd_1c(firstQubit + 2*bits, firstQubit, bits, approximate);
-    iqft(firstQubit + bits, firstQubit + 2*bits, approximate);
-    cnot(firstQubit + bits, firstQubit + 2*bits);
-    qft(firstQubit + bits, firstQubit + 2*bits, approximate);
-    qadd(firstQubit, bits, approximate);
-    // put a in register
-    for (int i = 0; i < bits; i++) {
-        if (N % 2 != a % 2)
-            x(bits - i - 1 + firstQubit);
-        N /= 2;
-        a /= 2;
-    }
-    N = NCopy;
-    a = aCopy;
-    iqadd_2c(control1, control2, firstQubit, bits, approximate);
-
-    for (int i = 0; i < bits; i++) {
-        if (a % 2 == 1)
-            x(bits - i - 1 + firstQubit);
-        a /= 2;
-    }
+    iqadd_2c(a, control1, control2, firstQubit, bits, approximate);
+    iqft(firstQubit, firstQubit + bits, approximate);
+    x(firstQubit);
+    cnot(firstQubit, firstQubit + bits);
+    x(firstQubit);
+    qft(firstQubit, bits + firstQubit, approximate);
+    qadd_2c(a, control1, control2, firstQubit, bits, approximate);
+    iqadd_1c(N, firstQubit + bits, firstQubit, bits, approximate);
+    iqft(firstQubit, firstQubit + bits, approximate);
+    cnot(firstQubit, firstQubit + bits);
+    qft(firstQubit, firstQubit + bits, approximate);
+    qadd(N, firstQubit, bits, approximate);
+    iqadd_2c(a, control1, control2, firstQubit, bits, approximate);
 }
 
 void StateVector::cMultMod(unsigned a, unsigned N, size_t control, size_t firstQubit, size_t bits, bool approximate) {

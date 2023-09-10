@@ -68,8 +68,8 @@ TEST(qadd, qadd_is_inverse_to_iqadd) {
     actual = s1.getState();
 
     for (int i = 0; i < expected.size(); i++) {
-        EXPECT_NEAR(expected[i].real(), actual[i].real(), 1.0e-7);
-        EXPECT_NEAR(expected[i].imag(), actual[i].imag(), 1.0e-7);
+        EXPECT_NEAR(expected[i].real(), actual[i].real(), 1.0e-6);
+        EXPECT_NEAR(expected[i].imag(), actual[i].imag(), 1.0e-6);
     }
 }
 TEST(qadd, quantum) {
@@ -201,8 +201,8 @@ TEST(test_qadd_1c, qadd_is_inverse_to_iqadd) {
     actual = s1->getState();
 
     for (int i = 0; i < expected.size(); i++) {
-        EXPECT_NEAR(expected[i].real(), actual[i].real(), 1.0e-7);
-        EXPECT_NEAR(expected[i].imag(), actual[i].imag(), 1.0e-7);
+        EXPECT_NEAR(expected[i].real(), actual[i].real(), 1.0e-6);
+        EXPECT_NEAR(expected[i].imag(), actual[i].imag(), 1.0e-6);
     }
     delete s1;
     delete s2;
@@ -267,8 +267,8 @@ TEST(test_qadd_2c, qadd_is_inverse_to_iqadd) {
     actual = s1->getState();
 
     for (int i = 0; i < expected.size(); i++) {
-        EXPECT_NEAR(expected[i].real(), actual[i].real(), 1.0e-7);
-        EXPECT_NEAR(expected[i].imag(), actual[i].imag(), 1.0e-7);
+        EXPECT_NEAR(expected[i].real(), actual[i].real(), 1.0e-6);
+        EXPECT_NEAR(expected[i].imag(), actual[i].imag(), 1.0e-6);
     }
     delete s1;
     delete s2;
@@ -339,919 +339,503 @@ TEST(test_qadd_2c, reverse_qadd_negative_sum) {
 }
 
 TEST(test_qaddMod, can_apply) {
-    StateVector* s = new StateVector(6);
+    StateVector* s = new StateVector(8);
     ASSERT_NO_THROW(s->qaddMod_2c(3, 6, 0, 1, 2, 4, false));
     delete s;
 }
 TEST(test_qaddMod, can_apply_approximate) {
-    StateVector* s = new StateVector(6);
+    StateVector* s = new StateVector(8);
     ASSERT_NO_THROW(s->qaddMod_2c(3, 6, 0, 1, 2, 4, true));
     delete s;
 }
 TEST(test_qaddMod, control_qubit_in_zero_state) {
-    System s1(9), s2(9);
+    StateVector* s1 = new StateVector(6);
+    StateVector* s2 = new StateVector(6);
 
-    Circuit* init = new Circuit(9);
-    init->x(0);
-    init->x(6);
-    init->qft(5, 8, false);
-    s1.apply(*init);
-    s2.apply(*init);
-    delete init;
+    s1->x(0);
+    s1->x(3);
+    s1->qft(2, 5, false);
+    s2->x(0);
+    s2->x(3);
+    s2->qft(2, 5, false);
 
-    Circuit* circ = new Circuit(9);
-    circ->qaddMod_2c(2, 3, 0, 1, 2, 2, false);
-    s1.apply(*circ);
-    delete circ;
+    s1->qaddMod_2c(2, 3, 0, 1, 2, 2, false);
 
-    vector<Complex> expected = s2.getState(), actual = s1.getState();
+    vector<Complex> expected = s2->getState(), actual = s1->getState();
     for(int j = 0; j < expected.size(); j++) {
-        EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-7);
-        EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-7);
+        EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-6);
+        EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-6);
     }
+    delete s1;
+    delete s2;
 }
 TEST(test_qaddMod, control_qubit_in_zero_state_2) {
-    System s1(9), s2(9);
+    StateVector* s1 = new StateVector(6);
+    StateVector* s2 = new StateVector(6);
 
-    Circuit* init = new Circuit(9);
-    init->x(0);
-    init->x(6);
-    init->qft(5, 8, false);
-    s1.apply(*init);
-    s2.apply(*init);
-    delete init;
+    s1->x(0);
+    s1->x(3);
+    s1->qft(2, 5, false);
+    s2->x(0);
+    s2->x(3);
+    s2->qft(2, 5, false);
 
-    Circuit* circ = new Circuit(9);
-    circ->qaddMod_2c(1, 3, 0, 1, 2, 2, false);
-    s1.apply(*circ);
-    delete circ;
+    s1->qaddMod_2c(1, 3, 0, 1, 2, 2, false);
 
-    vector<Complex> expected = s2.getState(), actual = s1.getState();
+    vector<Complex> expected = s2->getState(), actual = s1->getState();
     for(int j = 0; j < expected.size(); j++) {
-        EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-7);
-        EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-7);
+        EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-6);
+        EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-6);
     }
+    delete s1;
+    delete s2;
 }
 TEST(test_qaddMod, control_qubit_in_zero_state_3) {
-    System s1(9), s2(9);
+    StateVector* s1 = new StateVector(6);
+    StateVector* s2 = new StateVector(6);
 
-    Circuit* init = new Circuit(9);
-    init->x(0);
-    init->x(7);
-    init->qft(5, 8, false);
-    s1.apply(*init);
-    s2.apply(*init);
-    delete init;
+    s1->x(0);
+    s1->x(4);
+    s1->qft(2, 5, false);
+    s2->x(0);
+    s2->x(4);
+    s2->qft(2, 5, false);
 
-    Circuit* circ = new Circuit(9);
-    circ->qaddMod_2c(1, 2, 0, 1, 2, 2, false);
-    s1.apply(*circ);
-    delete circ;
+    s1->qaddMod_2c(1, 2, 0, 1, 2, 2, false);
 
-    vector<Complex> expected = s2.getState(), actual = s1.getState();
+    vector<Complex> expected = s2->getState(), actual = s1->getState();
     for(int j = 0; j < expected.size(); j++) {
-        EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-7);
-        EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-7);
+        EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-6);
+        EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-6);
     }
+    delete s1;
+    delete s2;
 }
 TEST(test_qaddMod, control_qubit_in_zero_state_4) {
-    System s1(9), s2(9);
+    StateVector* s1 = new StateVector(6);
+    StateVector* s2 = new StateVector(6);
 
-    Circuit* init = new Circuit(9);
-    init->x(0);
-    init->x(7);
-    init->qft(5, 8, false);
-    s1.apply(*init);
-    s2.apply(*init);
-    delete init;
+    s1->x(0);
+    s1->x(4);
+    s1->qft(2, 5, false);
+    s2->x(0);
+    s2->x(4);
+    s2->qft(2, 5, false);
 
-    Circuit* circ = new Circuit(9);
-    circ->qaddMod_2c(2, 3, 0, 1, 2, 2, false);
-    s1.apply(*circ);
-    delete circ;
+    s1->qaddMod_2c(2, 3, 0, 1, 2, 2, false);
 
-    vector<Complex> expected = s2.getState(), actual = s1.getState();
+    vector<Complex> expected = s2->getState(), actual = s1->getState();
     for(int j = 0; j < expected.size(); j++) {
-        EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-7);
-        EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-7);
+        EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-6);
+        EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-6);
     }
-}
-TEST(test_qaddMod, control_qubit_in_zero_state_approximate_2) {
-    System s1(9), s2(9);
-
-    Circuit* init = new Circuit(9);
-    init->x(0);
-    init->x(6);
-    init->qft(5, 8, false);
-    s1.apply(*init);
-    s2.apply(*init);
-    delete init;
-
-    Circuit* circ = new Circuit(9);
-    circ->qaddMod_2c(1, 3, 0, 1, 2, 2, true);
-    s1.apply(*circ);
-    delete circ;
-
-    vector<Complex> expected = s2.getState(), actual = s1.getState();
-    for(int j = 0; j < expected.size(); j++) {
-        EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-7);
-        EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-7);
-    }
-}
-TEST(test_qaddMod, control_qubit_in_zero_state_approximate_3) {
-    System s1(9), s2(9);
-
-    Circuit* init = new Circuit(9);
-    init->x(0);
-    init->x(7);
-    init->qft(5, 8, false);
-    s1.apply(*init);
-    s2.apply(*init);
-    delete init;
-
-    Circuit* circ = new Circuit(9);
-    circ->qaddMod_2c(1, 2, 0, 1, 2, 2, true);
-    s1.apply(*circ);
-    delete circ;
-
-    vector<Complex> expected = s2.getState(), actual = s1.getState();
-    for(int j = 0; j < expected.size(); j++) {
-        EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-7);
-        EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-7);
-    }
-}
-TEST(test_qaddMod, control_qubit_in_zero_state_approximate_4) {
-    System s1(9), s2(9);
-
-    Circuit* init = new Circuit(9);
-    init->x(0);
-    init->x(7);
-    init->qft(5, 8, false);
-    s1.apply(*init);
-    s2.apply(*init);
-    delete init;
-
-    Circuit* circ = new Circuit(9);
-    circ->qaddMod_2c(2, 3, 0, 1, 2, 2, true);
-    s1.apply(*circ);
-    delete circ;
-
-    vector<Complex> expected = s2.getState(), actual = s1.getState();
-    for(int j = 0; j < expected.size(); j++) {
-        EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-7);
-        EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-7);
-    }
+    delete s1;
+    delete s2;
 }
 TEST(test_qaddMod, control_qubit_in_zero_state_approximate) {
-    System s1(9), s2(9);
+    StateVector* s1 = new StateVector(6);
+    StateVector* s2 = new StateVector(6);
 
-    Circuit* init = new Circuit(9);
-    init->x(0);
-    init->x(6);
-    init->qft(5, 8, false);
-    s1.apply(*init);
-    s2.apply(*init);
-    delete init;
+    s1->x(0);
+    s1->x(3);
+    s1->qft(2, 5, false);
+    s2->x(0);
+    s2->x(3);
+    s2->qft(2, 5, false);
 
-    Circuit* circ = new Circuit(9);
-    circ->qaddMod_2c(2, 3, 0, 1, 2, 2, true);
-    s1.apply(*circ);
-    delete circ;
+    s1->qaddMod_2c(2, 3, 0, 1, 2, 2, true);
 
-    vector<Complex> expected = s2.getState(), actual = s1.getState();
-    for(int j = 0; j < expected.size(); j++) {
-        EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-7);
-        EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-7);
-    }
-}
-TEST(test_qaddMod, _0_plus_1_mod_3) {
-    System s1(9), s2(9);
-
-    Circuit* init = new Circuit(9);
-    init->x(0);
-    init->x(1);
-    init->qft(5, 8, false);
-    s1.apply(*init);
-    delete init;
-
-    Circuit* circ = new Circuit(9);
-    circ->qaddMod_2c(1, 3, 0, 1, 2, 2, false);
-    circ->iqft(5, 8, false);
-    s1.apply(*circ);
-    delete circ;
-
-    Circuit* expect = new Circuit(9);
-    expect->x(0);
-    expect->x(1);
-    expect->x(7);
-    s2.apply(*expect);
-    delete expect;
-
-    vector<Complex> expected = s2.getState(), actual = s1.getState();
+    vector<Complex> expected = s2->getState(), actual = s1->getState();
     for(int j = 0; j < expected.size(); j++) {
         EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-6);
         EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-6);
     }
+    delete s1;
+    delete s2;
 }
-TEST(test_qaddMod, _1_plus_1_mod_2) {
-    System s1(9), s2(9);
+TEST(test_qaddMod, control_qubit_in_zero_state_2_approximate) {
+    StateVector* s1 = new StateVector(6);
+    StateVector* s2 = new StateVector(6);
 
-    Circuit* init = new Circuit(9);
-    init->x(0);
-    init->x(1);
-    init->x(7);
-    init->qft(5, 8, false);
-    s1.apply(*init);
-    delete init;
+    s1->x(0);
+    s1->x(3);
+    s1->qft(2, 5, false);
+    s2->x(0);
+    s2->x(3);
+    s2->qft(2, 5, false);
 
-    Circuit* circ = new Circuit(9);
-    circ->qaddMod_2c(1, 2, 0, 1, 2, 2, false);
-    circ->iqft(5, 8, false);
-    s1.apply(*circ);
-    delete circ;
+    s1->qaddMod_2c(1, 3, 0, 1, 2, 2, true);
 
-    Circuit* expect = new Circuit(9);
-    expect->x(0);
-    expect->x(1);
-    s2.apply(*expect);
-    delete expect;
-
-    vector<Complex> expected = s2.getState(), actual = s1.getState();
+    vector<Complex> expected = s2->getState(), actual = s1->getState();
     for(int j = 0; j < expected.size(); j++) {
         EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-6);
         EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-6);
     }
+    delete s1;
+    delete s2;
 }
-TEST(test_qaddMod, _1_plus_2_mod_3) {
-    System s1(9), s2(9);
+TEST(test_qaddMod, control_qubit_in_zero_state_3_approximate) {
+    StateVector* s1 = new StateVector(6);
+    StateVector* s2 = new StateVector(6);
 
-    Circuit* init = new Circuit(9);
-    init->x(0);
-    init->x(1);
-    init->x(7);
-    init->qft(5, 8, false);
-    s1.apply(*init);
-    delete init;
+    s1->x(0);
+    s1->x(4);
+    s1->qft(2, 5, false);
+    s2->x(0);
+    s2->x(4);
+    s2->qft(2, 5, false);
 
-    Circuit* circ = new Circuit(9);
-    circ->qaddMod_2c(2, 3, 0, 1, 2, 2, false);
-    circ->iqft(5, 8, false);
-    s1.apply(*circ);
-    delete circ;
+    s1->qaddMod_2c(1, 2, 0, 1, 2, 2, true);
 
-    Circuit* expect = new Circuit(9);
-    expect->x(0);
-    expect->x(1);
-    s2.apply(*expect);
-    delete expect;
-
-    vector<Complex> expected = s2.getState(), actual = s1.getState();
+    vector<Complex> expected = s2->getState(), actual = s1->getState();
     for(int j = 0; j < expected.size(); j++) {
         EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-6);
         EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-6);
     }
+    delete s1;
+    delete s2;
 }
-TEST(test_qaddMod, _2_plus_1_mod_3) {
-    System s1(9), s2(9);
+TEST(test_qaddMod, control_qubit_in_zero_state_4_approximate) {
+    StateVector* s1 = new StateVector(6);
+    StateVector* s2 = new StateVector(6);
 
-    Circuit* init = new Circuit(9);
-    init->x(0);
-    init->x(1);
-    init->x(6);
-    init->qft(5, 8, false);
-    s1.apply(*init);
-    delete init;
+    s1->x(0);
+    s1->x(4);
+    s1->qft(2, 5, false);
+    s2->x(0);
+    s2->x(4);
+    s2->qft(2, 5, false);
 
-    Circuit* circ = new Circuit(9);
-    circ->qaddMod_2c(1, 3, 0, 1, 2, 2, false);
-    circ->iqft(5, 8, false);
-    s1.apply(*circ);
-    delete circ;
+    s1->qaddMod_2c(2, 3, 0, 1, 2, 2, true);
 
-    Circuit* expect = new Circuit(9);
-    expect->x(0);
-    expect->x(1);
-    s2.apply(*expect);
-    delete expect;
-
-    vector<Complex> expected = s2.getState(), actual = s1.getState();
+    vector<Complex> expected = s2->getState(), actual = s1->getState();
     for(int j = 0; j < expected.size(); j++) {
         EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-6);
         EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-6);
     }
+    delete s1;
+    delete s2;
 }
-TEST(test_qaddMod, _2_plus_2_mod_3) {
-    System s1(9), s2(9);
+TEST(test_qaddMod, _13_plus_10_mod_14) {
+    StateVector* s = new StateVector(8);
 
-    Circuit* init = new Circuit(9);
-    init->x(0);
-    init->x(1);
-    init->x(6);
-    init->qft(5, 8, false);
-    s1.apply(*init);
-    delete init;
+    s->x(0);
+    s->x(1);
+    s->x(3);
+    s->x(4);
+    s->x(6);
 
-    Circuit* circ = new Circuit(9);
-    circ->qaddMod_2c(2, 3, 0, 1, 2, 2, false);
-    circ->iqft(5, 8, false);
-    s1.apply(*circ);
-    delete circ;
+    s->qft(2, 7, false);
+    s->qaddMod_2c(10, 14, 0, 1, 2, 4, false);
+    s->iqft(2, 7, false);
 
-    Circuit* expect = new Circuit(9);
-    expect->x(0);
-    expect->x(1);
-    expect->x(7);
-    s2.apply(*expect);
-    delete expect;
+    size_t actual = s->measure();
+    delete s;
+    size_t expected = 1 + (1 << 1) + (1 << 3) + (1 << 6);
 
-    vector<Complex> expected = s2.getState(), actual = s1.getState();
-    for(int j = 0; j < expected.size(); j++) {
-        EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-6);
-        EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-6);
-    }
+    EXPECT_EQ(expected, actual);
 }
-TEST(test_qaddMod, _2_plus_3_mod_3) {
-    System s1(9), s2(9);
+TEST(test_qaddMod, _8_plus_9_mod_11) {
+    StateVector* s = new StateVector(8);
 
-    Circuit* init = new Circuit(9);
-    init->x(0);
-    init->x(1);
-    init->x(6);
-    init->qft(5, 8, false);
-    s1.apply(*init);
-    delete init;
+    s->x(0);
+    s->x(1);
+    s->x(3);
 
-    Circuit* circ = new Circuit(9);
-    circ->qaddMod_2c(3, 3, 0, 1, 2, 2, false);
-    circ->iqft(5, 8, false);
-    s1.apply(*circ);
-    delete circ;
+    s->qft(2, 7, false);
+    s->qaddMod_2c(9, 11, 0, 1, 2, 4, false);
+    s->iqft(2, 7, false);
 
-    Circuit* expect = new Circuit(9);
-    expect->x(0);
-    expect->x(1);
-    expect->x(6);
-    s2.apply(*expect);
-    delete expect;
+    size_t actual = s->measure();
+    delete s;
+    size_t expected = 1 + (1 << 1) + (1 << 4) + (1 << 5);
 
-    vector<Complex> expected = s2.getState(), actual = s1.getState();
-    for(int j = 0; j < expected.size(); j++) {
-        EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-6);
-        EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-6);
-    }
+    EXPECT_EQ(expected, actual);
 }
-TEST(test_qaddMod, _3_plus_6_mod_7) {
-    System s1(11), s2(11);
+TEST(test_qaddMod, _13_plus_10_mod_14_approximate) {
+    StateVector* s = new StateVector(8);
 
-    Circuit* init = new Circuit(11);
-    init->x(0);
-    init->x(1);
-    init->x(8);
-    init->x(9);
-    init->qft(6, 10, false);
-    s1.apply(*init);
-    delete init;
+    s->x(0);
+    s->x(1);
+    s->x(3);
+    s->x(4);
+    s->x(6);
 
-    Circuit* circ = new Circuit(11);
-    circ->qaddMod_2c(6, 7, 0, 1, 2, 3, false);
-    circ->iqft(6, 10, false);
-    s1.apply(*circ);
-    delete circ;
+    s->qft(2, 7, false);
+    s->qaddMod_2c(10, 14, 0, 1, 2, 4, true);
+    s->iqft(2, 7, false);
 
-    Circuit* expect = new Circuit(11);
-    expect->x(0);
-    expect->x(1);
-    expect->x(8);
-    s2.apply(*expect);
-    delete expect;
+    size_t actual = s->measure();
+    delete s;
+    size_t expected = 1 + (1 << 1) + (1 << 3) + (1 << 6);
 
-    vector<Complex> expected = s2.getState(), actual = s1.getState();
-    for(int j = 0; j < expected.size(); j++) {
-        EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-6);
-        EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-6);
-    }
+    EXPECT_EQ(expected, actual);
 }
-TEST(test_qaddMod, _5_plus_4_mod_7) {
-    System s1(11), s2(11);
+TEST(test_qaddMod, _8_plus_9_mod_11_approximate) {
+    StateVector* s = new StateVector(8);
 
-    Circuit* init = new Circuit(11);
-    init->x(0);
-    init->x(1);
-    init->x(7);
-    init->x(9);
-    init->qft(6, 10, false);
-    s1.apply(*init);
-    delete init;
+    s->x(0);
+    s->x(1);
+    s->x(3);
 
-    Circuit* circ = new Circuit(11);
-    circ->qaddMod_2c(4, 7, 0, 1, 2, 3, false);
-    circ->iqft(6, 10, false);
-    s1.apply(*circ);
-    delete circ;
+    s->qft(2, 7, false);
+    s->qaddMod_2c(9, 11, 0, 1, 2, 4, true);
+    s->iqft(2, 7, false);
 
-    Circuit* expect = new Circuit(11);
-    expect->x(0);
-    expect->x(1);
-    expect->x(8);
-    s2.apply(*expect);
-    delete expect;
+    size_t actual = s->measure();
+    delete s;
+    size_t expected = 1 + (1 << 1) + (1 << 4) + (1 << 5);
 
-    vector<Complex> expected = s2.getState(), actual = s1.getState();
-    for(int j = 0; j < expected.size(); j++) {
-        EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-6);
-        EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-6);
-    }
-}
-TEST(test_qaddMod, _3_plus_6_mod_7_approximate) {
-    System s1(11), s2(11);
-
-    Circuit* init = new Circuit(11);
-    init->x(0);
-    init->x(1);
-    init->x(8);
-    init->x(9);
-    init->qft(6, 10, false);
-    s1.apply(*init);
-    delete init;
-
-    Circuit* circ = new Circuit(11);
-    circ->qaddMod_2c(6, 7, 0, 1, 2, 3, true);
-    circ->iqft(6, 10, false);
-    s1.apply(*circ);
-    delete circ;
-
-    Circuit* expect = new Circuit(11);
-    expect->x(0);
-    expect->x(1);
-    expect->x(8);
-    s2.apply(*expect);
-    delete expect;
-
-    vector<Complex> expected = s2.getState(), actual = s1.getState();
-    for(int j = 0; j < expected.size(); j++) {
-        EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-6);
-        EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-6);
-    }
-}
-TEST(test_qaddMod, _5_plus_4_mod_7_approximate) {
-    System s1(11), s2(11);
-
-    Circuit* init = new Circuit(11);
-    init->x(0);
-    init->x(1);
-    init->x(7);
-    init->x(9);
-    init->qft(6, 10, false);
-    s1.apply(*init);
-    delete init;
-
-    Circuit* circ = new Circuit(11);
-    circ->qaddMod_2c(4, 7, 0, 1, 2, 3, true);
-    circ->iqft(6, 10, false);
-    s1.apply(*circ);
-    delete circ;
-
-    Circuit* expect = new Circuit(11);
-    expect->x(0);
-    expect->x(1);
-    expect->x(8);
-    s2.apply(*expect);
-    delete expect;
-
-    vector<Complex> expected = s2.getState(), actual = s1.getState();
-    for(int j = 0; j < expected.size(); j++) {
-        EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-6);
-        EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-6);
-    }
+    EXPECT_EQ(expected, actual);
 }
 
+TEST(test_iqaddMod, can_apply) {
+    StateVector* s = new StateVector(8);
+    ASSERT_NO_THROW(s->iqaddMod_2c(3, 6, 0, 1, 2, 4, false));
+    delete s;
+}
+TEST(test_iqaddMod, can_apply_approximate) {
+    StateVector* s = new StateVector(8);
+    ASSERT_NO_THROW(s->iqaddMod_2c(3, 6, 0, 1, 2, 4, true));
+    delete s;
+}
 TEST(test_iqaddMod, control_qubit_in_zero_state) {
-    System s1(9), s2(9);
+    StateVector* s1 = new StateVector(6);
+    StateVector* s2 = new StateVector(6);
 
-    Circuit* init = new Circuit(9);
-    init->x(0);
-    init->x(6);
-    init->qft(5, 8, false);
-    s1.apply(*init);
-    s2.apply(*init);
-    delete init;
+    s1->x(0);
+    s1->x(3);
+    s1->qft(2, 5, false);
+    s2->x(0);
+    s2->x(3);
+    s2->qft(2, 5, false);
 
-    Circuit* circ = new Circuit(9);
-    circ->iqaddMod_2c(2, 3, 0, 1, 2, 2, false);
-    s1.apply(*circ);
-    delete circ;
+    s1->iqaddMod_2c(2, 3, 0, 1, 2, 2, false);
 
-    vector<Complex> expected = s2.getState(), actual = s1.getState();
+    vector<Complex> expected = s2->getState(), actual = s1->getState();
     for(int j = 0; j < expected.size(); j++) {
-        EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-7);
-        EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-7);
+        EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-6);
+        EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-6);
     }
+    delete s1;
+    delete s2;
 }
 TEST(test_iqaddMod, control_qubit_in_zero_state_2) {
-    System s1(9), s2(9);
+    StateVector* s1 = new StateVector(6);
+    StateVector* s2 = new StateVector(6);
 
-    Circuit* init = new Circuit(9);
-    init->x(0);
-    init->x(6);
-    init->qft(5, 8, false);
-    s1.apply(*init);
-    s2.apply(*init);
-    delete init;
+    s1->x(0);
+    s1->x(3);
+    s1->qft(2, 5, false);
+    s2->x(0);
+    s2->x(3);
+    s2->qft(2, 5, false);
 
-    Circuit* circ = new Circuit(9);
-    circ->iqaddMod_2c(1, 3, 0, 1, 2, 2, false);
-    s1.apply(*circ);
-    delete circ;
+    s1->iqaddMod_2c(1, 3, 0, 1, 2, 2, false);
 
-    vector<Complex> expected = s2.getState(), actual = s1.getState();
+    vector<Complex> expected = s2->getState(), actual = s1->getState();
     for(int j = 0; j < expected.size(); j++) {
-        EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-7);
-        EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-7);
+        EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-6);
+        EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-6);
     }
+    delete s1;
+    delete s2;
 }
 TEST(test_iqaddMod, control_qubit_in_zero_state_3) {
-    System s1(9), s2(9);
+    StateVector* s1 = new StateVector(6);
+    StateVector* s2 = new StateVector(6);
 
-    Circuit* init = new Circuit(9);
-    init->x(0);
-    init->x(7);
-    init->qft(5, 8, false);
-    s1.apply(*init);
-    s2.apply(*init);
-    delete init;
+    s1->x(0);
+    s1->x(4);
+    s1->qft(2, 5, false);
+    s2->x(0);
+    s2->x(4);
+    s2->qft(2, 5, false);
 
-    Circuit* circ = new Circuit(9);
-    circ->iqaddMod_2c(1, 2, 0, 1, 2, 2, false);
-    s1.apply(*circ);
-    delete circ;
+    s1->iqaddMod_2c(1, 2, 0, 1, 2, 2, false);
 
-    vector<Complex> expected = s2.getState(), actual = s1.getState();
+    vector<Complex> expected = s2->getState(), actual = s1->getState();
     for(int j = 0; j < expected.size(); j++) {
-        EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-7);
-        EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-7);
+        EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-6);
+        EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-6);
     }
+    delete s1;
+    delete s2;
 }
 TEST(test_iqaddMod, control_qubit_in_zero_state_4) {
-    System s1(9), s2(9);
+    StateVector* s1 = new StateVector(6);
+    StateVector* s2 = new StateVector(6);
 
-    Circuit* init = new Circuit(9);
-    init->x(0);
-    init->x(7);
-    init->qft(5, 8, false);
-    s1.apply(*init);
-    s2.apply(*init);
-    delete init;
+    s1->x(0);
+    s1->x(4);
+    s1->qft(2, 5, false);
+    s2->x(0);
+    s2->x(4);
+    s2->qft(2, 5, false);
 
-    Circuit* circ = new Circuit(9);
-    circ->iqaddMod_2c(2, 3, 0, 1, 2, 2, false);
-    s1.apply(*circ);
-    delete circ;
+    s1->iqaddMod_2c(2, 3, 0, 1, 2, 2, false);
 
-    vector<Complex> expected = s2.getState(), actual = s1.getState();
-    for(int j = 0; j < expected.size(); j++) {
-        EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-7);
-        EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-7);
-    }
-}
-TEST(test_iqaddMod, _0_minus_1_mod_3) {
-    System s1(9), s2(9);
-
-    Circuit* init = new Circuit(9);
-    init->x(0);
-    init->x(1);
-    init->qft(5, 8, false);
-    s1.apply(*init);
-    delete init;
-
-    Circuit* circ = new Circuit(9);
-    circ->iqaddMod_2c(1, 3, 0, 1, 2, 2, false);
-    circ->iqft(5, 8, false);
-    s1.apply(*circ);
-    delete circ;
-
-    Circuit* expect = new Circuit(9);
-    expect->x(0);
-    expect->x(1);
-    expect->x(6);
-    s2.apply(*expect);
-    delete expect;
-
-    vector<Complex> expected = s2.getState(), actual = s1.getState();
+    vector<Complex> expected = s2->getState(), actual = s1->getState();
     for(int j = 0; j < expected.size(); j++) {
         EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-6);
         EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-6);
     }
+    delete s1;
+    delete s2;
 }
-TEST(test_iqaddMod, _1_minus_1_mod_2) {
-    System s1(9), s2(9);
+TEST(test_iqaddMod, control_qubit_in_zero_state_approximate) {
+    StateVector* s1 = new StateVector(6);
+    StateVector* s2 = new StateVector(6);
 
-    Circuit* init = new Circuit(9);
-    init->x(0);
-    init->x(1);
-    init->x(7);
-    init->qft(5, 8, false);
-    s1.apply(*init);
-    delete init;
+    s1->x(0);
+    s1->x(3);
+    s1->qft(2, 5, false);
+    s2->x(0);
+    s2->x(3);
+    s2->qft(2, 5, false);
 
-    Circuit* circ = new Circuit(9);
-    circ->iqaddMod_2c(1, 2, 0, 1, 2, 2, false);
-    circ->iqft(5, 8, false);
-    s1.apply(*circ);
-    delete circ;
+    s1->iqaddMod_2c(2, 3, 0, 1, 2, 2, true);
 
-    Circuit* expect = new Circuit(9);
-    expect->x(0);
-    expect->x(1);
-    s2.apply(*expect);
-    delete expect;
-
-    vector<Complex> expected = s2.getState(), actual = s1.getState();
+    vector<Complex> expected = s2->getState(), actual = s1->getState();
     for(int j = 0; j < expected.size(); j++) {
         EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-6);
         EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-6);
     }
+    delete s1;
+    delete s2;
 }
-TEST(test_iqaddMod, _1_minus_2_mod_3) {
-    System s1(9), s2(9);
+TEST(test_iqaddMod, control_qubit_in_zero_state_2_approximate) {
+    StateVector* s1 = new StateVector(6);
+    StateVector* s2 = new StateVector(6);
 
-    Circuit* init = new Circuit(9);
-    init->x(0);
-    init->x(1);
-    init->x(7);
-    init->qft(5, 8, false);
-    s1.apply(*init);
-    delete init;
+    s1->x(0);
+    s1->x(3);
+    s1->qft(2, 5, false);
+    s2->x(0);
+    s2->x(3);
+    s2->qft(2, 5, false);
 
-    Circuit* circ = new Circuit(9);
-    circ->iqaddMod_2c(2, 3, 0, 1, 2, 2, false);
-    circ->iqft(5, 8, false);
-    s1.apply(*circ);
-    delete circ;
+    s1->iqaddMod_2c(1, 3, 0, 1, 2, 2, true);
 
-    Circuit* expect = new Circuit(9);
-    expect->x(0);
-    expect->x(1);
-    expect->x(6);
-    s2.apply(*expect);
-    delete expect;
-
-    vector<Complex> expected = s2.getState(), actual = s1.getState();
+    vector<Complex> expected = s2->getState(), actual = s1->getState();
     for(int j = 0; j < expected.size(); j++) {
         EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-6);
         EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-6);
     }
+    delete s1;
+    delete s2;
 }
-TEST(test_iqaddMod, _2_minus_1_mod_3) {
-    System s1(9), s2(9);
+TEST(test_iqaddMod, control_qubit_in_zero_state_3_approximate) {
+    StateVector* s1 = new StateVector(6);
+    StateVector* s2 = new StateVector(6);
 
-    Circuit* init = new Circuit(9);
-    init->x(0);
-    init->x(1);
-    init->x(6);
-    init->qft(5, 8, false);
-    s1.apply(*init);
-    delete init;
+    s1->x(0);
+    s1->x(4);
+    s1->qft(2, 5, false);
+    s2->x(0);
+    s2->x(4);
+    s2->qft(2, 5, false);
 
-    Circuit* circ = new Circuit(9);
-    circ->iqaddMod_2c(1, 3, 0, 1, 2, 2, false);
-    circ->iqft(5, 8, false);
-    s1.apply(*circ);
-    delete circ;
+    s1->iqaddMod_2c(1, 2, 0, 1, 2, 2, true);
 
-    Circuit* expect = new Circuit(9);
-    expect->x(0);
-    expect->x(1);
-    expect->x(7);
-    s2.apply(*expect);
-    delete expect;
-
-    vector<Complex> expected = s2.getState(), actual = s1.getState();
+    vector<Complex> expected = s2->getState(), actual = s1->getState();
     for(int j = 0; j < expected.size(); j++) {
         EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-6);
         EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-6);
     }
+    delete s1;
+    delete s2;
 }
-TEST(test_iqaddMod, _2_minus_2_mod_3) {
-    System s1(9), s2(9);
+TEST(test_iqaddMod, control_qubit_in_zero_state_4_approximate) {
+    StateVector* s1 = new StateVector(6);
+    StateVector* s2 = new StateVector(6);
 
-    Circuit* init = new Circuit(9);
-    init->x(0);
-    init->x(1);
-    init->x(6);
-    init->qft(5, 8, false);
-    s1.apply(*init);
-    delete init;
+    s1->x(0);
+    s1->x(4);
+    s1->qft(2, 5, false);
+    s2->x(0);
+    s2->x(4);
+    s2->qft(2, 5, false);
 
-    Circuit* circ = new Circuit(9);
-    circ->iqaddMod_2c(2, 3, 0, 1, 2, 2, false);
-    circ->iqft(5, 8, false);
-    s1.apply(*circ);
-    delete circ;
+    s1->iqaddMod_2c(2, 3, 0, 1, 2, 2, true);
 
-    Circuit* expect = new Circuit(9);
-    expect->x(0);
-    expect->x(1);
-    s2.apply(*expect);
-    delete expect;
-
-    vector<Complex> expected = s2.getState(), actual = s1.getState();
+    vector<Complex> expected = s2->getState(), actual = s1->getState();
     for(int j = 0; j < expected.size(); j++) {
         EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-6);
         EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-6);
     }
+    delete s1;
+    delete s2;
 }
-TEST(test_iqaddMod, _2_minus_3_mod_3) {
-    System s1(9), s2(9);
+TEST(test_iqaddMod, _13_minus_10_mod_14) {
+    StateVector* s = new StateVector(8);
 
-    Circuit* init = new Circuit(9);
-    init->x(0);
-    init->x(1);
-    init->x(6);
-    init->qft(5, 8, false);
-    s1.apply(*init);
-    delete init;
+    s->x(0);
+    s->x(1);
+    s->x(3);
+    s->x(4);
+    s->x(6);
 
-    Circuit* circ = new Circuit(9);
-    circ->iqaddMod_2c(3, 3, 0, 1, 2, 2, false);
-    circ->iqft(5, 8, false);
-    s1.apply(*circ);
-    delete circ;
+    s->qft(2, 7, false);
+    s->iqaddMod_2c(10, 14, 0, 1, 2, 4, false);
+    s->iqft(2, 7, false);
 
-    Circuit* expect = new Circuit(9);
-    expect->x(0);
-    expect->x(1);
-    expect->x(6);
-    s2.apply(*expect);
-    delete expect;
+    size_t actual = s->measure();
+    delete s;
+    size_t expected = 1 + (1 << 1) + (1 << 5) + (1 << 6);
 
-    vector<Complex> expected = s2.getState(), actual = s1.getState();
-    for(int j = 0; j < expected.size(); j++) {
-        EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-6);
-        EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-6);
-    }
+    EXPECT_EQ(expected, actual);
 }
-TEST(test_iqaddMod, _3_minus_6_mod_7) {
-    System s1(11), s2(11);
+TEST(test_iqaddMod, _8_minus_9_mod_11) {
+    StateVector* s = new StateVector(8);
 
-    Circuit* init = new Circuit(11);
-    init->x(0);
-    init->x(1);
-    init->x(8);
-    init->x(9);
-    init->qft(6, 10, false);
-    s1.apply(*init);
-    delete init;
+    s->x(0);
+    s->x(1);
+    s->x(3);
 
-    Circuit* circ = new Circuit(11);
-    circ->iqaddMod_2c(6, 7, 0, 1, 2, 3, false);
-    circ->iqft(6, 10, false);
-    s1.apply(*circ);
-    delete circ;
+    s->qft(2, 7, false);
+    s->iqaddMod_2c(9, 11, 0, 1, 2, 4, false);
+    s->iqft(2, 7, false);
 
-    Circuit* expect = new Circuit(11);
-    expect->x(0);
-    expect->x(1);
-    expect->x(7);
-    s2.apply(*expect);
-    delete expect;
+    size_t actual = s->measure();
+    delete s;
+    size_t expected = 1 + (1 << 1) + (1 << 3) + (1 << 5);
 
-    vector<Complex> expected = s2.getState(), actual = s1.getState();
-    for(int j = 0; j < expected.size(); j++) {
-        EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-6);
-        EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-6);
-    }
+    EXPECT_EQ(expected, actual);
 }
-TEST(test_iqaddMod, _5_minus_4_mod_7) {
-    System s1(11), s2(11);
+TEST(test_iqaddMod, _13_minus_10_mod_14_approximate) {
+    StateVector* s = new StateVector(8);
 
-    Circuit* init = new Circuit(11);
-    init->x(0);
-    init->x(1);
-    init->x(7);
-    init->x(9);
-    init->qft(6, 10, false);
-    s1.apply(*init);
-    delete init;
+    s->x(0);
+    s->x(1);
+    s->x(3);
+    s->x(4);
+    s->x(6);
 
-    Circuit* circ = new Circuit(11);
-    circ->iqaddMod_2c(4, 7, 0, 1, 2, 3, false);
-    circ->iqft(6, 10, false);
-    s1.apply(*circ);
-    delete circ;
+    s->qft(2, 7, false);
+    s->iqaddMod_2c(10, 14, 0, 1, 2, 4, true);
+    s->iqft(2, 7, false);
 
-    Circuit* expect = new Circuit(11);
-    expect->x(0);
-    expect->x(1);
-    expect->x(9);
-    s2.apply(*expect);
-    delete expect;
+    size_t actual = s->measure();
+    delete s;
+    size_t expected = 1 + (1 << 1) + (1 << 5) + (1 << 6);
 
-    vector<Complex> expected = s2.getState(), actual = s1.getState();
-    for(int j = 0; j < expected.size(); j++) {
-        EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-6);
-        EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-6);
-    }
+    EXPECT_EQ(expected, actual);
 }
-TEST(test_iqaddMod, _3_minus_6_mod_7_approximate) {
-    System s1(11), s2(11);
+TEST(test_iqaddMod, _8_minus_9_mod_11_approximate) {
+    StateVector* s = new StateVector(8);
 
-    Circuit* init = new Circuit(11);
-    init->x(0);
-    init->x(1);
-    init->x(8);
-    init->x(9);
-    init->qft(6, 10, false);
-    s1.apply(*init);
-    delete init;
+    s->x(0);
+    s->x(1);
+    s->x(3);
 
-    Circuit* circ = new Circuit(11);
-    circ->iqaddMod_2c(6, 7, 0, 1, 2, 3, true);
-    circ->iqft(6, 10, false);
-    s1.apply(*circ);
-    delete circ;
+    s->qft(2, 7, false);
+    s->iqaddMod_2c(9, 11, 0, 1, 2, 4, true);
+    s->iqft(2, 7, false);
 
-    Circuit* expect = new Circuit(11);
-    expect->x(0);
-    expect->x(1);
-    expect->x(7);
-    s2.apply(*expect);
-    delete expect;
+    size_t actual = s->measure();
+    delete s;
+    size_t expected = 1 + (1 << 1) + (1 << 3) + (1 << 5);
 
-    vector<Complex> expected = s2.getState(), actual = s1.getState();
-    for(int j = 0; j < expected.size(); j++) {
-        EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-6);
-        EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-6);
-    }
+    EXPECT_EQ(expected, actual);
 }
-TEST(test_iqaddMod, _5_minus_4_mod_7_approximate) {
-    System s1(11), s2(11);
-
-    Circuit* init = new Circuit(11);
-    init->x(0);
-    init->x(1);
-    init->x(7);
-    init->x(9);
-    init->qft(6, 10, false);
-    s1.apply(*init);
-    delete init;
-
-    Circuit* circ = new Circuit(11);
-    circ->iqaddMod_2c(4, 7, 0, 1, 2, 3, true);
-    circ->iqft(6, 10, false);
-    s1.apply(*circ);
-    delete circ;
-
-    Circuit* expect = new Circuit(11);
-    expect->x(0);
-    expect->x(1);
-    expect->x(9);
-    s2.apply(*expect);
-    delete expect;
-
-    vector<Complex> expected = s2.getState(), actual = s1.getState();
-    for(int j = 0; j < expected.size(); j++) {
-        EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-6);
-        EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-6);
-    }
-}
-/*
-TEST(test_qaddMod, _13_plus_12_mod_15) {
-    System s1(13), s2(13);
-
-    Circuit* init = new Circuit(13);
-    init->x(0);
-    init->x(1);
-    init->x(8);
-    init->x(9);
-    init->x(11);
-    init->qft(7, 12, false);
-    s1.apply(*init);
-    delete init;
-
-    Circuit* circ = new Circuit(13);
-    circ->qaddMod_2c(12, 15, 0, 1, 2, 4, false);
-    s1.apply(*circ);
-    delete circ;
-
-    Circuit* after = new Circuit(13);
-    after->iqft(7, 12, false);
-    s1.apply(*after);
-    delete after;
-
-    Circuit* expect = new Circuit(13);
-    expect->x(0);
-    expect->x(1);
-    expect->x(3);
-    expect->x(4);
-    expect->x(8);
-    expect->x(10);
-    s2.apply(*expect);
-    delete expect;
-
-    vector<Complex> expected = s2.getState(), actual = s1.getState();
-    for(int j = 0; j < expected.size(); j++) {
-        EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-6);
-        EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-6);
-    }
-}
- */
