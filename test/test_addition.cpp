@@ -16,7 +16,7 @@ TEST(test_addition, classic_3bit_circuit) {
     s.apply(init);
 
     Circuit circ(10);
-    circ.add_classic(3);
+    circ.add(3);
 
     s.apply(circ);
     size_t res = s.measure();

@@ -3,6 +3,8 @@
 //
 #include "Gates.h"
 
+#include <chrono> // TODO: remove including
+#include <iostream> // TODO: remove including
 // functions return matrix for quantum gates
 Matrix I() {
     Matrix matrix(2);
@@ -170,5 +172,6 @@ Matrix* forSystem(Matrix singleQubitMatrix, size_t target, size_t systemSize) {
             result = result->kron(id);
         }
     }
+
     return result;
 }

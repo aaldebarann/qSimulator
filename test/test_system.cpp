@@ -4,7 +4,7 @@
 
 #include <gtest.h>
 #include "System.h"
-#include <corecrt_math_defines.h>
+// #include <corecrt_math_defines.h>
 
 TEST(System, can_create) {
     ASSERT_NO_THROW(System s(3));

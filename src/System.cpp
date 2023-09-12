@@ -67,7 +67,7 @@ vector<Complex> System::measure(size_t target) {
     return state;
 }
 
-void System::apply(Circuit &circ) {
+void System::apply(Circuit& circ) {
     for(Matrix* m: circ.getMatrices()) {
         state = *m * state;
     }

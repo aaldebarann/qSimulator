@@ -60,7 +60,7 @@ int main() {
     test_quantum(0, 2, 2);
     test_quantum(2, 4, 3);
     */
-    //test_quantum(31, 29, 5);
+    // test_quantum(31, 29, 5);
 
 /*
     test_classic(0, 0, 1);

@@ -3,7 +3,7 @@
 //
 #include <gtest.h>
 #include "Gates.h"
-#include <corecrt_math_defines.h>
+// #include <corecrt_math_defines.h>
 
 TEST(Gates, correct_i) {
     Matrix expected{8, 0};

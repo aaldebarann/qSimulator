@@ -45,7 +45,7 @@ unsigned classicalAdd(unsigned a, unsigned b, size_t bits) {
     delete init;
     // применяем схему классического сложения
     Circuit* circ = new Circuit(3*bits + 1);
-    circ->add_classic(bits);
+    circ->add(bits);
     begin = end;
     end = std::chrono::steady_clock::now();
     std::cout << "4" << std::endl;
@@ -125,7 +125,7 @@ unsigned quantumAdd(unsigned a, unsigned b, size_t bits, bool approximate = fals
     std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count()<<" milliseconds"<< std::endl;
     delete circ;
     Circuit* circ1 = new Circuit(2*bits);
-    circ1->add_quantum(bits);
+    circ1->qadd(0, bits);
     begin = end;
     end = std::chrono::steady_clock::now();
     std::cout << "6" << std::endl;
