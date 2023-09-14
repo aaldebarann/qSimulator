@@ -405,6 +405,7 @@ void StateVector::iqadd_2c(unsigned a, size_t control1, size_t control2, size_t 
     }
 }
 void StateVector::qaddMod_2c(unsigned a, unsigned N, size_t control1, size_t control2, size_t firstQubit, size_t bits, bool approximate) {
+    a %= N;
     bits++; // one extra bit to avoid overflow
     if (bits + firstQubit + 1 > size)
         throw std::out_of_range("qaddMod_2c out of range");
@@ -424,6 +425,7 @@ void StateVector::qaddMod_2c(unsigned a, unsigned N, size_t control1, size_t con
     qadd_2c(a, control1, control2, firstQubit, bits, approximate);
 }
 void StateVector::iqaddMod_2c(unsigned int a, unsigned int N, size_t control1, size_t control2, size_t firstQubit, size_t bits, bool approximate) {
+    a %= N;
     bits++; // one extra bit to avoid overflow
     if (bits + firstQubit + 1 > size)
         throw std::out_of_range("iqaddMod_2c out of range");
@@ -444,25 +446,25 @@ void StateVector::iqaddMod_2c(unsigned int a, unsigned int N, size_t control1, s
 }
 
 void StateVector::cMultMod(unsigned a, unsigned N, size_t control, size_t firstQubit, size_t bits, bool approximate) {
-    if (2 * (bits + 1) + bits + firstQubit + 1> size)
+    if ( 2*bits + 2 + firstQubit > size)
         throw std::out_of_range("cMultMod out of range");
 
-    qft(firstQubit + 2*bits + 1, firstQubit + 3*bits + 2, approximate);
+    qft(firstQubit + bits, firstQubit + 2*bits + 1, approximate);
     for(int i = 0; i < bits; i++) {
         qaddMod_2c((1 << i) * a, N, control, firstQubit + bits - i - 1, firstQubit + bits, bits, approximate);
     }
-    iqft(firstQubit + 2*bits + 1, firstQubit + 3*bits + 2, approximate);
+    iqft(firstQubit + bits, firstQubit + 2*bits + 1, approximate);
 }
 void StateVector::icMultMod(unsigned a, unsigned N, size_t control, size_t firstQubit, size_t bits,
                         bool approximate) {
-    if (2 * (bits + 1) + bits + firstQubit + 1> size)
+    if ( 2*bits + 2 + firstQubit > size)
         throw std::out_of_range("icMultMod out of range");
 
-    qft(firstQubit + 2*bits + 1, firstQubit + 3*bits + 2, approximate);
+    qft(firstQubit + bits, firstQubit + 2*bits + 1, approximate);
     for(int i = 0; i < bits; i++) {
         iqaddMod_2c((1 << i) * a, N, control, firstQubit + bits - i - 1, firstQubit + bits, bits, approximate);
     }
-    iqft(firstQubit + 2*bits + 1, firstQubit + 3*bits + 2, approximate);
+    iqft(firstQubit + bits, firstQubit + 2*bits + 1, approximate);
 
 }
 int64_t StateVector::inverse(int64_t a, int64_t m) {
@@ -486,13 +488,14 @@ int64_t StateVector::inverse(int64_t a, int64_t m) {
     return a2;
 } // returns modular inverse
 void StateVector::u(unsigned a, unsigned N, size_t control, size_t firstQubit, size_t bits, bool approximate) {
-    if (3 * bits + firstQubit + 3 > size)
+    if (2 * bits + firstQubit + 2 > size)
         throw std::out_of_range("controlled-U(a) out of range");
     cMultMod(a, N, control, firstQubit, bits, approximate);
     for(int i = 0; i < bits; i++) {
-        cswap(control, firstQubit + i, firstQubit + 2*bits + 2 + i);
+        cswap(control, firstQubit + i, firstQubit + bits + 1 + i);
     }
-    icMultMod(inverse(a, N), N, control, firstQubit, bits, approximate);
+    unsigned ia = inverse(a, N);
+    icMultMod(ia, N, control, firstQubit, bits, approximate);
 }
 
 void StateVector::print() {
