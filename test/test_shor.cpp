@@ -397,7 +397,6 @@ TEST(controlledUa, _2_mul_3_mod_31) {
     StateVector* s = new StateVector(13);
 
     s->x(0);
-
     s->x(4);
     s->u(3, 31, 0, 1, 5, false);
 
@@ -435,4 +434,80 @@ TEST(controlledUa, _21_mul_22_mod_23) {
 
     EXPECT_EQ(expected, actual);
     delete s;
+}
+TEST(controlledUa, _5_mul_5_mod_13_approximate) {
+    StateVector* s = new StateVector(11);
+
+    s->x(0);
+
+    s->x(2);
+    s->x(4);
+    s->u(5, 13, 0, 1, 4, true);
+
+    size_t actual = s->measure();
+    size_t expected = 1 + (1 << 1) + (1 << 2);
+
+    EXPECT_EQ(expected, actual);
+    delete s;
+}
+TEST(controlledUa, _2_mul_3_mod_31_approximate) {
+    StateVector* s = new StateVector(13);
+
+    s->x(0);
+    s->x(4);
+    s->u(3, 31, 0, 1, 5, true);
+
+    size_t actual = s->measure();
+    size_t expected = 1 + (1 << 3) + (1 << 4);
+
+    EXPECT_EQ(expected, actual);
+    delete s;
+}
+TEST(controlledUa, _12_mul_24_mod_29_approximate) {
+    StateVector* s = new StateVector(13);
+
+    s->x(0);
+    s->x(2);
+    s->x(3);
+    s->u(24, 29, 0, 1, 5, true);
+
+    size_t actual = s->measure();
+    size_t expected = 1 + (1 << 1) + (1 << 2) + (1 << 4) + (1 << 5);
+
+    EXPECT_EQ(expected, actual);
+    delete s;
+}
+TEST(controlledUa, _21_mul_22_mod_23_approximate) {
+    StateVector* s = new StateVector(13);
+
+    s->x(0);
+    s->x(1);
+    s->x(3);
+    s->x(5);
+    s->u(22, 23, 0, 1, 5, true);
+
+    size_t actual = s->measure();
+    size_t expected = 1 + (1 << 4);
+
+    EXPECT_EQ(expected, actual);
+    delete s;
+}
+
+TEST(test_shor_quantum, _6) {
+    EXPECT_EQ(0, 6 % shor_quantum(6, 3));
+}
+TEST(test_shor_quantum, _10) {
+    EXPECT_EQ(0, 10 % shor_quantum(10, 4));
+}
+TEST(test_shor_quantum, _12) {
+    EXPECT_EQ(0, 12 % shor_quantum(12, 4));
+}
+TEST(test_shor_quantum, _15) {
+    EXPECT_EQ(0, 15 % shor_quantum(15, 4));
+}
+TEST(test_shor_quantum, _18) {
+    EXPECT_EQ(0, 18 % shor_quantum(18, 5));
+}
+TEST(test_shor_quantum, _28) {
+    EXPECT_EQ(0, 28 % shor_quantum(28, 5));
 }
