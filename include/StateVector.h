@@ -44,7 +44,7 @@ public:
     void cp(double phi, size_t target1, size_t target2); // Controlled phase rotation
 
     void ccp(double phi, size_t control1, size_t control2, size_t target); // Phase rotation with two controll qubits
-    void cccp(double phi, size_t control1, size_t control2, size_t control3, size_t target);
+    // void cccp(double phi, size_t control1, size_t control2, size_t control3, size_t target);
     void cswap(size_t control, size_t target1, size_t target2);
     void add(size_t bits); // classical addition
 

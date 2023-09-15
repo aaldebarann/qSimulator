@@ -65,9 +65,13 @@ vector<Complex> StateVector::measure(size_t target) {
 
 // Basic gates
 void StateVector::i(size_t target) {
+    if(target >= size)
+        throw std::out_of_range("target qubit index is out of range");
     gates.push_back("I(" + std::to_string(target) + ")");
 } // Identity gate
 void StateVector::x(size_t target) {
+    if(target >= size)
+        throw std::out_of_range("target qubit index is out of range");
     gates.push_back("X(" + std::to_string(target) + ")");
     size_t mask = 1 << target;
     for(size_t j = 0; j < (1 << (target)); j++) {
@@ -79,6 +83,8 @@ void StateVector::x(size_t target) {
     }
 } // NOT gate (Pauli-X)
 void StateVector::y(size_t target) {
+    if(target >= size)
+        throw std::out_of_range("target qubit index is out of range");
     gates.push_back("Y(" + std::to_string(target) + ")");
     size_t mask = 1 << target;
     Complex i(0, 1);
@@ -93,6 +99,8 @@ void StateVector::y(size_t target) {
     }
 } // Pauli-Y
 void StateVector::z(size_t target) {
+    if(target >= size)
+        throw std::out_of_range("target qubit index is out of range");
     gates.push_back("Z(" + std::to_string(target) + ")");
     size_t mask = 1 << target;
     for(size_t j = 0; j < (1 << (target)); j++) {
@@ -104,6 +112,8 @@ void StateVector::z(size_t target) {
     }
 } // Pauli-Z
 void StateVector::h(size_t target) {
+    if(target >= size)
+        throw std::out_of_range("target qubit index is out of range");
     gates.push_back("H(" + std::to_string(target) + ")");
     size_t mask = 1 << target;
     for(size_t j = 0; j < (1 << (target)); j++) {
@@ -119,6 +129,8 @@ void StateVector::h(size_t target) {
     }
 } // Hadamar gate
 void StateVector::p(double phaseShift, size_t target) {
+    if(target >= size)
+        throw std::out_of_range("target qubit index is out of range");
     gates.push_back("P(" + std::to_string(phaseShift) + ", " + std::to_string(target) + ")");
     size_t mask = 1 << target;
     Complex tmp(0, phaseShift);
@@ -136,7 +148,12 @@ void StateVector::it(size_t target) {
     p(-M_PI * 0.25, target);
 } // T gate
 void StateVector::cnot(size_t control, size_t target) {
-    // TODO: Где проверки на выход за границы системы????????????
+    if(target >= size)
+        throw std::out_of_range("target qubit index is out of range");
+    if(control >= size)
+        throw std::out_of_range("control qubit index is out of range");
+    if(target == control)
+        throw std::invalid_argument("target qubit must be different from control qubit");
     gates.push_back("CNOT(" + std::to_string(control) + ", " + std::to_string(target) + ")");
     size_t mask = 1 << target;
     size_t controlMask = 1 << control;
@@ -150,6 +167,14 @@ void StateVector::cnot(size_t control, size_t target) {
     }
 } // Controled not
 void StateVector::ccnot(size_t control1, size_t control2, size_t target) {
+    if(target >= size)
+        throw std::out_of_range("target qubit index is out of range");
+    if(control1 >= size || control2 >= size)
+        throw std::out_of_range("control qubit index is out of range");
+    if(target == control1 || target == control2)
+        throw std::invalid_argument("target qubit must be different from control qubit");
+    if(control1 == control2)
+        throw std::invalid_argument("control qubits indexes should not match");
     h(target);
     cnot(control2, target);
     it(target);
@@ -167,8 +192,12 @@ void StateVector::ccnot(size_t control1, size_t control2, size_t target) {
     cnot(control1, control2);
 } // Toffoli gate
 void StateVector::cp(double phi, size_t control, size_t target) {
-    gates.push_back("CP(" + std::to_string(phi) + ", "
-                    + std::to_string(control)+ ", " + std::to_string(target) + ")");
+    if(target >= size)
+        throw std::out_of_range("target qubit index is out of range");
+    if(control >= size)
+        throw std::out_of_range("control qubit index is out of range");
+    if(target == control)
+        throw std::invalid_argument("target qubit must be different from control qubit");
     size_t mask = (1 << target) + (1 << control) ;
     Complex tmp(0, phi);
     for(size_t j = 0; j < (1 << size); j++) {
@@ -179,6 +208,14 @@ void StateVector::cp(double phi, size_t control, size_t target) {
     }
 } // Controlled phase rotation
 void StateVector::ccp(double phi, size_t control1, size_t control2, size_t target) {
+    if(target >= size)
+        throw std::out_of_range("target qubit index is out of range");
+    if(control1 >= size || control2 >= size)
+        throw std::out_of_range("control qubit index is out of range");
+    if(target == control1 || target == control2)
+        throw std::invalid_argument("target qubit must be different from control qubit");
+    if(control1 == control2)
+        throw std::invalid_argument("control qubits indexes should not match");
     gates.push_back("CCP(" + std::to_string(phi) + ", "
                     + std::to_string(control1) + ", " + std::to_string(control2) + ", " + std::to_string(target) + ")");
     size_t mask = (1 << target) + (1 << control1) + (1 << control2);
@@ -190,6 +227,7 @@ void StateVector::ccp(double phi, size_t control1, size_t control2, size_t targe
         }
     }
 } // Controlled phase rotation
+/*
 void StateVector::cccp(double phi, size_t control1, size_t control2, size_t control3, size_t target) {
     gates.push_back("CCCP(" + std::to_string(phi) + ", "
                     + std::to_string(control1) + ", " + std::to_string(control2) + ", " + std::to_string(control3) + ", " + std::to_string(target) + ")");
@@ -202,6 +240,7 @@ void StateVector::cccp(double phi, size_t control1, size_t control2, size_t cont
         }
     }
 }
+ */
 void StateVector::cswap(size_t control, size_t target1, size_t target2) {
     cnot(target2, target1);
     ccnot(control, target1, target2);
