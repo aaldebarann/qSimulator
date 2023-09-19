@@ -8,6 +8,7 @@
 #include <cstdlib>
 #include <cmath>
 #include <cstdint>
+#include "StateVector.h"
 
 using std::abs;
 using std::rand;
