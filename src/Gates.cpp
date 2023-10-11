@@ -63,18 +63,18 @@ Matrix* CNOT(size_t control, size_t target, size_t systemSize) {
     Matrix* res1 = new Matrix{1, 1};
     for(int k = (int)systemSize - 1; k >= 0; k--) {
         if(k == control)
-            res1 = res1->kron(m1);
+            res1->kron(m1);
         else
-            res1 = res1->kron(id);
+            res1->kron(id);
     }
     Matrix* res2 = new Matrix{1, 1};
     for(int k = (int)systemSize - 1; k >= 0; k--) {
         if(k == control)
-            res2 = res2->kron(m2);
+            res2->kron(m2);
         else if(k == target)
-            res2 = res2->kron(x);
+            res2->kron(x);
         else
-            res2 = res2->kron(id);
+            res2->kron(id);
     }
     (*res1) += (*res2);
     return res1;
@@ -96,51 +96,52 @@ Matrix* CCNOT(size_t control1, size_t control2, size_t target, size_t systemSize
     Matrix* res1 = new Matrix{1, 1};
     for(int k = (int)systemSize - 1; k >= 0; k--) {
         if(k == control1)
-            res1 = res1->kron(m1);
+            res1->kron(m1);
         else if(k == control2)
-            res1 = res1->kron(m1);
+            res1->kron(m1);
         else if(k == target)
-            res1 = res1->kron(x);
+            res1->kron(x);
         else
-            res1 = res1->kron(id);
+            res1->kron(id);
     }
     Matrix* res2 = new Matrix{1, 1};
     for(int k = (int)systemSize - 1; k >= 0; k--) {
         if(k == control1)
-            res2 = res2->kron(m0);
+            res2->kron(m0);
         else if(k == control2)
-            res2 = res2->kron(m1);
+            res2->kron(m1);
         else if(k == target)
-            res2 = res2->kron(id);
+            res2->kron(id);
         else
-            res2 = res2->kron(id);
+            res2->kron(id);
     }
     Matrix* res3 = new Matrix{1, 1};
     for(int k = (int)systemSize - 1; k >= 0; k--) {
         if(k == control1)
-            res3 = res3->kron(m1);
+            res3->kron(m1);
         else if(k == control2)
-            res3 = res3->kron(m0);
+            res3->kron(m0);
         else if(k == target)
-            res3 = res3->kron(id);
+            res3->kron(id);
         else
-            res3 = res3->kron(id);
+            res3->kron(id);
     }
     Matrix* res4 = new Matrix{1, 1};
     for(int k = (int)systemSize - 1; k >= 0; k--) {
         if(k == control1)
-            res4 = res4->kron(m0);
+            res4->kron(m0);
         else if(k == control2)
-            res4 = res4->kron(m0);
+            res4->kron(m0);
         else if(k == target)
-            res4 = res4->kron(id);
+            res4->kron(id);
         else
-            res4 = res4->kron(id);
+            res4->kron(id);
     }
     *res1 += *res2 += *res3 += *res4;
     return res1;
 } // Toffoli gate
 Matrix* CPHASE(Complex phi, size_t target1, size_t target2, size_t systemSize) {
+    // TODO: �������� �������� �� ������������ ����������
     size_t matrixSize = pow(2, systemSize);
     Matrix* result = new Matrix(matrixSize, 0);
     int mask = (1 << target1) + (1 << target2);
@@ -155,7 +156,60 @@ Matrix* CPHASE(Complex phi, size_t target1, size_t target2, size_t systemSize) {
     }
     return result;
 } // Controlled phase rotation
+Matrix* CCP(double phi, size_t control1, size_t control2, size_t target, size_t systemSize) {
+    // TODO: �������� �������� �� ������������ ����������
+    size_t matrixSize = pow(2, systemSize);
+    Matrix* result = new Matrix(matrixSize, 0);
+    int mask = (1 << control1) + (1 << control2) + (1 << target);
 
+    Complex tmp(0, 1);
+    tmp *= phi;
+    for (int j = 0; j < matrixSize; j++) {
+        if ((j & mask) == mask) {
+            (*result)(j, j) = std::exp(tmp);
+        }
+        else {
+            (*result)(j, j) = 1;
+        }
+    }
+    return result;
+}
+Matrix* CCCP(double phi, size_t control1, size_t control2, size_t control3, size_t target, size_t systemSize) {
+    // TODO: �������� �������� �� ������������ ����������
+    size_t matrixSize = pow(2, systemSize);
+    Matrix* result = new Matrix(matrixSize, 0);
+    int mask = (1 << control1) + (1 << control2) + (1 << control3) + (1 << target);
+
+    Complex tmp(0, 1);
+    tmp *= phi;
+    for (int j = 0; j < matrixSize; j++) {
+        if ((j & mask) == mask) {
+            (*result)(j, j) = std::exp(tmp);
+        }
+        else {
+            (*result)(j, j) = 1;
+        }
+    }
+    return result;
+}
+Matrix* CSWAP(size_t control, size_t target1, size_t target2, size_t systemSize) {
+    size_t matrixSize = 1 << systemSize;
+    Matrix* result = new Matrix(matrixSize, 0);
+    int cmask = (1 << control);
+    int t1mask = (1 << target1);
+    int t2mask = (1 << target2);
+    for(int i = 0; i < matrixSize; i++) {
+        if((i & cmask) == 1 &&
+                ((i & t1mask) > 0) != ((i & t2mask) > 0) ) {
+            int k = (i ^ t1mask) ^ t2mask;
+            (*result)(k, i) = 1;
+            (*result)(i, k) = 1;
+        } else {
+            (*result)(i, i) = 1;
+        }
+    }
+    return result;
+}
 // convert matrix of single-qubit gate to matrix for n-dimensional system
 Matrix* forSystem(Matrix singleQubitMatrix, size_t target, size_t systemSize) {
     if(target >= systemSize) {
@@ -165,9 +219,9 @@ Matrix* forSystem(Matrix singleQubitMatrix, size_t target, size_t systemSize) {
     Matrix id = I();
     for(int i = (int)systemSize - 1; i >= 0; i--) {
         if(i == target) {
-            result = result->kron(singleQubitMatrix);
+            result->kron(singleQubitMatrix);
         } else {
-            result = result->kron(id);
+            result->kron(id);
         }
     }
     return result;

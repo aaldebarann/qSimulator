@@ -3,7 +3,7 @@
 //
 #include <gtest.h>
 #include "Gates.h"
-#include <corecrt_math_defines.h>
+// #include <corecrt_math_defines.h>
 
 TEST(Gates, correct_i) {
     Matrix expected{8, 0};
@@ -158,5 +158,23 @@ TEST(Gates, correct_cphase) {
             EXPECT_NEAR(expected(i, j).imag(), (*actual)(i, j).imag(), 1.0e-7);
         }
     }
+    delete actual;
+}
+TEST(Gates, correct_cswap) {
+    Matrix expected{8, 0};
+
+    expected(0, 0) = 1;
+    expected(1, 1) = 1;
+    expected(2, 2) = 1;
+    expected(3, 5) = 1;
+    expected(4, 4) = 1;
+    expected(5, 3) = 1;
+    expected(6, 6) = 1;
+    expected(7, 7) = 1;
+
+    Matrix* actual = CSWAP(0, 1, 2, 3);
+
+    EXPECT_EQ(expected, *actual);
+
     delete actual;
 }
