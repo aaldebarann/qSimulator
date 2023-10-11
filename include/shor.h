@@ -8,6 +8,7 @@
 #include <cstdlib>
 #include <cmath>
 #include <cstdint>
+#include <map>
 #include "StateVector.h"
 
 using std::abs;
@@ -80,6 +81,7 @@ uint32_t quantumOrderFinding(uint32_t x, uint32_t module, uint32_t bits, bool ap
     for(int i = 0; i < 2*bits; i++) {
         s->h(i);
     }
+    s->x(3*bits - 1);
     for(int i = 0; i < 2*bits; i++) {
         // tmp = a ^ (2 ^ i)
         // taking by module to prevent overflow
@@ -88,7 +90,14 @@ uint32_t quantumOrderFinding(uint32_t x, uint32_t module, uint32_t bits, bool ap
     }
     s->qft(0, 2*bits, approximate);
     size_t r = s->measure();
-    return (r >> 2*bits);
+    size_t rr = r;
+    for(int ii = 0; ii < 4*bits + 2; ii++) {
+        std::cout << (rr % 2)<<" ";
+        rr /= 2;
+    }
+    std::cout<<std::endl;
+    size_t mask = (1 << (2*bits)) - 1; // last 2*n bits
+    return (r & mask);
 }
 
 uint32_t shor_classic(uint32_t N) {
@@ -112,17 +121,31 @@ uint32_t shor_classic(uint32_t N) {
     }
 }
 uint32_t shor_quantum(uint32_t N, uint32_t bits, uint32_t approximate = false) {
+
     if(N % 2 == 0)
         return 2;
     uint32_t tmp = perfectPower(N);
     if(tmp != 0)
         return tmp;
-    uint32_t x, y, r;
-    while (true) {
+    uint32_t x, y, j, r;
+    while(true) {
+        std::vector<size_t> m;
         x = rand() % (N - 1) + 1;
+        std::cout << "x = " << x << std::endl;
         if (gcd(x, N) > 1)
             return gcd(x, N);
-        r = quantumOrderFinding(x, N, bits, approximate);
+        for (int i = 0; i < 14; i++) {
+            j = quantumOrderFinding(x, N, bits, approximate);
+            m.push_back(j);
+        }
+
+        size_t g = m[0];
+        for (auto it: m) {
+            g = gcd(g, it);
+            std::cout << it << std::endl;
+        }
+        r = (1 << (2 * bits)) / g;
+        std::cout << "r =? " << r << std::endl;
         y = gcd(N, modPow(x, r / 2, N) + 1);
         if (N % y == 0 && y != 1 && y != N)
             return y;
