@@ -11,7 +11,7 @@
 
 using std::vector;
 using std::string;
-typedef std::complex<float> Complex;
+typedef std::complex<double> Complex;
 
 class StateVector {
 private:
