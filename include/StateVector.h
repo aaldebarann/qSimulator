@@ -5,13 +5,13 @@
 #ifndef QSIMULATOR_STATEVECTOR_H
 #define QSIMULATOR_STATEVECTOR_H
 
-#include <complex>
 #include <vector>
 #include <iostream>
 
+#include "Matrix.h"
+
 using std::vector;
 using std::string;
-typedef std::complex<double> Complex;
 
 class StateVector {
 private:
