@@ -1,6 +1,6 @@
 # qSimulator
 ## Quantum computer simulator
-Quantum computer simulators can model the behavior of quantum circuits, 
+QSimulator can model the behavior of quantum circuits, 
 which are composed of quantum gates and qubits. Simulator aim to 
 accurately emulate the probabilistic and superpositional characteristics 
 of quantum mechanics. It simulates the evolution of qubits through quantum gates,
