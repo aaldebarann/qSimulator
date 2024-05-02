@@ -98,4 +98,4 @@ target_link_libraries(runUnitTests project1_lib)
 
 # This is so you can do 'make test' to see all your tests run, instead of
 # manually running the executable runUnitTests to see those specific tests.
-add_test(UnitTests runUnitTests)
+add_test(unitTests ./bin/tests)
