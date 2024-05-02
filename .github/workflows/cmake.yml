@@ -5,7 +5,7 @@ on: [push]
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Debug
-
+#[[
 jobs:
   build_job:
     # The CMake configure and build commands are platform agnostic and should work equally
@@ -54,3 +54,4 @@ jobs:
         shell: bash
         run: |
           ctest
+]]
