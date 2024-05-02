@@ -2,7 +2,7 @@
 // Created by Алексей on 21.07.2023.
 //
 
-#include "gtest.h"
+#include <gtest/gtest.h>
 #include "System.h"
 #include "StateVector.h"
 

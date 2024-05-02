@@ -2,7 +2,7 @@
 // Created by Алексей on 15.05.2023.
 //
 
-#include <gtest.h>
+#include <gtest/gtest.h>
 #include "System.h"
 // #include <corecrt_math_defines.h>
 

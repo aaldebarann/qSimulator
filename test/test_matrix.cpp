@@ -1,7 +1,7 @@
 //
 // Created by Алексей on 14.05.2023.
 //
-#include <gtest.h>
+#include <gtest/gtest.h>
 #include "Matrix.h"
 
 TEST(Matrix, can_create) {
