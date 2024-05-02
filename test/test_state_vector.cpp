@@ -2,7 +2,7 @@
 // Created by aleksei on 9/8/23.
 //
 
-#include <gtest.h>
+#include <gtest/gtest.h>
 #include "StateVector.h"
 // #include <corecrt_math_defines.h>
 

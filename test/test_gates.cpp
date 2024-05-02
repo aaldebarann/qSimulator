@@ -1,7 +1,7 @@
 //
 // Created by aleksei on 27.05.23.
 //
-#include <gtest.h>
+#include <gtest/gtest.h>
 #include "Gates.h"
 // #include <corecrt_math_defines.h>
 

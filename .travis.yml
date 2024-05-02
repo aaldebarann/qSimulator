@@ -1,0 +1,57 @@
+language: cpp
+
+env:
+  global:
+    # Ubuntu version
+    - LINUX_DIST=trusty
+    - DEPS_DIR=${TRAVIS_BUILD_DIR}/deps
+    # Global build options and C++ flags
+    - CXX_FLAGS="-Wall -pedantic -Werror -Wno-variadic-macros -Wno-long-long -Wno-shadow"
+    # Misc
+    - RUN_TESTS=true
+
+matrix:
+  include:
+    - os: linux
+      dist: jammy
+      sudo: true
+      compiler: gcc
+      addons:
+       apt:
+         packages: &precise_latest_boost_packages
+           - gcc-12
+           - g++-12
+           - clang-14
+           - valgrind
+           # Misc
+           - python3-yaml
+           - cmake
+           - lcov
+           - libopencv-dev
+
+    
+before_install:
+    # Combine global build options with OS/compiler-dependent options
+    - export CMAKE_OPTIONS="${CMAKE_OPTIONS} ${ENV_CMAKE_OPTIONS}"
+    - export CXX_FLAGS="${CXX_FLAGS} ${ENV_CXX_FLAGS}"
+
+install:
+    - if [ "$CXX" = "clang++" ] && [ "$TRAVIS_OS_NAME" = "linux" ]; then export CXX="clang++-14" CC="clang-14"; fi
+    - echo ${PATH}
+    - echo ${CXX}
+    - ${CXX} --version
+    - ${CXX} -v
+    - sudo pip install codecov
+
+script:
+    ############################################################################
+    # Build main and tests
+    ############################################################################
+     - mkdir -p build
+     - cd build
+     - cmake ${CMAKE_OPTIONS} -DCMAKE_CXX_FLAGS=${CXX_FLAGS} .. 
+     - make
+     - ctest
+
+after_success:
+  - echo "SUCCESS"
