@@ -1,38 +1,15 @@
-name: bfloat16
+name: qSimulator
 
-on:
-  push:
-    branches:
-      - master
-      - v2
-  pull_request:
+on: [push]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    with:
-      submodules: recursive
-    - name: Install compiler and packages
-    shell: bash
-     run: |
-      sudo apt-get install -y gcc-12 g++-12 clang-14 valgrind python3-yaml cmake lcov
-      sudo pip install codecov    
-    - name: Create CMake build files
-        working-directory: ${{github.workspace}}
-        shell: bash
-        run: |
-          CXX_FLAGS="-Wall -Werror -Wno-variadic-macros -Wno-long-long -Wno-shadow"
-          export CMAKE_OPTIONS="${CMAKE_OPTIONS} ${ENV_CMAKE_OPTIONS}"
-          export CXX_FLAGS="${CXX_FLAGS} ${ENV_CXX_FLAGS}"
-          cmake -B build ${CMAKE_OPTIONS} -DCMAKE_CXX_FLAGS=${CXX_FLAGS
-    - name: Build the project
-      shell: bash
-      run: (mkdir build && cd build && cmake ..)
+    - name: Build the bfloat16
+      run: mkdir build && cd build && cmake ..
     - name: Configure
-      shell: bash
-      run: cmake --build ./build --config RELEASE
-    - name: Run tests
-      shell: bash
-      run: ./build/bin/tests
+      run: cd build && cmake --build .
+    - name: Run base tests
+      run: ./build/tests/tests_bfloat16 --gtest_filter=bfloat16_base_functionality_tests*
