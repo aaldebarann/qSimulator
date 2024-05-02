@@ -2,21 +2,6 @@ name: qSimulator
 
 on: [push]
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Build the bfloat16
-      run: mkdir build && cd build && cmake ..
-    - name: Configure
-      run: cd build && cmake --build .
-    - name: Run base tests
-      run: ./build/bin/tests
-
-      name: build and test
-
-on: [push]
-
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Debug
