@@ -7,6 +7,7 @@ of quantum mechanics. It simulates the evolution of qubits through quantum gates
  taking into account entanglement and interference effects.
 
 The simulator is convinient to test and debug quantum algorithms before implementing them on actual quantum hardware. This saves time and resources while ensuring the algorithms are well-optimized.  
+  
 As an example of using the simulator, the Shore algorithm is implemented.
 
 ## Directory structure
