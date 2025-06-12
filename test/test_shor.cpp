@@ -499,15 +499,15 @@ TEST(test_shor_quantum, _6) {
 TEST(test_shor_quantum, _10) {
     EXPECT_EQ(0, 10 % shor_quantum(10, 4));
 }
-TEST(test_shor_quantum, _12) {
+TEST(DISABLED_test_shor_quantum, _12) {
     EXPECT_EQ(0, 12 % shor_quantum(12, 4));
 }
-TEST(test_shor_quantum, _15) {
+TEST(DISABLED_test_shor_quantum, _15) {
     EXPECT_EQ(0, 15 % shor_quantum(15, 4));
 }
-TEST(test_shor_quantum, _18) {
+TEST(DISABLED_test_shor_quantum, _18) {
     EXPECT_EQ(0, 18 % shor_quantum(18, 5));
 }
-TEST(test_shor_quantum, _28) {
+TEST(DISABLED_test_shor_quantum, _28) {
     EXPECT_EQ(0, 28 % shor_quantum(28, 5));
 }

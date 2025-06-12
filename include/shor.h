@@ -131,7 +131,7 @@ uint32_t shor_quantum(uint32_t N, uint32_t bits, uint32_t approximate = false) {
     while(true) {
         std::vector<size_t> m;
         x = rand() % (N - 1) + 1;
-        std::cout << "x = " << x << std::endl;
+        // std::cout << "x = " << x << std::endl;
         if (gcd(x, N) > 1)
             return gcd(x, N);
         for (int i = 0; i < 14; i++) {
@@ -145,7 +145,7 @@ uint32_t shor_quantum(uint32_t N, uint32_t bits, uint32_t approximate = false) {
             std::cout << it << std::endl;
         }
         r = (1 << (2 * bits)) / g;
-        std::cout << "r =? " << r << std::endl;
+        // std::cout << "r =? " << r << std::endl;
         y = gcd(N, modPow(x, r / 2, N) + 1);
         if (N % y == 0 && y != 1 && y != N)
             return y;
