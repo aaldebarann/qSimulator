@@ -42,6 +42,7 @@ public:
     void cnot(size_t control, size_t target); // Controlled not gate
     void ccnot(size_t control1, size_t control2, size_t target); // ccnot gate (toffoli gate)
     void cp(double phi, size_t target1, size_t target2); // Controlled phase rotation
+    void cry(double theta, size_t control, size_t target); // Controlled Ry(theta)
 
     void ccp(double phi, size_t control1, size_t control2, size_t target); // Phase rotation with two controll qubits
     // void cccp(double phi, size_t control1, size_t control2, size_t control3, size_t target);
@@ -68,7 +69,9 @@ public:
     void cMultMod(unsigned a, unsigned module, size_t control, size_t firstQubit, size_t bits, bool approximate = false);
     void icMultMod(unsigned a, unsigned module, size_t control, size_t firstQubit, size_t bits, bool approximate = false);
     void u(unsigned a, unsigned module, size_t control, size_t firstQubit, size_t bits, bool approximate);
-
+    // noise simulation
+    void ampDamp(double gamma, size_t target, size_t ancillary);
+    void ampDamp(double gamma); // applied to all qubits
 };
 
 

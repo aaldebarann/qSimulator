@@ -3,6 +3,7 @@
 //
 
 #include <climits>
+#include <cmath>
 #include "StateVector.h"
 
 StateVector::StateVector(size_t sz): size(sz) {
@@ -46,7 +47,7 @@ vector<Complex> StateVector::measure(size_t target) {
         // target qubit is in state |1>
         for(int i = 0; i < n; i++) {
             if ((i & (1 << target)) == 0) {
-                state[i] = 0;
+                state[i] = 1;
             }
         }
     }
@@ -204,6 +205,30 @@ void StateVector::cp(double phi, size_t control, size_t target) {
         if((j & mask) == mask){
             // applying gate
             state[j] *= std::exp(tmp);
+        }
+    }
+} // Controlled phase rotation
+void StateVector::cry(double theta, size_t control, size_t target) {
+    if(target >= size)
+        throw std::out_of_range("target qubit index is out of range");
+    if(control >= size)
+        throw std::out_of_range("control qubit index is out of range");
+    if(target == control)
+        throw std::invalid_argument("target qubit must be different from control qubit");
+    gates.push_back("CRY(" + std::to_string(theta) + ", "
+        + std::to_string(control) + ", " + std::to_string(target) + ")");
+    size_t mask = 1 << target;
+    size_t controlMask = 1 << control;
+    for(size_t j = 0; j < (1 << (target)); j++) {
+        for(size_t k = 0; k < (1 << (size - target - 1)); k++) {
+            size_t t = j + (k << (target + 1));
+            // applying gate
+            if((t & controlMask) > 0) {     
+                Complex a = state[t];
+                Complex b = state[t ^ mask];           
+                state[t] = a * (Complex)cos(theta / 2) - b * (Complex)sin(theta / 2);
+                state[t ^ mask] = a * (Complex)sin(theta / 2) + b * (Complex)cos(theta / 2);
+            }
         }
     }
 } // Controlled phase rotation
@@ -540,5 +565,20 @@ void StateVector::u(unsigned a, unsigned N, size_t control, size_t firstQubit, s
 void StateVector::print() {
     for(auto s: gates) {
         std::cout << s << std::endl;
+    }
+}
+
+// noise simulation
+void StateVector::ampDamp(double gamma, size_t target, size_t ancillary) {
+    double theta = asin(sqrt(gamma)) * 2; // sin^2(theta/2) = gamma
+    cry(theta, target, ancillary);
+    cnot(ancillary, target);
+    measure(ancillary);
+}
+void StateVector::ampDamp(double gamma) {
+    gates.push_back("ampDamp(" + std::to_string(gamma) + ")");
+    size_t m = size / 2;
+    for(size_t i = 0; i < m; i++) {
+        ampDamp(gamma, i, m + i);
     }
 }

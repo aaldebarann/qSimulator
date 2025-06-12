@@ -256,3 +256,41 @@ TEST(StateVector, circuit_s9) {
         EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-7);
     }
 }
+TEST(StateVector, cry_gate) {
+    StateVector s{2};
+    s.h(0);
+    s.cry(0.1, 0, 1);
+    Complex i(0, 1);
+    vector<Complex> expected{1/sqrt(2), 1/sqrt(2)*cos(0.05), 0, 1/sqrt(2)*sin(0.05)};
+    vector<Complex> actual = s.getState();
+    // compare expected with actual
+    for(int j = 0; j < expected.size(); j++) {
+        EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-7);
+        EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-7);
+    }
+}
+TEST(StateVector, cry_gate_1) {
+    StateVector s{3};
+
+    s.x(0);
+    s.h(1);
+    s.h(2);
+    s.p(-M_PI / 4, 1 );
+    s.cnot(0, 1);
+    s.p(M_PI / 2, 1);
+    s.cnot(0, 1);
+    s.cry(0.1, 0, 1);
+
+    Complex i(0, 1);
+    vector<Complex> expected{0, -(Complex)0.0176703 + (Complex)0.51704543*i,
+         0, (Complex)0.35311154-(Complex)0.32812196*i,  
+         0, -(Complex)0.0176703 + (Complex)0.51704543*i,
+         0, (Complex)0.35311154-(Complex)0.32812196*i};
+    vector<Complex> actual = s.getState();
+
+    // compare expected with actual
+    for(int j = 0; j < expected.size(); j++) {
+        EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-7);
+        EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-7);
+    }
+}
