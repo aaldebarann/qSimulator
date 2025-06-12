@@ -5,6 +5,7 @@
 #include <climits>
 #include <cmath>
 #include "StateVector.h"
+#include <bitset> // TODO
 
 StateVector::StateVector(size_t sz): size(sz) {
     state.resize(1 << size);
@@ -47,10 +48,14 @@ vector<Complex> StateVector::measure(size_t target) {
         // target qubit is in state |1>
         for(int i = 0; i < n; i++) {
             if ((i & (1 << target)) == 0) {
-                state[i] = 1;
+                state[i] = 0;
             }
         }
     }
+    vector<Complex> v1 = getState();
+    for(Complex u: v1)
+        std::cout << u << "  ";
+    std::cout << std::endl;
     // normalization
     double norm = 0;
     for(int i = 0; i < n; i++) {
@@ -199,7 +204,7 @@ void StateVector::cp(double phi, size_t control, size_t target) {
         throw std::out_of_range("control qubit index is out of range");
     if(target == control)
         throw std::invalid_argument("target qubit must be different from control qubit");
-    size_t mask = (1 << target) + (1 << control) ;
+    size_t mask = (1 << target) + (1 << control);
     Complex tmp(0, phi);
     for(size_t j = 0; j < (1 << size); j++) {
         if((j & mask) == mask){
@@ -217,11 +222,28 @@ void StateVector::cry(double theta, size_t control, size_t target) {
         throw std::invalid_argument("target qubit must be different from control qubit");
     gates.push_back("CRY(" + std::to_string(theta) + ", "
         + std::to_string(control) + ", " + std::to_string(target) + ")");
+    // size_t mask = 1 << target;
+    // size_t controlMask = 1 << control;
+    // for(size_t x = 0; x < (1 << size); x++) {
+    //     std::cout << std::bitset<2>(x) << std::endl;
+    //     if(x & mask == 1) {
+    //         std::cout << "duplicated" << std::endl;
+    //         continue;
+    //     }
+    //     if(x & controlMask == 1) {
+    //         Complex a = state[x];
+    //         Complex b = state[x | mask];           
+    //         state[x] = a * (Complex)cos(theta / 2) - b * (Complex)sin(theta / 2);
+    //         state[x | mask] = a * (Complex)sin(theta / 2) + b * (Complex)cos(theta / 2);
+    //     } else 
+    //         std::cout << "control is 0" << std::endl;
+    // }
     size_t mask = 1 << target;
     size_t controlMask = 1 << control;
     for(size_t j = 0; j < (1 << (target)); j++) {
         for(size_t k = 0; k < (1 << (size - target - 1)); k++) {
             size_t t = j + (k << (target + 1));
+            std::cout << std::bitset<4>(t) << std::endl;
             // applying gate
             if((t & controlMask) > 0) {     
                 Complex a = state[t];
@@ -571,14 +593,18 @@ void StateVector::print() {
 // noise simulation
 void StateVector::ampDamp(double gamma, size_t target, size_t ancillary) {
     double theta = asin(sqrt(gamma)) * 2; // sin^2(theta/2) = gamma
+    // vector<Complex> v1 = getState();
+    // for(Complex u: v1)
+    //     std::cout << u << "  ";
+    // std::cout << std::endl;
+    // std::cout << "ampDamp(theta = "<<theta<<", target = "<<target<<", anc = "<<ancillary<<std::endl;
     cry(theta, target, ancillary);
     cnot(ancillary, target);
     measure(ancillary);
 }
 void StateVector::ampDamp(double gamma) {
-    gates.push_back("ampDamp(" + std::to_string(gamma) + ")");
     size_t m = size / 2;
     for(size_t i = 0; i < m; i++) {
-        ampDamp(gamma, i, m + i);
+        ampDamp(gamma, m + i, i);
     }
 }
