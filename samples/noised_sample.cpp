@@ -28,8 +28,8 @@ int main() {
     // при размере системы size=27 требуется порядка 10^8 операций
     // ожидаемое время исполнения одного гейта: 100 ms - 1000 ms
     // помним, что код измеряет время выполнения 10-ти базовых операций
-    double gamma = 0.2;
-    const size_t MAX_DEPTH = 50;
+    double gamma = 0.011;
+    const size_t MAX_DEPTH = 200;
     for(int depth = 0; depth < MAX_DEPTH; depth ++) {
         std::map<size_t, size_t> m;
         for(int i = 0; i < 1000; i++) {
@@ -57,6 +57,6 @@ int main() {
         }
         // for (const auto& [key, value] : m)
         //     std::cout << '[' << std::bitset<3>(key) << "] = " << value << "\n";
-        std::cout << "IZI (" << depth << ") = " << getIZI(m) << std::endl;
+        std::cout << getIZI(m) << std::endl;
     }
 }
