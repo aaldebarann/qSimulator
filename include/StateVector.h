@@ -7,6 +7,7 @@
 
 #include <vector>
 #include <iostream>
+#include <string>
 
 #include "Matrix.h"
 
@@ -29,6 +30,7 @@ public:
     // system measure
     size_t measure() const; // system measure (doesn't change system state)
     vector<Complex> measure(size_t target); // single-qubit measure (changes system state)
+    size_t getObs(string observable, size_t counts = 1024) const; // observable measure (doesn't change system state)
 
     // applying quantum gates
     void i(size_t target); // Identity gate
@@ -39,6 +41,8 @@ public:
     void p(double phaseShift, size_t target); // Phase shift
     void t(size_t target); // T gate
     void it(size_t target); // inverse T gate
+    void ru(double theta, double phi, double lam, size_t target);
+
     void cnot(size_t control, size_t target); // Controlled not gate
     void ccnot(size_t control1, size_t control2, size_t target); // ccnot gate (toffoli gate)
     void cp(double phi, size_t target1, size_t target2); // Controlled phase rotation

@@ -4,6 +4,7 @@
 
 #include <climits>
 #include <cmath>
+#include <map>
 #include "StateVector.h"
 #include <bitset> // TODO
 
@@ -52,10 +53,6 @@ vector<Complex> StateVector::measure(size_t target) {
             }
         }
     }
-    vector<Complex> v1 = getState();
-    for(Complex u: v1)
-        std::cout << u << "  ";
-    std::cout << std::endl;
     // normalization
     double norm = 0;
     for(int i = 0; i < n; i++) {
@@ -68,7 +65,20 @@ vector<Complex> StateVector::measure(size_t target) {
     }
     return state;
 }
-
+// observable measure
+size_t StateVector::getObs(string observable, size_t counts) const {
+    std::map<size_t, size_t> m;
+    for(int i = 0; i < counts; i++) {
+        size_t res = measure();
+        if(m.count(res) > 0) {
+            m[res]++;
+        } else {
+            m.insert({res, 1});
+        }
+    }
+    
+    return state.size() - 1;
+}
 // Basic gates
 void StateVector::i(size_t target) {
     if(target >= size)
@@ -172,6 +182,23 @@ void StateVector::cnot(size_t control, size_t target) {
         }
     }
 } // Controled not
+void StateVector::ru(double theta, double phi, double lam, size_t target) {
+    if(target >= size)
+        throw std::out_of_range("target qubit index is out of range");
+    gates.push_back("u(" + std::to_string(theta) + ", "
+        + std::to_string(phi) + ", " + std::to_string(lam) + ", " +std::to_string(target) + ")");
+    size_t mask = 1 << target;
+    for(size_t j = 0; j < (1 << (target)); j++) {
+        for(size_t k = 0; k < (1 << (size - target - 1)); k++) {
+            size_t t = j + (k << (target + 1));
+            Complex a = state[t];
+            Complex b = state[t ^ mask];     
+            Complex i{0, 1};     
+            state[t] = a * (Complex)cos(theta / 2) - b * exp(i * (Complex)lam) * (Complex)sin(theta / 2);
+            state[t ^ mask] = a * exp(i * (Complex)phi) * (Complex)sin(theta / 2) + b * exp(i * (Complex)(lam + phi)) * (Complex)cos(theta / 2);
+        }
+    }
+} // Controlled phase rotation
 void StateVector::ccnot(size_t control1, size_t control2, size_t target) {
     if(target >= size)
         throw std::out_of_range("target qubit index is out of range");
@@ -243,7 +270,6 @@ void StateVector::cry(double theta, size_t control, size_t target) {
     for(size_t j = 0; j < (1 << (target)); j++) {
         for(size_t k = 0; k < (1 << (size - target - 1)); k++) {
             size_t t = j + (k << (target + 1));
-            std::cout << std::bitset<4>(t) << std::endl;
             // applying gate
             if((t & controlMask) > 0) {     
                 Complex a = state[t];
@@ -593,11 +619,6 @@ void StateVector::print() {
 // noise simulation
 void StateVector::ampDamp(double gamma, size_t target, size_t ancillary) {
     double theta = asin(sqrt(gamma)) * 2; // sin^2(theta/2) = gamma
-    // vector<Complex> v1 = getState();
-    // for(Complex u: v1)
-    //     std::cout << u << "  ";
-    // std::cout << std::endl;
-    // std::cout << "ampDamp(theta = "<<theta<<", target = "<<target<<", anc = "<<ancillary<<std::endl;
     cry(theta, target, ancillary);
     cnot(ancillary, target);
     measure(ancillary);

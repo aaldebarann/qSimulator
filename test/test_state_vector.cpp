@@ -294,3 +294,22 @@ TEST(StateVector, cry_gate_1) {
         EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-7);
     }
 }
+TEST(StateVector, u_gate) {
+    StateVector s{3};
+    vector<Complex> expected = s.getState();
+    s.ru(1.1, 2.2, 0.3, 0);
+    s.ru(2.1, 2.9, 3.1, 1);
+    s.ru(0.5789, 1.9, 2.3456, 2);
+    s.ru(-1.1, -0.3, -2.2, 0);
+    s.ru(-2.1, -3.1, -2.9, 1);
+    s.ru(-0.5789, -2.3456, -1.9, 2);
+    vector<Complex> actual = s.getState();
+    
+    std::cout << expected.size() << " " << actual.size() << std::endl;
+
+    // compare expected with actual
+    for(int j = 0; j < expected.size(); j++) {
+        EXPECT_NEAR(expected[j].real(), actual[j].real(), 1.0e-5);
+        EXPECT_NEAR(expected[j].imag(), actual[j].imag(), 1.0e-5);
+    }
+}
